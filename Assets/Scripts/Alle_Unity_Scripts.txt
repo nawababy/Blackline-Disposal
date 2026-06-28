@@ -1,0 +1,5803 @@
+﻿
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\CharacterCreation\CharacterCarouselController.cs
+==================================================
+
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class CharacterCarouselController : MonoBehaviour
+{
+    public Transform previewParent;
+    public GameObject[] characterPrefabs; // alle Prefabs
+    public float previewScale = 150f;
+
+    public Button leftArrowButton;
+    public Button rightArrowButton;
+    public Button finishButton;
+
+    private GameObject currentPreview;
+    private int currentIndex = 0;
+
+    void Start()
+    {
+        leftArrowButton.onClick.AddListener(() => ChangeCharacter(-1));
+        rightArrowButton.onClick.AddListener(() => ChangeCharacter(1));
+        finishButton.onClick.AddListener(FinishCreation);
+
+        UpdatePreview();
+    }
+
+    void ChangeCharacter(int direction)
+    {
+        currentIndex += direction;
+
+        if (currentIndex < 0) currentIndex = characterPrefabs.Length - 1;
+        if (currentIndex >= characterPrefabs.Length) currentIndex = 0;
+
+        UpdatePreview();
+    }
+
+    void UpdatePreview()
+    {
+        // ALLE Kinder vom PreviewParent löschen
+        foreach (Transform child in previewParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Neues Prefab instanziieren
+        GameObject prefabToSpawn = characterPrefabs[currentIndex];
+        if (prefabToSpawn != null)
+        {
+            currentPreview = Instantiate(prefabToSpawn, previewParent);
+            currentPreview.transform.localPosition = Vector3.zero;
+            currentPreview.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            currentPreview.transform.localScale = Vector3.one * previewScale;
+        }
+    }
+
+    void FinishCreation()
+    {
+        int slotIndex = PlayerPrefs.GetInt("CurrentSlot", 0);
+        PlayerPrefs.SetString("SaveSlot_" + slotIndex, currentIndex.ToString());
+        PlayerPrefs.Save();
+
+        SceneManager.LoadScene("GameScene");
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\CharacterCreation\CharacterCustomisationController.cs
+==================================================
+
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CharacterCustomizationController : MonoBehaviour
+{
+    [Header("Preview")]
+    public Transform previewParent;
+
+    [Header("Category Prefabs")]
+    public GameObject[] heads;
+    public GameObject[] faces;
+    public GameObject[] uppers;
+    public GameObject[] pants;
+    public GameObject[] shoes;
+    public Material[] skinTones;
+
+    [Header("UI Buttons")]
+    public Button headLeft, headRight;
+    public Button faceLeft, faceRight;
+    public Button upperLeft, upperRight;
+    public Button pantsLeft, pantsRight;
+    public Button shoesLeft, shoesRight;
+    public Button skinLeft, skinRight;
+
+    // Indices für Auswahl
+    private int headIndex = 0;
+    private int faceIndex = 0;
+    private int upperIndex = 0;
+    private int pantsIndex = 0;
+    private int shoesIndex = 0;
+    private int skinIndex = 0;
+
+    // Aktuell instanzierte Teile
+    private GameObject currentHead, currentFace, currentUpper, currentPants, currentShoes;
+
+    void Start()
+    {
+        // Head Buttons
+        headLeft.onClick.AddListener(() => ChangeCategory(ref headIndex, heads, -1));
+        headRight.onClick.AddListener(() => ChangeCategory(ref headIndex, heads, 1));
+
+        // Face Buttons
+        faceLeft.onClick.AddListener(() => ChangeCategory(ref faceIndex, faces, -1));
+        faceRight.onClick.AddListener(() => ChangeCategory(ref faceIndex, faces, 1));
+
+        // Upper Buttons
+        upperLeft.onClick.AddListener(() => ChangeCategory(ref upperIndex, uppers, -1));
+        upperRight.onClick.AddListener(() => ChangeCategory(ref upperIndex, uppers, 1));
+
+        // Pants Buttons
+        pantsLeft.onClick.AddListener(() => ChangeCategory(ref pantsIndex, pants, -1));
+        pantsRight.onClick.AddListener(() => ChangeCategory(ref pantsIndex, pants, 1));
+
+        // Shoes Buttons
+        shoesLeft.onClick.AddListener(() => ChangeCategory(ref shoesIndex, shoes, -1));
+        shoesRight.onClick.AddListener(() => ChangeCategory(ref shoesIndex, shoes, 1));
+
+        // Skin Buttons
+        skinLeft.onClick.AddListener(() => ChangeSkin(-1));
+        skinRight.onClick.AddListener(() => ChangeSkin(1));
+
+        UpdatePreview();
+    }
+
+    void ChangeCategory(ref int index, GameObject[] options, int direction)
+    {
+        if (options.Length == 0) return;
+
+        index += direction;
+        if (index < 0) index = options.Length - 1;
+        if (index >= options.Length) index = 0;
+
+        UpdatePreview();
+    }
+
+    void ChangeSkin(int direction)
+    {
+        if (skinTones.Length == 0) return;
+
+        skinIndex += direction;
+        if (skinIndex < 0) skinIndex = skinTones.Length - 1;
+        if (skinIndex >= skinTones.Length) skinIndex = 0;
+
+        UpdatePreview();
+    }
+
+    void UpdatePreview()
+    {
+        // Alte Teile entfernen
+        if (currentHead != null) Destroy(currentHead);
+        if (currentFace != null) Destroy(currentFace);
+        if (currentUpper != null) Destroy(currentUpper);
+        if (currentPants != null) Destroy(currentPants);
+        if (currentShoes != null) Destroy(currentShoes);
+
+        // Neue Instanzen erzeugen
+        if (heads.Length > 0)
+            currentHead = Instantiate(heads[headIndex], previewParent.position, Quaternion.identity, previewParent);
+        if (faces.Length > 0)
+            currentFace = Instantiate(faces[faceIndex], previewParent.position, Quaternion.identity, previewParent);
+        if (uppers.Length > 0)
+            currentUpper = Instantiate(uppers[upperIndex], previewParent.position, Quaternion.identity, previewParent);
+        if (pants.Length > 0)
+            currentPants = Instantiate(pants[pantsIndex], previewParent.position, Quaternion.identity, previewParent);
+        if (shoes.Length > 0)
+            currentShoes = Instantiate(shoes[shoesIndex], previewParent.position, Quaternion.identity, previewParent);
+
+        // Skin anwenden
+        if (skinTones.Length > 0)
+        {
+            Renderer[] renderers = previewParent.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in renderers)
+                r.material = skinTones[skinIndex];
+        }
+
+        // Rotation & Scale
+        previewParent.localRotation = Quaternion.Euler(0, 180, 0);
+        previewParent.localScale = Vector3.one * 150f;
+    }
+
+    // Speichern der Auswahl für den aktuellen BodyType/Slot
+    public void SaveSelection(string slotKey)
+    {
+        PlayerPrefs.SetInt(slotKey + "_Head", headIndex);
+        PlayerPrefs.SetInt(slotKey + "_Face", faceIndex);
+        PlayerPrefs.SetInt(slotKey + "_Upper", upperIndex);
+        PlayerPrefs.SetInt(slotKey + "_Pants", pantsIndex);
+        PlayerPrefs.SetInt(slotKey + "_Shoes", shoesIndex);
+        PlayerPrefs.SetInt(slotKey + "_Skin", skinIndex);
+        PlayerPrefs.Save();
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Compass\CompassController.cs
+==================================================
+
+using UnityEngine;
+
+public class CompassController : MonoBehaviour
+{
+    [Header("References")]
+    public Transform player;
+    public RectTransform compassBar;
+    public float compassWidth = 750f;
+
+    [Header("Cardinal Markers")]
+    public RectTransform markerN;
+    public RectTransform markerE;
+    public RectTransform markerS;
+    public RectTransform markerW;
+
+    private float halfWidth;
+    private float lastYaw;
+
+    void Start()
+    {
+        halfWidth = compassWidth / 2f;
+        if (player != null)
+            lastYaw = player.eulerAngles.y;
+    }
+
+    void Update()
+    {
+        if (player == null) return;
+
+        float playerYaw = player.eulerAngles.y;
+
+        // Nur aktualisieren, wenn sich die Rotation geändert hat
+        if (Mathf.Approximately(playerYaw, lastYaw)) return;
+
+        UpdateCardinalMarker(markerN, 0f, playerYaw);
+        UpdateCardinalMarker(markerE, 90f, playerYaw);
+        UpdateCardinalMarker(markerS, 180f, playerYaw);
+        UpdateCardinalMarker(markerW, -90f, playerYaw);
+
+        lastYaw = playerYaw;
+    }
+
+    void UpdateCardinalMarker(RectTransform marker, float markerAngle, float playerYaw)
+    {
+        if (marker == null) return;
+
+        float relativeAngle = Mathf.DeltaAngle(playerYaw, markerAngle);
+        float xPos = (relativeAngle / 180f) * halfWidth;
+
+        Vector2 pos = marker.anchoredPosition;
+        pos.x = xPos;
+        marker.anchoredPosition = pos;
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Facility\FacilityLevelDefinition.cs
+==================================================
+
+using UnityEngine;
+
+[System.Serializable]
+public class FacilityLevelDefinition
+{
+    [Header("Level Information")]
+    public string levelName = "Level 1";
+
+    [Header("Processing")]
+    [Min(0.1f)]
+    public float processTime = 300f;
+
+    [Min(0f)]
+    public float valueMultiplier = 1f;
+
+    [Header("Upgrade")]
+    [Min(0)]
+    public int upgradeCost;
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Facility\TrashFacility.cs
+==================================================
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TrashFacility : MonoBehaviour
+{
+    [Header("Accepted Trash Types")]
+    [SerializeField] private List<TrashClass> acceptedTrash = new List<TrashClass>();
+
+    [Header("Facility Levels")]
+    [SerializeField] private FacilityLevelDefinition[] levels = new FacilityLevelDefinition[3];
+
+    [Header("Current Level")]
+    [SerializeField] private int currentLevelIndex;
+
+    [Header("References")]
+    [SerializeField] private PlayerInventory playerInventory;
+
+    private bool isProcessing;
+    private float storedValue;
+
+    private void Awake()
+    {
+        CreateDefaultLevelsIfNeeded();
+        currentLevelIndex = Mathf.Clamp(currentLevelIndex, 0, levels.Length - 1);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isProcessing)
+            return;
+
+        Trash trash = other.GetComponentInParent<Trash>();
+
+        if (trash == null)
+            return;
+
+        if (!acceptedTrash.Contains(trash.TrashClass))
+            return;
+
+        storedValue = trash.BaseValue;
+
+        Destroy(trash.gameObject);
+        StartCoroutine(ProcessTrash(storedValue));
+    }
+
+    private IEnumerator ProcessTrash(float valueToProcess)
+    {
+        isProcessing = true;
+
+        FacilityLevelDefinition currentLevel = levels[currentLevelIndex];
+
+        yield return new WaitForSeconds(currentLevel.processTime);
+
+        float payout = valueToProcess * currentLevel.valueMultiplier;
+
+        if (playerInventory != null)
+            playerInventory.AddCash(payout);
+
+        isProcessing = false;
+    }
+
+    public void Upgrade()
+    {
+        if (currentLevelIndex >= levels.Length - 1)
+            return;
+
+        currentLevelIndex++;
+    }
+
+    private void CreateDefaultLevelsIfNeeded()
+    {
+        if (levels == null || levels.Length < 3)
+            levels = new FacilityLevelDefinition[3];
+
+        if (levels[0] == null)
+            levels[0] = new FacilityLevelDefinition
+            {
+                levelName = "Level 1",
+                processTime = 300f,
+                valueMultiplier = 1f
+            };
+
+        if (levels[1] == null)
+            levels[1] = new FacilityLevelDefinition
+            {
+                levelName = "Level 2",
+                processTime = 150f,
+                valueMultiplier = 2.5f
+            };
+
+        if (levels[2] == null)
+            levels[2] = new FacilityLevelDefinition
+            {
+                levelName = "Level 3",
+                processTime = 60f,
+                valueMultiplier = 3.5f
+            };
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Inventory Hotbar\HotbarController.cs
+==================================================
+
+using UnityEngine;
+
+public sealed class HotbarController : MonoBehaviour
+{
+    [Header("Inventory")]
+    [SerializeField] private PlayerInventory inventory;
+
+    [Header("Control")]
+    [SerializeField] private bool canControl = true;
+
+    private void Update()
+    {
+        if (!canControl || inventory == null || inventory.SlotCount <= 0)
+            return;
+
+        HandleNumberKeys();
+        HandleMouseScroll();
+    }
+
+    private void HandleNumberKeys()
+    {
+        int usableSlots = Mathf.Min(inventory.SlotCount, 9);
+
+        for (int i = 0; i < usableSlots; i++)
+        {
+            KeyCode numberKey = KeyCode.Alpha1 + i;
+
+            if (Input.GetKeyDown(numberKey))
+            {
+                inventory.SetSelectedSlot(i);
+                return;
+            }
+        }
+    }
+
+    private void HandleMouseScroll()
+    {
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+
+        if (Mathf.Approximately(scrollInput, 0f))
+            return;
+
+        int direction = scrollInput > 0f ? -1 : 1;
+        int nextSlot = inventory.selectedSlot + direction;
+
+        if (nextSlot < 0)
+            nextSlot = inventory.SlotCount - 1;
+        else if (nextSlot >= inventory.SlotCount)
+            nextSlot = 0;
+
+        inventory.SetSelectedSlot(nextSlot);
+    }
+
+    public void SetControlEnabled(bool value)
+    {
+        canControl = value;
+    }
+
+    public void SetInventory(PlayerInventory newInventory)
+    {
+        inventory = newInventory;
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Inventory Hotbar\HotbarItem.cs
+==================================================
+
+using UnityEngine;
+
+[System.Serializable]
+public sealed class HotbarItem
+{
+    [Header("Item Information")]
+    [SerializeField] private string itemId = "item.default";
+    [SerializeField] private string itemName = "New Item";
+
+    [Header("Visuals")]
+    [SerializeField] private Sprite icon;
+
+    [Header("Optional Prefab")]
+    [SerializeField] private GameObject heldPrefab;
+
+    public string ItemId => itemId;
+    public string ItemName => itemName;
+    public Sprite Icon => icon;
+    public GameObject HeldPrefab => heldPrefab;
+
+    public bool IsValid =>
+        !string.IsNullOrWhiteSpace(itemId) &&
+        !string.IsNullOrWhiteSpace(itemName);
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Inventory Hotbar\HotbarUI.cs
+==================================================
+
+using System.Collections;
+using System.Globalization;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed class HotbarUI : MonoBehaviour
+{
+    [Header("Slots 1–7")]
+    [SerializeField] private Image[] itemSlots = new Image[7];
+
+    [Header("Highlight Settings")]
+    [SerializeField] private Vector2 normalSize = new Vector2(64f, 64f);
+    [SerializeField] private Vector2 selectedSize = new Vector2(75f, 75f);
+
+    [Header("Inventory")]
+    [SerializeField] private PlayerInventory inventory;
+
+    [Header("Money Values")]
+    [SerializeField] private TMP_Text cashTextTMP;
+    [SerializeField] private TMP_Text bankTextTMP;
+
+    [Header("Money Gain Popups")]
+    [SerializeField] private TMP_Text cashGainTextTMP;
+    [SerializeField] private TMP_Text bankGainTextTMP;
+
+    [Header("Popup Animation")]
+    [SerializeField, Min(0.1f)] private float popupDuration = 1.5f;
+    [SerializeField, Min(0f)] private float popupMoveDistance = 25f;
+    [SerializeField, Min(0.01f)] private float popAnimationDuration = 0.18f;
+    [SerializeField] private float popupStartScale = 0.7f;
+    [SerializeField] private float popupPeakScale = 1.15f;
+
+    [Header("Legacy UI Text – optional")]
+    [SerializeField] private Text cashText;
+    [SerializeField] private Text bankText;
+
+    private CultureInfo currencyCulture;
+
+    private int lastCash;
+    private int lastBank;
+
+    private bool cashInitialized;
+    private bool bankInitialized;
+
+    private Coroutine cashPopupRoutine;
+    private Coroutine bankPopupRoutine;
+
+    private Vector2 cashPopupStartPosition;
+    private Vector2 bankPopupStartPosition;
+
+    private void Awake()
+    {
+        currencyCulture = CultureInfo.GetCultureInfo("en-US");
+
+        PreparePopup(
+            cashGainTextTMP,
+            out cashPopupStartPosition
+        );
+
+        PreparePopup(
+            bankGainTextTMP,
+            out bankPopupStartPosition
+        );
+    }
+
+    private void OnEnable()
+    {
+        SubscribeToInventory();
+        RefreshAll();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromInventory();
+    }
+
+    private void PreparePopup(
+        TMP_Text popupText,
+        out Vector2 startPosition
+    )
+    {
+        startPosition = Vector2.zero;
+
+        if (popupText == null)
+            return;
+
+        startPosition = popupText.rectTransform.anchoredPosition;
+        popupText.text = string.Empty;
+        popupText.rectTransform.localScale = Vector3.one;
+    }
+
+    private void SubscribeToInventory()
+    {
+        if (inventory == null)
+            return;
+
+        inventory.CashChanged += UpdateCash;
+        inventory.BankBalanceChanged += UpdateBank;
+        inventory.SelectedSlotChanged += UpdateSelectedSlot;
+    }
+
+    private void UnsubscribeFromInventory()
+    {
+        if (inventory == null)
+            return;
+
+        inventory.CashChanged -= UpdateCash;
+        inventory.BankBalanceChanged -= UpdateBank;
+        inventory.SelectedSlotChanged -= UpdateSelectedSlot;
+    }
+
+    private void RefreshAll()
+    {
+        if (inventory == null)
+            return;
+
+        lastCash = inventory.cash;
+        lastBank = inventory.bankBalance;
+
+        cashInitialized = true;
+        bankInitialized = true;
+
+        UpdateSelectedSlot(inventory.selectedSlot);
+        SetCashText(inventory.cash);
+        SetBankText(inventory.bankBalance);
+    }
+
+    private void UpdateSelectedSlot(int selectedSlot)
+    {
+        if (itemSlots == null)
+            return;
+
+        float safeNormalWidth = Mathf.Max(normalSize.x, 0.01f);
+        float safeNormalHeight = Mathf.Max(normalSize.y, 0.01f);
+
+        Vector3 selectedScale = new Vector3(
+            selectedSize.x / safeNormalWidth,
+            selectedSize.y / safeNormalHeight,
+            1f
+        );
+
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            if (itemSlots[i] == null)
+                continue;
+
+            itemSlots[i].transform.localScale =
+                i == selectedSlot ? selectedScale : Vector3.one;
+        }
+    }
+
+    private void UpdateCash(int newAmount)
+    {
+        if (cashInitialized)
+        {
+            int difference = newAmount - lastCash;
+
+            if (difference > 0)
+                ShowCashGain(difference);
+        }
+
+        lastCash = newAmount;
+        cashInitialized = true;
+
+        SetCashText(newAmount);
+    }
+
+    private void UpdateBank(int newAmount)
+    {
+        if (bankInitialized)
+        {
+            int difference = newAmount - lastBank;
+
+            if (difference > 0)
+                ShowBankGain(difference);
+        }
+
+        lastBank = newAmount;
+        bankInitialized = true;
+
+        SetBankText(newAmount);
+    }
+
+    private void SetCashText(int amount)
+    {
+        string formattedAmount = amount.ToString(
+            "C0",
+            currencyCulture
+        );
+
+        if (cashTextTMP != null)
+            cashTextTMP.text = formattedAmount;
+
+        if (cashText != null)
+            cashText.text = formattedAmount;
+    }
+
+    private void SetBankText(int amount)
+    {
+        string formattedAmount = amount.ToString(
+            "C0",
+            currencyCulture
+        );
+
+        if (bankTextTMP != null)
+            bankTextTMP.text = formattedAmount;
+
+        if (bankText != null)
+            bankText.text = formattedAmount;
+    }
+
+    private void ShowCashGain(int amount)
+    {
+        if (cashGainTextTMP == null)
+            return;
+
+        if (cashPopupRoutine != null)
+            StopCoroutine(cashPopupRoutine);
+
+        Color popupColor = cashTextTMP != null
+            ? cashTextTMP.color
+            : cashGainTextTMP.color;
+
+        cashPopupRoutine = StartCoroutine(
+            AnimateGainPopup(
+                cashGainTextTMP,
+                cashPopupStartPosition,
+                popupColor,
+                amount
+            )
+        );
+    }
+
+    private void ShowBankGain(int amount)
+    {
+        if (bankGainTextTMP == null)
+            return;
+
+        if (bankPopupRoutine != null)
+            StopCoroutine(bankPopupRoutine);
+
+        Color popupColor = bankTextTMP != null
+            ? bankTextTMP.color
+            : bankGainTextTMP.color;
+
+        bankPopupRoutine = StartCoroutine(
+            AnimateGainPopup(
+                bankGainTextTMP,
+                bankPopupStartPosition,
+                popupColor,
+                amount
+            )
+        );
+    }
+
+    private IEnumerator AnimateGainPopup(
+        TMP_Text popupText,
+        Vector2 startPosition,
+        Color popupColor,
+        int amount
+    )
+    {
+        RectTransform popupTransform = popupText.rectTransform;
+
+        popupText.text = $"+${amount:N0}";
+        popupTransform.anchoredPosition = startPosition;
+        popupTransform.localScale =
+            Vector3.one * popupStartScale;
+
+        popupColor.a = 1f;
+        popupText.color = popupColor;
+
+        float timer = 0f;
+
+        while (timer < popupDuration)
+        {
+            timer += Time.unscaledDeltaTime;
+
+            float totalProgress = Mathf.Clamp01(
+                timer / popupDuration
+            );
+
+            float moveProgress = Mathf.SmoothStep(
+                0f,
+                1f,
+                totalProgress
+            );
+
+            popupTransform.anchoredPosition =
+                startPosition +
+                Vector2.up *
+                popupMoveDistance *
+                moveProgress;
+
+            if (timer < popAnimationDuration)
+            {
+                float popProgress = Mathf.Clamp01(
+                    timer / popAnimationDuration
+                );
+
+                float currentScale;
+
+                if (popProgress < 0.5f)
+                {
+                    currentScale = Mathf.Lerp(
+                        popupStartScale,
+                        popupPeakScale,
+                        popProgress * 2f
+                    );
+                }
+                else
+                {
+                    currentScale = Mathf.Lerp(
+                        popupPeakScale,
+                        1f,
+                        (popProgress - 0.5f) * 2f
+                    );
+                }
+
+                popupTransform.localScale =
+                    Vector3.one * currentScale;
+            }
+            else
+            {
+                popupTransform.localScale = Vector3.one;
+            }
+
+            float fadeStart = 0.3f;
+            float alpha = 1f;
+
+            if (totalProgress > fadeStart)
+            {
+                alpha = 1f - Mathf.InverseLerp(
+                    fadeStart,
+                    1f,
+                    totalProgress
+                );
+            }
+
+            Color currentColor = popupColor;
+            currentColor.a = alpha;
+            popupText.color = currentColor;
+
+            yield return null;
+        }
+
+        popupText.text = string.Empty;
+        popupTransform.anchoredPosition = startPosition;
+        popupTransform.localScale = Vector3.one;
+
+        Color resetColor = popupColor;
+        resetColor.a = 1f;
+        popupText.color = resetColor;
+    }
+
+    public void SetInventory(PlayerInventory newInventory)
+    {
+        if (inventory == newInventory)
+            return;
+
+        UnsubscribeFromInventory();
+
+        inventory = newInventory;
+
+        cashInitialized = false;
+        bankInitialized = false;
+
+        SubscribeToInventory();
+        RefreshAll();
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Inventory Hotbar\PlayerInventory.cs
+==================================================
+
+using System;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public sealed class PlayerInventory : MonoBehaviour
+{
+    private const int DefaultHotbarSize = 7;
+
+    [Header("Hotbar Slots")]
+    [FormerlySerializedAs("hotbar")]
+    [SerializeField]
+    private HotbarItem[] hotbarItems = new HotbarItem[DefaultHotbarSize];
+
+    [Header("Money")]
+    [FormerlySerializedAs("cash")]
+    [SerializeField, Min(0)]
+    private int currentCash;
+
+    [FormerlySerializedAs("bankBalance")]
+    [SerializeField, Min(0)]
+    private int currentBankBalance;
+
+    [Header("Selected Slot")]
+    [FormerlySerializedAs("selectedSlot")]
+    [SerializeField, Min(0)]
+    private int currentSelectedSlot;
+
+    /*
+     * Diese Properties behalten absichtlich die bisherigen Namen.
+     * Dadurch funktionieren HotbarUI, HotbarController und
+     * TrashFacility weiterhin, bis wir sie ebenfalls überarbeiten.
+     */
+    public HotbarItem[] hotbar => hotbarItems;
+    public int cash => currentCash;
+    public int bankBalance => currentBankBalance;
+
+    public int selectedSlot
+    {
+        get => currentSelectedSlot;
+        set => SetSelectedSlot(value);
+    }
+
+    public int SlotCount =>
+        hotbarItems != null ? hotbarItems.Length : 0;
+
+    public event Action<int> CashChanged;
+    public event Action<int> BankBalanceChanged;
+    public event Action<int> SelectedSlotChanged;
+
+    private void Awake()
+    {
+        EnsureValidHotbar();
+        ClampSelectedSlot();
+    }
+
+    private void OnValidate()
+    {
+        EnsureValidHotbar();
+
+        currentCash = Mathf.Max(0, currentCash);
+        currentBankBalance = Mathf.Max(0, currentBankBalance);
+
+        ClampSelectedSlot();
+    }
+
+    private void EnsureValidHotbar()
+    {
+        if (hotbarItems == null || hotbarItems.Length == 0)
+            hotbarItems = new HotbarItem[DefaultHotbarSize];
+    }
+
+    private void ClampSelectedSlot()
+    {
+        if (SlotCount <= 0)
+        {
+            currentSelectedSlot = 0;
+            return;
+        }
+
+        currentSelectedSlot = Mathf.Clamp(
+            currentSelectedSlot,
+            0,
+            SlotCount - 1
+        );
+    }
+
+    public void SetSelectedSlot(int slotIndex)
+    {
+        if (SlotCount <= 0)
+            return;
+
+        int newSlot = Mathf.Clamp(slotIndex, 0, SlotCount - 1);
+
+        if (newSlot == currentSelectedSlot)
+            return;
+
+        currentSelectedSlot = newSlot;
+        SelectedSlotChanged?.Invoke(currentSelectedSlot);
+    }
+
+    public HotbarItem GetItem(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= SlotCount)
+            return null;
+
+        return hotbarItems[slotIndex];
+    }
+
+    public void SetItem(int slotIndex, HotbarItem item)
+    {
+        if (slotIndex < 0 || slotIndex >= SlotCount)
+            return;
+
+        hotbarItems[slotIndex] = item;
+    }
+
+    public void AddCash(float amount)
+    {
+        int roundedAmount = Mathf.RoundToInt(amount);
+
+        if (roundedAmount <= 0)
+            return;
+
+        currentCash += roundedAmount;
+        CashChanged?.Invoke(currentCash);
+    }
+
+    public bool TrySpendCash(int amount)
+    {
+        if (amount <= 0 || currentCash < amount)
+            return false;
+
+        currentCash -= amount;
+        CashChanged?.Invoke(currentCash);
+
+        return true;
+    }
+
+    public void SetCash(int amount)
+    {
+        int newAmount = Mathf.Max(0, amount);
+
+        if (newAmount == currentCash)
+            return;
+
+        currentCash = newAmount;
+        CashChanged?.Invoke(currentCash);
+    }
+
+    public void AddBank(float amount)
+    {
+        int roundedAmount = Mathf.RoundToInt(amount);
+
+        if (roundedAmount <= 0)
+            return;
+
+        currentBankBalance += roundedAmount;
+        BankBalanceChanged?.Invoke(currentBankBalance);
+    }
+
+    public bool TrySpendBank(int amount)
+    {
+        if (amount <= 0 || currentBankBalance < amount)
+            return false;
+
+        currentBankBalance -= amount;
+        BankBalanceChanged?.Invoke(currentBankBalance);
+
+        return true;
+    }
+
+    public void SetBankBalance(int amount)
+    {
+        int newAmount = Mathf.Max(0, amount);
+
+        if (newAmount == currentBankBalance)
+            return;
+
+        currentBankBalance = newAmount;
+        BankBalanceChanged?.Invoke(currentBankBalance);
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\MainMenu & ESCMenu\DeleteConfirmationUI.cs
+==================================================
+
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+public sealed class DeleteSaveConfirmationUI : MonoBehaviour
+{
+    [Header("Confirmation Window")]
+    [SerializeField] private GameObject confirmationPanel;
+
+    [Header("Texts")]
+    [SerializeField] private TMP_Text titleText;
+    [SerializeField] private TMP_Text messageText;
+
+    [Header("Buttons")]
+    [SerializeField] private Button cancelButton;
+    [SerializeField] private Button confirmDeleteButton;
+
+    [Header("Events")]
+    [Tooltip(
+        "Wird ausgelöst, nachdem ein Speicherplatz gelöscht wurde. " +
+        "Hier kann später die Save-Slot-Anzeige aktualisiert werden."
+    )]
+    [SerializeField]
+    private UnityEvent onSaveDeleted =
+        new UnityEvent();
+
+    private int pendingSlotIndex = -1;
+
+    public bool IsOpen =>
+        confirmationPanel != null &&
+        confirmationPanel.activeSelf;
+
+    private void Awake()
+    {
+        if (cancelButton != null)
+            cancelButton.onClick.AddListener(CancelDelete);
+
+        if (confirmDeleteButton != null)
+            confirmDeleteButton.onClick.AddListener(ConfirmDelete);
+
+        CloseWindow();
+    }
+
+    private void OnDestroy()
+    {
+        if (cancelButton != null)
+            cancelButton.onClick.RemoveListener(CancelDelete);
+
+        if (confirmDeleteButton != null)
+            confirmDeleteButton.onClick.RemoveListener(ConfirmDelete);
+    }
+
+    private void Update()
+    {
+        if (!IsOpen)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            CancelDelete();
+    }
+
+    public void OpenForSlot(int slotIndex)
+    {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "DeleteSaveConfirmationUI findet keinen GameManager."
+            );
+
+            return;
+        }
+
+        if (!GameManager.Instance.HasSaveForSlot(slotIndex))
+        {
+            Debug.LogWarning(
+                $"Speicherplatz {slotIndex} ist bereits leer."
+            );
+
+            CloseWindow();
+            return;
+        }
+
+        pendingSlotIndex = slotIndex;
+
+        string saveName =
+            GameManager.Instance.GetSaveNameForSlot(slotIndex);
+
+        if (titleText != null)
+            titleText.text = "DELETE SAVE";
+
+        if (messageText != null)
+        {
+            messageText.text =
+                $"Are you sure you want to permanently delete " +
+                $"\"{saveName}\"?\n\n" +
+                "This action cannot be undone.";
+        }
+
+        if (confirmationPanel != null)
+            confirmationPanel.SetActive(true);
+    }
+
+    public void CancelDelete()
+    {
+        CloseWindow();
+    }
+
+    public void ConfirmDelete()
+    {
+        if (pendingSlotIndex < 0)
+        {
+            Debug.LogWarning(
+                "Es wurde kein Speicherplatz zum Löschen ausgewählt."
+            );
+
+            CloseWindow();
+            return;
+        }
+
+        if (GameManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "DeleteSaveConfirmationUI findet keinen GameManager."
+            );
+
+            CloseWindow();
+            return;
+        }
+
+        int slotToDelete = pendingSlotIndex;
+
+        bool wasDeleted =
+            GameManager.Instance.DeleteSaveForSlot(slotToDelete);
+
+        CloseWindow();
+
+        if (wasDeleted)
+            onSaveDeleted.Invoke();
+    }
+
+    private void CloseWindow()
+    {
+        pendingSlotIndex = -1;
+
+        if (confirmationPanel != null)
+            confirmationPanel.SetActive(false);
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\MainMenu & ESCMenu\EscapeMenuController.cs
+==================================================
+
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public sealed class EscapeMenuController : MonoBehaviour
+{
+    [Header("Menu References")]
+    [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private Image blurOverlay;
+    [SerializeField] private Image crosshairImage;
+
+    [Header("Local Player")]
+    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerLook playerLook;
+    [SerializeField] private CarryTrash carryTrash;
+    [SerializeField] private HotbarController hotbarController;
+    [SerializeField] private Transform playerTransform;
+
+    [Header("Input")]
+    [SerializeField] private InputSettings inputSettings;
+    [SerializeField] private KeyCode fallbackToggleKey = KeyCode.Escape;
+
+    [Header("I'm Stuck")]
+    [SerializeField] private Transform stuckRespawnPoint;
+    [SerializeField]
+    private Vector3 fallbackStuckPosition =
+        new Vector3(0f, 1f, 0f);
+
+    [Header("Exit")]
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+
+    private bool isMenuOpen;
+
+    public bool IsMenuOpen => isMenuOpen;
+
+    private KeyCode ToggleKey =>
+        inputSettings != null
+            ? inputSettings.pauseKey
+            : fallbackToggleKey;
+
+    private void Start()
+    {
+        CloseMenu();
+    }
+
+    private void Update()
+    {
+        if (!Input.GetKeyDown(ToggleKey))
+            return;
+
+        if (settingsPanel != null && settingsPanel.activeSelf)
+        {
+            OnSettingsBackButton();
+            return;
+        }
+
+        ToggleMenu();
+    }
+
+    public void ToggleMenu()
+    {
+        if (isMenuOpen)
+            CloseMenu();
+        else
+            OpenMenu();
+    }
+
+    public void OpenMenu()
+    {
+        isMenuOpen = true;
+
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        ApplyMenuState();
+    }
+
+    public void CloseMenu()
+    {
+        isMenuOpen = false;
+
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        ApplyMenuState();
+    }
+
+    private void ApplyMenuState()
+    {
+        if (menuPanel != null)
+            menuPanel.SetActive(isMenuOpen);
+
+        if (blurOverlay != null)
+            blurOverlay.enabled = isMenuOpen;
+
+        if (crosshairImage != null)
+            crosshairImage.enabled = !isMenuOpen;
+
+        // Nur Input deaktivieren.
+        // Die Kamera selbst bleibt aktiv.
+        if (playerMovement != null)
+            playerMovement.SetInputEnabled(!isMenuOpen);
+
+        if (playerLook != null)
+            playerLook.SetLookEnabled(!isMenuOpen);
+
+        if (carryTrash != null)
+            carryTrash.SetCarryEnabled(!isMenuOpen);
+
+        if (hotbarController != null)
+            hotbarController.SetControlEnabled(!isMenuOpen);
+
+        ApplyCursorState();
+    }
+
+    private void ApplyCursorState()
+    {
+        Cursor.lockState = isMenuOpen
+            ? CursorLockMode.None
+            : CursorLockMode.Locked;
+
+        Cursor.visible = isMenuOpen;
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus)
+            ApplyCursorState();
+    }
+
+    public void OnResumeButton()
+    {
+        CloseMenu();
+    }
+
+    public void OnSettingsButton()
+    {
+        if (!isMenuOpen || settingsPanel == null)
+            return;
+
+        settingsPanel.SetActive(true);
+    }
+
+    public void OnSettingsBackButton()
+    {
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+    }
+
+    public void OnSaveAndExitButton()
+    {
+        // Richtiges Speichern kommt später.
+
+        if (string.IsNullOrWhiteSpace(mainMenuSceneName))
+        {
+            Debug.LogWarning("Keine Main-Menu-Szene eingetragen.");
+            return;
+        }
+
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public void OnQuitGameButton()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    public void OnImStuckButton()
+    {
+        if (playerTransform == null)
+        {
+            Debug.LogWarning(
+                "Beim EscapeMenuController fehlt der Player Transform."
+            );
+
+            return;
+        }
+
+        Vector3 targetPosition = stuckRespawnPoint != null
+            ? stuckRespawnPoint.position
+            : fallbackStuckPosition;
+
+        Quaternion targetRotation = stuckRespawnPoint != null
+            ? stuckRespawnPoint.rotation
+            : playerTransform.rotation;
+
+        CharacterController characterController =
+            playerTransform.GetComponent<CharacterController>();
+
+        if (characterController != null)
+            characterController.enabled = false;
+
+        playerTransform.SetPositionAndRotation(
+            targetPosition,
+            targetRotation
+        );
+
+        if (characterController != null)
+            characterController.enabled = true;
+
+        CloseMenu();
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\MainMenu & ESCMenu\GameManager.cs
+==================================================
+
+using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public enum GameState
+{
+    MainMenu,
+    CharacterCreation,
+    Playing,
+    Paused
+}
+
+public sealed class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; }
+
+    [Header("Scene Names")]
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField]
+    private string characterCreationSceneName = "CharacterCreation";
+    [SerializeField] private string gameSceneName = "GameScene";
+
+    public GameState CurrentState { get; private set; }
+
+    public int CurrentSlot { get; private set; } = -1;
+
+    /*
+     * Wird ausgelöst, sobald ein Speicherplatz gelöscht wurde.
+     * Die Speicherplatz-UI kann sich später daran anmelden
+     * und sofort aktualisieren.
+     */
+    public event Action<int> SaveSlotDeleted;
+
+    private const string CurrentSlotKey = "CurrentSlot";
+    private const string SaveSlotKeyPrefix = "SaveSlot_";
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        CurrentSlot = PlayerPrefs.GetInt(CurrentSlotKey, -1);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void Start()
+    {
+        UpdateStateFromScene(
+            SceneManager.GetActiveScene().name
+        );
+    }
+
+    private void OnSceneLoaded(
+        Scene scene,
+        LoadSceneMode loadMode
+    )
+    {
+        UpdateStateFromScene(scene.name);
+    }
+
+    private void UpdateStateFromScene(string sceneName)
+    {
+        if (string.Equals(
+                sceneName,
+                mainMenuSceneName,
+                StringComparison.Ordinal))
+        {
+            CurrentState = GameState.MainMenu;
+        }
+        else if (string.Equals(
+                     sceneName,
+                     characterCreationSceneName,
+                     StringComparison.Ordinal))
+        {
+            CurrentState = GameState.CharacterCreation;
+        }
+        else if (string.Equals(
+                     sceneName,
+                     gameSceneName,
+                     StringComparison.Ordinal))
+        {
+            CurrentState = GameState.Playing;
+        }
+    }
+
+    public void StartNewGame(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return;
+
+        SetCurrentSlot(slotIndex);
+        LoadCharacterCreation();
+    }
+
+    public void ContinueGame(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return;
+
+        SetCurrentSlot(slotIndex);
+
+        if (HasSaveForSlot(slotIndex))
+            LoadGameScene();
+        else
+            LoadCharacterCreation();
+    }
+
+    public bool HasSaveForSlot(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return false;
+
+        string saveKey = GetSaveKey(slotIndex);
+
+        if (!PlayerPrefs.HasKey(saveKey))
+            return false;
+
+        string saveName = PlayerPrefs.GetString(
+            saveKey,
+            "Empty"
+        );
+
+        return !string.IsNullOrWhiteSpace(saveName) &&
+               !string.Equals(
+                   saveName,
+                   "Empty",
+                   StringComparison.OrdinalIgnoreCase
+               );
+    }
+
+    public string GetSaveNameForSlot(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return "Empty";
+
+        string saveKey = GetSaveKey(slotIndex);
+
+        return PlayerPrefs.GetString(saveKey, "Empty");
+    }
+
+    public void SetCurrentSlot(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return;
+
+        CurrentSlot = slotIndex;
+
+        PlayerPrefs.SetInt(
+            CurrentSlotKey,
+            CurrentSlot
+        );
+
+        PlayerPrefs.Save();
+    }
+
+    public bool DeleteSaveForSlot(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return false;
+
+        string saveKey = GetSaveKey(slotIndex);
+
+        bool saveExisted = PlayerPrefs.HasKey(saveKey);
+
+        /*
+         * Aktuell wird der Hauptschlüssel des Speicherplatzes
+         * gelöscht.
+         *
+         * Sobald weitere Daten hinzukommen, beispielsweise:
+         * CharacterName_0
+         * PlayerMoney_0
+         * PlayerPositionX_0
+         *
+         * werden diese ebenfalls hier zentral gelöscht.
+         */
+        PlayerPrefs.DeleteKey(saveKey);
+
+        if (CurrentSlot == slotIndex)
+        {
+            CurrentSlot = -1;
+            PlayerPrefs.DeleteKey(CurrentSlotKey);
+        }
+
+        PlayerPrefs.Save();
+
+        SaveSlotDeleted?.Invoke(slotIndex);
+
+        Debug.Log(
+            saveExisted
+                ? $"Speicherplatz {slotIndex} wurde gelöscht."
+                : $"Speicherplatz {slotIndex} war bereits leer."
+        );
+
+        return saveExisted;
+    }
+
+    public void LoadMainMenu()
+    {
+        LoadScene(mainMenuSceneName);
+    }
+
+    public void LoadCharacterCreation()
+    {
+        LoadScene(characterCreationSceneName);
+    }
+
+    public void LoadGameScene()
+    {
+        LoadScene(gameSceneName);
+    }
+
+    public void SetPausedState(bool paused)
+    {
+        CurrentState = paused
+            ? GameState.Paused
+            : GameState.Playing;
+
+        /*
+         * Absichtlich kein Time.timeScale.
+         * Im späteren Koop darf ein Spieler das Spiel
+         * nicht für alle anderen Spieler anhalten.
+         */
+    }
+
+    private string GetSaveKey(int slotIndex)
+    {
+        return SaveSlotKeyPrefix + slotIndex;
+    }
+
+    private bool IsValidSlotIndex(int slotIndex)
+    {
+        if (slotIndex >= 0)
+            return true;
+
+        Debug.LogWarning(
+            "Ungültiger Speicherplatz: " + slotIndex
+        );
+
+        return false;
+    }
+
+    private void LoadScene(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            Debug.LogWarning(
+                "Es wurde kein Szenenname angegeben."
+            );
+
+            return;
+        }
+
+        SceneManager.LoadScene(sceneName);
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\MainMenu & ESCMenu\MainMenuController.cs
+==================================================
+
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed class MainMenuController : MonoBehaviour
+{
+    private const string MasterVolumeKey = "MasterVolume";
+
+    [Header("Panels")]
+    [SerializeField] private GameObject mainPanel;
+    [SerializeField] private GameObject saveSelectPanel;
+    [SerializeField] private GameObject optionsPanel;
+
+    [Header("Save Slot Buttons")]
+    [Tooltip("Slot 1 = Element 0, Slot 2 = Element 1 usw.")]
+    [SerializeField] private Button[] saveSlotButtons = new Button[3];
+
+    [Header("Save Slot Name Texts")]
+    [Tooltip(
+        "Hier exakt die Texte eintragen, die den Namen " +
+        "oder Empty anzeigen sollen."
+    )]
+    [SerializeField]
+    private TMP_Text[] saveSlotNameTexts =
+        new TMP_Text[3];
+
+    [Header("Save Slot Display")]
+    [SerializeField] private string emptySlotText = "Empty";
+
+    [Header("Options - Optional")]
+    [SerializeField] private Slider volumeSlider;
+
+    private bool isSubscribedToGameManager;
+
+    private void OnEnable()
+    {
+        TrySubscribeToGameManager();
+    }
+
+    private void Start()
+    {
+        ShowMainPanel();
+        SetupVolumeSlider();
+
+        TrySubscribeToGameManager();
+        UpdateSaveSlotButtons();
+        CheckGameManager();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromGameManager();
+    }
+
+    private void OnDestroy()
+    {
+        if (volumeSlider != null)
+            volumeSlider.onValueChanged.RemoveListener(SetVolume);
+
+        UnsubscribeFromGameManager();
+    }
+
+    // ==================================================
+    // MAIN MENU
+    // ==================================================
+
+    public void OnPlayPressed()
+    {
+        SetPanelState(
+            mainActive: false,
+            saveSelectActive: true,
+            optionsActive: false
+        );
+
+        UpdateSaveSlotButtons();
+    }
+
+    public void OnOptionsPressed()
+    {
+        if (optionsPanel == null)
+        {
+            Debug.LogWarning(
+                "Es wurde noch kein Options Panel zugewiesen.",
+                gameObject
+            );
+
+            return;
+        }
+
+        SetPanelState(
+            mainActive: false,
+            saveSelectActive: false,
+            optionsActive: true
+        );
+    }
+
+    public void OnQuitPressed()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    // ==================================================
+    // SAVE SLOTS
+    // ==================================================
+
+    public void LoadSlot(int slotIndex)
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return;
+
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError(
+                "Es wurde kein aktiver GameManager gefunden.",
+                gameObject
+            );
+
+            return;
+        }
+
+        GameManager.Instance.ContinueGame(slotIndex);
+    }
+
+    public void UpdateSaveSlotButtons()
+    {
+        if (saveSlotNameTexts == null ||
+            saveSlotNameTexts.Length == 0)
+        {
+            Debug.LogWarning(
+                "Es wurden keine Save Slot Name Texts eingetragen.",
+                gameObject
+            );
+
+            return;
+        }
+
+        for (int i = 0; i < saveSlotNameTexts.Length; i++)
+        {
+            TMP_Text slotNameText = saveSlotNameTexts[i];
+
+            if (slotNameText == null)
+            {
+                Debug.LogWarning(
+                    $"Der Name-Text für Speicherplatz {i} fehlt.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            bool hasSave =
+                GameManager.Instance != null &&
+                GameManager.Instance.HasSaveForSlot(i);
+
+            slotNameText.text = hasSave
+                ? GameManager.Instance.GetSaveNameForSlot(i)
+                : emptySlotText;
+        }
+    }
+
+    private bool IsValidSlotIndex(int slotIndex)
+    {
+        if (slotIndex < 0)
+        {
+            Debug.LogWarning(
+                "Ungültiger Save-Slot: " + slotIndex,
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (saveSlotButtons != null &&
+            saveSlotButtons.Length > 0 &&
+            slotIndex >= saveSlotButtons.Length)
+        {
+            Debug.LogWarning(
+                $"Der Save-Slot {slotIndex} existiert nicht.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private void TrySubscribeToGameManager()
+    {
+        if (isSubscribedToGameManager)
+            return;
+
+        if (GameManager.Instance == null)
+            return;
+
+        GameManager.Instance.SaveSlotDeleted += OnSaveSlotDeleted;
+        isSubscribedToGameManager = true;
+    }
+
+    private void UnsubscribeFromGameManager()
+    {
+        if (!isSubscribedToGameManager)
+            return;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SaveSlotDeleted -=
+                OnSaveSlotDeleted;
+        }
+
+        isSubscribedToGameManager = false;
+    }
+
+    private void OnSaveSlotDeleted(int deletedSlotIndex)
+    {
+        UpdateSaveSlotButtons();
+    }
+
+    // ==================================================
+    // OPTIONS
+    // ==================================================
+
+    private void SetupVolumeSlider()
+    {
+        if (volumeSlider == null)
+            return;
+
+        float savedVolume = PlayerPrefs.GetFloat(
+            MasterVolumeKey,
+            1f
+        );
+
+        savedVolume = Mathf.Clamp01(savedVolume);
+        AudioListener.volume = savedVolume;
+
+        volumeSlider.onValueChanged.RemoveListener(SetVolume);
+        volumeSlider.SetValueWithoutNotify(savedVolume);
+        volumeSlider.onValueChanged.AddListener(SetVolume);
+    }
+
+    public void SetVolume(float volume)
+    {
+        float clampedVolume = Mathf.Clamp01(volume);
+
+        AudioListener.volume = clampedVolume;
+
+        PlayerPrefs.SetFloat(
+            MasterVolumeKey,
+            clampedVolume
+        );
+
+        PlayerPrefs.Save();
+    }
+
+    // ==================================================
+    // PANEL NAVIGATION
+    // ==================================================
+
+    public void BackToMain()
+    {
+        ShowMainPanel();
+    }
+
+    private void ShowMainPanel()
+    {
+        SetPanelState(
+            mainActive: true,
+            saveSelectActive: false,
+            optionsActive: false
+        );
+    }
+
+    private void SetPanelState(
+        bool mainActive,
+        bool saveSelectActive,
+        bool optionsActive
+    )
+    {
+        if (mainPanel != null)
+            mainPanel.SetActive(mainActive);
+
+        if (saveSelectPanel != null)
+            saveSelectPanel.SetActive(saveSelectActive);
+
+        if (optionsPanel != null)
+            optionsPanel.SetActive(optionsActive);
+    }
+
+    // ==================================================
+    // VALIDATION
+    // ==================================================
+
+    private void CheckGameManager()
+    {
+        if (GameManager.Instance != null)
+            return;
+
+        Debug.LogWarning(
+            "In der MainMenu-Szene wurde kein aktiver " +
+            "GameManager gefunden.",
+            gameObject
+        );
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\MainMenu & ESCMenu\SaveSlotDeleteButtonUI.cs
+==================================================
+
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed class SaveSlotDeleteButtonUI : MonoBehaviour
+{
+    [Header("Save Slot")]
+    [Tooltip("Erster Slot = 0, zweiter Slot = 1, dritter Slot = 2")]
+    [SerializeField] private int slotIndex;
+
+    [Header("Delete Button")]
+    [SerializeField] private Button deleteButton;
+
+    [Header("Confirmation Window")]
+    [SerializeField]
+    private DeleteSaveConfirmationUI deleteConfirmationUI;
+
+    private bool isSubscribed;
+
+    private void Awake()
+    {
+        if (deleteButton != null)
+        {
+            deleteButton.onClick.AddListener(
+                OnDeleteButtonClicked
+            );
+        }
+    }
+
+    private void OnEnable()
+    {
+        TrySubscribeToGameManager();
+        RefreshDeleteButton();
+    }
+
+    private void Start()
+    {
+        TrySubscribeToGameManager();
+        RefreshDeleteButton();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromGameManager();
+    }
+
+    private void OnDestroy()
+    {
+        if (deleteButton != null)
+        {
+            deleteButton.onClick.RemoveListener(
+                OnDeleteButtonClicked
+            );
+        }
+
+        UnsubscribeFromGameManager();
+    }
+
+    private void TrySubscribeToGameManager()
+    {
+        if (isSubscribed)
+            return;
+
+        if (GameManager.Instance == null)
+            return;
+
+        GameManager.Instance.SaveSlotDeleted +=
+            OnSaveSlotDeleted;
+
+        isSubscribed = true;
+    }
+
+    private void UnsubscribeFromGameManager()
+    {
+        if (!isSubscribed)
+            return;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SaveSlotDeleted -=
+                OnSaveSlotDeleted;
+        }
+
+        isSubscribed = false;
+    }
+
+    public void RefreshDeleteButton()
+    {
+        if (deleteButton == null)
+            return;
+
+        bool hasSave =
+            GameManager.Instance != null &&
+            GameManager.Instance.HasSaveForSlot(slotIndex);
+
+        deleteButton.gameObject.SetActive(hasSave);
+    }
+
+    private void OnDeleteButtonClicked()
+    {
+        if (GameManager.Instance == null)
+            return;
+
+        if (!GameManager.Instance.HasSaveForSlot(slotIndex))
+        {
+            RefreshDeleteButton();
+            return;
+        }
+
+        if (deleteConfirmationUI == null)
+        {
+            Debug.LogWarning(
+                "Delete Confirmation UI wurde nicht eingetragen.",
+                gameObject
+            );
+
+            return;
+        }
+
+        deleteConfirmationUI.OpenForSlot(slotIndex);
+    }
+
+    private void OnSaveSlotDeleted(int deletedSlotIndex)
+    {
+        if (deletedSlotIndex != slotIndex)
+            return;
+
+        RefreshDeleteButton();
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\PlayerControls\ControlsSettingsUI.cs
+==================================================
+
+using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed class ControlsSettingsUI : MonoBehaviour
+{
+    // ==================================================
+    // INPUT SETTINGS
+    // ==================================================
+
+    [Header("Input Settings")]
+    [SerializeField] private InputSettings inputSettings;
+
+    // ==================================================
+    // KEY BINDINGS
+    // ==================================================
+
+    [Header("Crouch Key")]
+    [SerializeField] private Button crouchButton;
+    [SerializeField] private TMP_Text crouchKeyText;
+
+    [Header("Interact Key")]
+    [SerializeField] private Button interactButton;
+    [SerializeField] private TMP_Text interactKeyText;
+
+    [Header("Pickup Key")]
+    [SerializeField] private Button pickupButton;
+    [SerializeField] private TMP_Text pickupKeyText;
+
+    // ==================================================
+    // HOLD OPTIONS
+    // ==================================================
+
+    [Header("Hold Options")]
+    [Tooltip("Aktiviert: Die Crouch-Taste muss gehalten werden.")]
+    [SerializeField] private Toggle holdToCrouchToggle;
+
+    [Tooltip("Aktiviert: Die Pickup-Taste muss gehalten werden.")]
+    [SerializeField] private Toggle holdToPickupToggle;
+
+    // ==================================================
+    // RESET
+    // ==================================================
+
+    [Header("Reset")]
+    [SerializeField] private Button resetControlsButton;
+
+    // ==================================================
+    // REBINDING
+    // ==================================================
+
+    [Header("Rebinding")]
+    [SerializeField]
+    private string waitingForKeyText =
+        "Press a key...";
+
+    private bool isWaitingForKey;
+    private InputBindingId waitingBinding;
+    private int rebindStartedFrame;
+    private bool listenersRegistered;
+
+    // ==================================================
+    // UNITY LIFECYCLE
+    // ==================================================
+
+    private void Awake()
+    {
+        RegisterListeners();
+    }
+
+    private void OnEnable()
+    {
+        if (inputSettings == null)
+        {
+            Debug.LogWarning(
+                "ControlsSettingsUI hat keine InputSettings-Datei.",
+                gameObject
+            );
+
+            return;
+        }
+
+        inputSettings.EnsureLoaded();
+
+        inputSettings.Changed -= RefreshUI;
+        inputSettings.Changed += RefreshUI;
+
+        isWaitingForKey = false;
+
+        RefreshUI();
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private void OnDisable()
+    {
+        if (inputSettings != null)
+            inputSettings.Changed -= RefreshUI;
+
+        isWaitingForKey = false;
+    }
+
+    private void OnDestroy()
+    {
+        RemoveListeners();
+
+        if (inputSettings != null)
+            inputSettings.Changed -= RefreshUI;
+    }
+
+    private void Update()
+    {
+        if (!isWaitingForKey)
+            return;
+
+        // Verhindert, dass der Klick auf den Button
+        // direkt als neue Taste erkannt wird.
+        if (Time.frameCount <= rebindStartedFrame)
+            return;
+
+        foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
+        {
+            if (key == KeyCode.None)
+                continue;
+
+            if (!Input.GetKeyDown(key))
+                continue;
+
+            // Escape bricht die Neubelegung ab.
+            if (key == KeyCode.Escape)
+            {
+                CancelRebind();
+                return;
+            }
+
+            inputSettings.SetKey(
+                waitingBinding,
+                key
+            );
+
+            isWaitingForKey = false;
+
+            RefreshUI();
+            Canvas.ForceUpdateCanvases();
+
+            return;
+        }
+    }
+
+    // ==================================================
+    // LISTENERS
+    // ==================================================
+
+    private void RegisterListeners()
+    {
+        if (listenersRegistered)
+            return;
+
+        if (crouchButton != null)
+        {
+            crouchButton.onClick.AddListener(
+                OnCrouchButtonPressed
+            );
+        }
+
+        if (interactButton != null)
+        {
+            interactButton.onClick.AddListener(
+                OnInteractButtonPressed
+            );
+        }
+
+        if (pickupButton != null)
+        {
+            pickupButton.onClick.AddListener(
+                OnPickupButtonPressed
+            );
+        }
+
+        if (holdToCrouchToggle != null)
+        {
+            holdToCrouchToggle.onValueChanged.AddListener(
+                OnHoldToCrouchChanged
+            );
+        }
+
+        if (holdToPickupToggle != null)
+        {
+            holdToPickupToggle.onValueChanged.AddListener(
+                OnHoldToPickupChanged
+            );
+        }
+
+        if (resetControlsButton != null)
+        {
+            resetControlsButton.onClick.AddListener(
+                OnResetControlsPressed
+            );
+        }
+
+        listenersRegistered = true;
+    }
+
+    private void RemoveListeners()
+    {
+        if (!listenersRegistered)
+            return;
+
+        if (crouchButton != null)
+        {
+            crouchButton.onClick.RemoveListener(
+                OnCrouchButtonPressed
+            );
+        }
+
+        if (interactButton != null)
+        {
+            interactButton.onClick.RemoveListener(
+                OnInteractButtonPressed
+            );
+        }
+
+        if (pickupButton != null)
+        {
+            pickupButton.onClick.RemoveListener(
+                OnPickupButtonPressed
+            );
+        }
+
+        if (holdToCrouchToggle != null)
+        {
+            holdToCrouchToggle.onValueChanged.RemoveListener(
+                OnHoldToCrouchChanged
+            );
+        }
+
+        if (holdToPickupToggle != null)
+        {
+            holdToPickupToggle.onValueChanged.RemoveListener(
+                OnHoldToPickupChanged
+            );
+        }
+
+        if (resetControlsButton != null)
+        {
+            resetControlsButton.onClick.RemoveListener(
+                OnResetControlsPressed
+            );
+        }
+
+        listenersRegistered = false;
+    }
+
+    // ==================================================
+    // UI REFRESH
+    // ==================================================
+
+    public void RefreshUI()
+    {
+        if (inputSettings == null)
+            return;
+
+        SetKeyText(
+            crouchKeyText,
+            inputSettings.crouchKey
+        );
+
+        SetKeyText(
+            interactKeyText,
+            inputSettings.interactKey
+        );
+
+        SetKeyText(
+            pickupKeyText,
+            inputSettings.pickupKey
+        );
+
+        /*
+         * crouchToggle = true:
+         * einmal drücken zum Ducken.
+         *
+         * crouchToggle = false:
+         * Taste muss gehalten werden.
+         *
+         * Deshalb wird der Wert für "Hold to Crouch"
+         * hier umgedreht.
+         */
+        if (holdToCrouchToggle != null)
+        {
+            holdToCrouchToggle.SetIsOnWithoutNotify(
+                !inputSettings.crouchToggle
+            );
+        }
+
+        if (holdToPickupToggle != null)
+        {
+            holdToPickupToggle.SetIsOnWithoutNotify(
+                inputSettings.pickupHold
+            );
+        }
+
+        if (isWaitingForKey)
+        {
+            TMP_Text selectedText =
+                GetKeyText(waitingBinding);
+
+            if (selectedText != null)
+                selectedText.text = waitingForKeyText;
+        }
+    }
+
+    // ==================================================
+    // REBINDING
+    // ==================================================
+
+    private void OnCrouchButtonPressed()
+    {
+        BeginRebind(InputBindingId.Crouch);
+    }
+
+    private void OnInteractButtonPressed()
+    {
+        BeginRebind(InputBindingId.Interact);
+    }
+
+    private void OnPickupButtonPressed()
+    {
+        BeginRebind(InputBindingId.Pickup);
+    }
+
+    private void BeginRebind(InputBindingId binding)
+    {
+        if (inputSettings == null)
+            return;
+
+        waitingBinding = binding;
+        isWaitingForKey = true;
+        rebindStartedFrame = Time.frameCount;
+
+        RefreshUI();
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private void CancelRebind()
+    {
+        isWaitingForKey = false;
+
+        RefreshUI();
+        Canvas.ForceUpdateCanvases();
+    }
+
+    // ==================================================
+    // HOLD OPTIONS
+    // ==================================================
+
+    private void OnHoldToCrouchChanged(bool holdEnabled)
+    {
+        if (inputSettings == null)
+            return;
+
+        inputSettings.SetCrouchToggle(
+            !holdEnabled
+        );
+    }
+
+    private void OnHoldToPickupChanged(bool holdEnabled)
+    {
+        if (inputSettings == null)
+            return;
+
+        inputSettings.SetPickupHold(
+            holdEnabled
+        );
+    }
+
+    // ==================================================
+    // RESET
+    // ==================================================
+
+    private void OnResetControlsPressed()
+    {
+        if (inputSettings == null)
+            return;
+
+        isWaitingForKey = false;
+
+        inputSettings.ResetToDefaults();
+
+        RefreshUI();
+        Canvas.ForceUpdateCanvases();
+    }
+
+    // ==================================================
+    // HELPERS
+    // ==================================================
+
+    private TMP_Text GetKeyText(InputBindingId binding)
+    {
+        switch (binding)
+        {
+            case InputBindingId.Crouch:
+                return crouchKeyText;
+
+            case InputBindingId.Interact:
+                return interactKeyText;
+
+            case InputBindingId.Pickup:
+                return pickupKeyText;
+
+            default:
+                return null;
+        }
+    }
+
+    private void SetKeyText(
+        TMP_Text textField,
+        KeyCode key
+    )
+    {
+        if (textField == null)
+            return;
+
+        textField.text = FormatKeyName(key);
+    }
+
+    private string FormatKeyName(KeyCode key)
+    {
+        switch (key)
+        {
+            case KeyCode.LeftShift:
+                return "Left Shift";
+
+            case KeyCode.RightShift:
+                return "Right Shift";
+
+            case KeyCode.LeftControl:
+                return "Left Ctrl";
+
+            case KeyCode.RightControl:
+                return "Right Ctrl";
+
+            case KeyCode.LeftAlt:
+                return "Left Alt";
+
+            case KeyCode.RightAlt:
+                return "Right Alt";
+
+            case KeyCode.Return:
+                return "Enter";
+
+            case KeyCode.Escape:
+                return "Escape";
+
+            case KeyCode.Space:
+                return "Space";
+
+            case KeyCode.Mouse0:
+                return "Left Mouse";
+
+            case KeyCode.Mouse1:
+                return "Right Mouse";
+
+            case KeyCode.Mouse2:
+                return "Middle Mouse";
+
+            case KeyCode.None:
+                return "Unbound";
+        }
+
+        string keyName = key.ToString();
+
+        if (keyName.StartsWith("Alpha"))
+            return keyName.Replace("Alpha", "");
+
+        if (keyName.StartsWith("Keypad"))
+            return keyName.Replace("Keypad", "Num ");
+
+        return keyName;
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\PlayerControls\InputSettings.cs
+==================================================
+
+using System;
+using UnityEngine;
+
+public enum InputBindingId
+{
+    Jump,
+    Crouch,
+    Sprint,
+    Interact,
+    Pickup,
+    Drop,
+    Pause
+}
+
+[CreateAssetMenu(menuName = "Blackline Disposal/Input Settings")]
+public sealed class InputSettings : ScriptableObject
+{
+    [Header("Movement")]
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode crouchKey = KeyCode.C;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+
+    [Header("Interaction")]
+    public KeyCode interactKey = KeyCode.E;
+    public KeyCode pickupKey = KeyCode.E;
+    public KeyCode dropKey = KeyCode.G;
+
+    [Header("Menu")]
+    public KeyCode pauseKey = KeyCode.Escape;
+
+    [Header("Toggle / Hold")]
+    public bool crouchToggle = true;
+    public bool pickupHold = true;
+
+    public event Action Changed;
+
+    private const string JumpKey = "Controls_Jump";
+    private const string CrouchKey = "Controls_Crouch";
+    private const string SprintKey = "Controls_Sprint";
+    private const string InteractKey = "Controls_Interact";
+    private const string PickupKey = "Controls_Pickup";
+    private const string DropKey = "Controls_Drop";
+    private const string PauseKey = "Controls_Pause";
+
+    private const string CrouchToggleKey = "Controls_CrouchToggle";
+    private const string PickupHoldKey = "Controls_PickupHold";
+
+    private bool hasLoaded;
+
+    private void OnEnable()
+    {
+        hasLoaded = false;
+
+        if (Application.isPlaying)
+            EnsureLoaded();
+    }
+
+    public void EnsureLoaded()
+    {
+        if (!hasLoaded)
+            Load();
+    }
+
+    public KeyCode GetKey(InputBindingId binding)
+    {
+        EnsureLoaded();
+
+        switch (binding)
+        {
+            case InputBindingId.Jump:
+                return jumpKey;
+
+            case InputBindingId.Crouch:
+                return crouchKey;
+
+            case InputBindingId.Sprint:
+                return sprintKey;
+
+            case InputBindingId.Interact:
+                return interactKey;
+
+            case InputBindingId.Pickup:
+                return pickupKey;
+
+            case InputBindingId.Drop:
+                return dropKey;
+
+            case InputBindingId.Pause:
+                return pauseKey;
+
+            default:
+                return KeyCode.None;
+        }
+    }
+
+    public void SetKey(
+        InputBindingId binding,
+        KeyCode newKey
+    )
+    {
+        EnsureLoaded();
+
+        if (newKey == KeyCode.None)
+            return;
+
+        if (GetKey(binding) == newKey)
+            return;
+
+        switch (binding)
+        {
+            case InputBindingId.Jump:
+                jumpKey = newKey;
+                break;
+
+            case InputBindingId.Crouch:
+                crouchKey = newKey;
+                break;
+
+            case InputBindingId.Sprint:
+                sprintKey = newKey;
+                break;
+
+            case InputBindingId.Interact:
+                interactKey = newKey;
+                break;
+
+            case InputBindingId.Pickup:
+                pickupKey = newKey;
+                break;
+
+            case InputBindingId.Drop:
+                dropKey = newKey;
+                break;
+
+            case InputBindingId.Pause:
+                pauseKey = newKey;
+                break;
+        }
+
+        Save();
+        Changed?.Invoke();
+    }
+
+    public void SetCrouchToggle(bool enabled)
+    {
+        EnsureLoaded();
+
+        if (crouchToggle == enabled)
+            return;
+
+        crouchToggle = enabled;
+
+        Save();
+        Changed?.Invoke();
+    }
+
+    public void SetPickupHold(bool enabled)
+    {
+        EnsureLoaded();
+
+        if (pickupHold == enabled)
+            return;
+
+        pickupHold = enabled;
+
+        Save();
+        Changed?.Invoke();
+    }
+
+    public void Load()
+    {
+        jumpKey = ReadKey(
+            JumpKey,
+            KeyCode.Space
+        );
+
+        crouchKey = ReadKey(
+            CrouchKey,
+            KeyCode.C
+        );
+
+        sprintKey = ReadKey(
+            SprintKey,
+            KeyCode.LeftShift
+        );
+
+        interactKey = ReadKey(
+            InteractKey,
+            KeyCode.E
+        );
+
+        pickupKey = ReadKey(
+            PickupKey,
+            KeyCode.E
+        );
+
+        dropKey = ReadKey(
+            DropKey,
+            KeyCode.G
+        );
+
+        pauseKey = ReadKey(
+            PauseKey,
+            KeyCode.Escape
+        );
+
+        crouchToggle = PlayerPrefs.GetInt(
+            CrouchToggleKey,
+            1
+        ) == 1;
+
+        pickupHold = PlayerPrefs.GetInt(
+            PickupHoldKey,
+            1
+        ) == 1;
+
+        hasLoaded = true;
+
+        Changed?.Invoke();
+    }
+
+    public void Save()
+    {
+        PlayerPrefs.SetInt(
+            JumpKey,
+            (int)jumpKey
+        );
+
+        PlayerPrefs.SetInt(
+            CrouchKey,
+            (int)crouchKey
+        );
+
+        PlayerPrefs.SetInt(
+            SprintKey,
+            (int)sprintKey
+        );
+
+        PlayerPrefs.SetInt(
+            InteractKey,
+            (int)interactKey
+        );
+
+        PlayerPrefs.SetInt(
+            PickupKey,
+            (int)pickupKey
+        );
+
+        PlayerPrefs.SetInt(
+            DropKey,
+            (int)dropKey
+        );
+
+        PlayerPrefs.SetInt(
+            PauseKey,
+            (int)pauseKey
+        );
+
+        PlayerPrefs.SetInt(
+            CrouchToggleKey,
+            crouchToggle ? 1 : 0
+        );
+
+        PlayerPrefs.SetInt(
+            PickupHoldKey,
+            pickupHold ? 1 : 0
+        );
+
+        PlayerPrefs.Save();
+    }
+
+    public void ResetToDefaults()
+    {
+        jumpKey = KeyCode.Space;
+        crouchKey = KeyCode.C;
+        sprintKey = KeyCode.LeftShift;
+
+        interactKey = KeyCode.E;
+        pickupKey = KeyCode.E;
+        dropKey = KeyCode.G;
+
+        pauseKey = KeyCode.Escape;
+
+        crouchToggle = true;
+        pickupHold = true;
+
+        hasLoaded = true;
+
+        Save();
+        Changed?.Invoke();
+    }
+
+    private KeyCode ReadKey(
+        string playerPrefsKey,
+        KeyCode defaultKey
+    )
+    {
+        int savedValue = PlayerPrefs.GetInt(
+            playerPrefsKey,
+            (int)defaultKey
+        );
+
+        if (!Enum.IsDefined(
+                typeof(KeyCode),
+                savedValue))
+        {
+            return defaultKey;
+        }
+
+        return (KeyCode)savedValue;
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\PlayerControls\PlayerController.cs
+==================================================
+
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] private PlayerMovement movement;
+    [SerializeField] private PlayerLook playerLook;
+
+    [Header("Player Money")]
+    [SerializeField] private int cash;
+
+    public int Cash => cash;
+
+    private void Awake()
+    {
+        if (movement == null)
+            movement = GetComponent<PlayerMovement>();
+
+        if (playerLook == null)
+            playerLook = GetComponent<PlayerLook>();
+    }
+
+    public void AddCash(int amount)
+    {
+        if (amount <= 0)
+            return;
+
+        cash += amount;
+    }
+
+    public bool TrySpendCash(int amount)
+    {
+        if (amount <= 0)
+            return false;
+
+        if (cash < amount)
+            return false;
+
+        cash -= amount;
+        return true;
+    }
+
+    public void SetCash(int amount)
+    {
+        cash = Mathf.Max(0, amount);
+    }
+
+    public void SetLocalControl(bool value)
+    {
+        if (movement != null)
+            movement.SetInputEnabled(value);
+
+        if (playerLook != null)
+        {
+            playerLook.SetLookEnabled(value);
+            playerLook.SetCameraActive(value);
+        }
+    }
+
+    public void SaveGame()
+    {
+        // Save-System später:
+        // PlayerPrefs.SetInt("PlayerCash", cash);
+        // PlayerPrefs.Save();
+    }
+
+    public void LoadGame()
+    {
+        // Save-System später:
+        // cash = PlayerPrefs.GetInt("PlayerCash", 0);
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\PlayerControls\PlayerLook.cs
+==================================================
+
+using UnityEngine;
+
+public sealed class PlayerLook : MonoBehaviour
+{
+    [Header("Fallback Settings")]
+    [Tooltip("Wird verwendet, wenn kein SettingsManager vorhanden ist.")]
+    [SerializeField, Range(0.1f, 10f)]
+    private float fallbackSensitivity = 2f;
+
+    [SerializeField, Range(60f, 100f)]
+    private float fallbackFieldOfView = 60f;
+
+    [Header("Mouse Settings")]
+    [SerializeField, Range(1f, 89f)]
+    private float maxPitch = 85f;
+
+    [Header("Camera")]
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private PlayerMovement movementScript;
+
+    [SerializeField, Min(0f)]
+    private float cameraSmoothSpeed = 10f;
+
+    [Tooltip(
+        "Zusätzliche Höhe über der Mitte des CharacterControllers."
+    )]
+    [SerializeField]
+    private float eyeHeight = 0.6f;
+
+    [Header("Control")]
+    [SerializeField] private bool canLook = true;
+
+    private SettingsManager connectedSettingsManager;
+    private AudioListener cachedAudioListener;
+
+    private float sensitivity;
+    private float fieldOfView;
+    private float pitch;
+    private float currentCameraHeight;
+
+    private Vector3 cameraBaseLocalPosition;
+
+    public float Sensitivity => sensitivity;
+    public float FieldOfView => fieldOfView;
+    public bool CanLook => canLook;
+
+    private void Awake()
+    {
+        FindRequiredReferences();
+        CacheCameraValues();
+
+        sensitivity = fallbackSensitivity;
+        fieldOfView = fallbackFieldOfView;
+    }
+
+    private void OnEnable()
+    {
+        TryConnectToSettingsManager();
+    }
+
+    private void Start()
+    {
+        TryConnectToSettingsManager();
+        ApplyFieldOfView();
+        SetCursorLocked(true);
+    }
+
+    private void OnDisable()
+    {
+        DisconnectFromSettingsManager();
+    }
+
+    private void OnDestroy()
+    {
+        DisconnectFromSettingsManager();
+    }
+
+    private void Update()
+    {
+        /*
+         * Falls die GameScene direkt gestartet wurde und der
+         * SettingsManager erst etwas später verfügbar ist,
+         * wird die Verbindung automatisch nachgeholt.
+         */
+        if (connectedSettingsManager == null)
+            TryConnectToSettingsManager();
+
+        if (canLook)
+            HandleMouseLook();
+
+        SmoothCameraHeight();
+    }
+
+    // ==================================================
+    // REFERENCES
+    // ==================================================
+
+    private void FindRequiredReferences()
+    {
+        if (movementScript == null)
+        {
+            movementScript =
+                GetComponent<PlayerMovement>();
+        }
+
+        if (playerCamera == null)
+        {
+            playerCamera =
+                GetComponentInChildren<Camera>(true);
+        }
+
+        if (playerCamera != null)
+        {
+            cachedAudioListener =
+                playerCamera.GetComponent<AudioListener>();
+        }
+    }
+
+    private void CacheCameraValues()
+    {
+        if (playerCamera == null)
+        {
+            cameraBaseLocalPosition = Vector3.zero;
+            currentCameraHeight = eyeHeight;
+            return;
+        }
+
+        cameraBaseLocalPosition =
+            playerCamera.transform.localPosition;
+
+        currentCameraHeight =
+            GetTargetCameraHeight();
+
+        SetCameraHeight(currentCameraHeight);
+    }
+
+    // ==================================================
+    // SETTINGS MANAGER
+    // ==================================================
+
+    private void TryConnectToSettingsManager()
+    {
+        SettingsManager manager =
+            SettingsManager.Instance;
+
+        if (manager == null)
+        {
+            sensitivity = fallbackSensitivity;
+            fieldOfView = fallbackFieldOfView;
+
+            ApplyFieldOfView();
+            return;
+        }
+
+        if (connectedSettingsManager == manager)
+            return;
+
+        DisconnectFromSettingsManager();
+
+        connectedSettingsManager = manager;
+
+        sensitivity =
+            connectedSettingsManager.Sensitivity;
+
+        fieldOfView =
+            connectedSettingsManager.FieldOfView;
+
+        connectedSettingsManager.SensitivityChanged +=
+            OnSensitivityChanged;
+
+        connectedSettingsManager.FieldOfViewChanged +=
+            OnFieldOfViewChanged;
+
+        ApplyFieldOfView();
+    }
+
+    private void DisconnectFromSettingsManager()
+    {
+        if (connectedSettingsManager == null)
+            return;
+
+        connectedSettingsManager.SensitivityChanged -=
+            OnSensitivityChanged;
+
+        connectedSettingsManager.FieldOfViewChanged -=
+            OnFieldOfViewChanged;
+
+        connectedSettingsManager = null;
+    }
+
+    private void OnSensitivityChanged(
+        float newSensitivity
+    )
+    {
+        sensitivity = newSensitivity;
+    }
+
+    private void OnFieldOfViewChanged(
+        float newFieldOfView
+    )
+    {
+        fieldOfView = newFieldOfView;
+
+        ApplyFieldOfView();
+    }
+
+    // ==================================================
+    // MOUSE LOOK
+    // ==================================================
+
+    private void HandleMouseLook()
+    {
+        float mouseX =
+            Input.GetAxisRaw("Mouse X") *
+            sensitivity;
+
+        float mouseY =
+            Input.GetAxisRaw("Mouse Y") *
+            sensitivity;
+
+        pitch = Mathf.Clamp(
+            pitch - mouseY,
+            -maxPitch,
+            maxPitch
+        );
+
+        if (playerCamera != null)
+        {
+            playerCamera.transform.localRotation =
+                Quaternion.Euler(
+                    pitch,
+                    0f,
+                    0f
+                );
+        }
+
+        transform.Rotate(
+            Vector3.up * mouseX,
+            Space.Self
+        );
+    }
+
+    // ==================================================
+    // CAMERA HEIGHT
+    // ==================================================
+
+    private void SmoothCameraHeight()
+    {
+        if (playerCamera == null ||
+            movementScript == null)
+        {
+            return;
+        }
+
+        float targetHeight =
+            GetTargetCameraHeight();
+
+        currentCameraHeight = Mathf.Lerp(
+            currentCameraHeight,
+            targetHeight,
+            Time.deltaTime * cameraSmoothSpeed
+        );
+
+        SetCameraHeight(currentCameraHeight);
+    }
+
+    private float GetTargetCameraHeight()
+    {
+        if (movementScript == null)
+            return eyeHeight;
+
+        return movementScript.GetCenterY() +
+               eyeHeight;
+    }
+
+    private void SetCameraHeight(float height)
+    {
+        if (playerCamera == null)
+            return;
+
+        Vector3 newPosition =
+            cameraBaseLocalPosition;
+
+        newPosition.y = height;
+
+        playerCamera.transform.localPosition =
+            newPosition;
+    }
+
+    // ==================================================
+    // FIELD OF VIEW
+    // ==================================================
+
+    private void ApplyFieldOfView()
+    {
+        if (playerCamera == null)
+            return;
+
+        playerCamera.fieldOfView =
+            Mathf.Clamp(
+                fieldOfView,
+                60f,
+                100f
+            );
+    }
+
+    // ==================================================
+    // EXTERNAL CONTROL
+    // ==================================================
+
+    public void SetLookEnabled(bool value)
+    {
+        canLook = value;
+    }
+
+    public void SetCameraActive(bool value)
+    {
+        if (playerCamera == null)
+            return;
+
+        playerCamera.gameObject.SetActive(value);
+
+        if (cachedAudioListener != null)
+        {
+            cachedAudioListener.enabled = value;
+        }
+    }
+
+    public void SetCursorLocked(bool value)
+    {
+        Cursor.lockState = value
+            ? CursorLockMode.Locked
+            : CursorLockMode.None;
+
+        Cursor.visible = !value;
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\PlayerControls\PlayerMovement.cs
+==================================================
+
+using UnityEngine;
+
+[RequireComponent(typeof(CharacterController))]
+public class PlayerMovement : MonoBehaviour
+{
+    [Header("Speed")]
+    [SerializeField] private float walkSpeed = 4f;
+    [SerializeField] private float sprintMultiplier = 1.5f;
+    [SerializeField] private float crouchSpeedMultiplier = 0.5f;
+
+    [Header("Jump & Gravity")]
+    [SerializeField] private float jumpHeight = 1.5f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundedYVelocity = -2f;
+
+    [Header("Crouch")]
+    [SerializeField] private float standingHeight = 2f;
+    [SerializeField] private float crouchingHeight = 1f;
+    [SerializeField] private float crouchTransitionSpeed = 10f;
+
+    [Header("Input")]
+    [SerializeField] private InputSettings inputSettings;
+    [SerializeField] private bool canReadInput = true; // Später für Multiplayer: nur Owner = true
+
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string horParam = "Hor";
+    [SerializeField] private string vertParam = "Vert";
+    [SerializeField] private string jumpParam = "IsJump";
+
+    public bool IsCrouching { get; private set; }
+
+    private CharacterController controller;
+    private Vector3 verticalVelocity;
+    private float currentHeight;
+
+    private Vector2 inputAxis;
+    private bool isRunning;
+    private bool jumpPressed;
+
+    private void Awake()
+    {
+        controller = GetComponent<CharacterController>();
+
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
+        currentHeight = standingHeight;
+        ApplyControllerHeight(currentHeight);
+    }
+
+    private void Update()
+    {
+        if (canReadInput)
+            GatherInput();
+
+        HandleCrouch();
+        HandleMovement();
+        UpdateAnimator();
+
+        jumpPressed = false;
+    }
+
+    private void GatherInput()
+    {
+        inputAxis = new Vector2(
+            Input.GetAxisRaw("Horizontal"),
+            Input.GetAxisRaw("Vertical")
+        );
+
+        isRunning = inputSettings != null && Input.GetKey(inputSettings.sprintKey);
+
+        if (inputSettings != null && Input.GetKeyDown(inputSettings.jumpKey))
+            jumpPressed = true;
+    }
+
+    private void HandleMovement()
+    {
+        Vector3 moveDirection = transform.right * inputAxis.x + transform.forward * inputAxis.y;
+
+        if (moveDirection.sqrMagnitude > 1f)
+            moveDirection.Normalize();
+
+        float finalSpeed = walkSpeed;
+
+        if (isRunning)
+            finalSpeed *= sprintMultiplier;
+
+        if (IsCrouching)
+            finalSpeed *= crouchSpeedMultiplier;
+
+        Vector3 horizontalMove = moveDirection * finalSpeed;
+
+        if (controller.isGrounded && verticalVelocity.y < 0f)
+            verticalVelocity.y = groundedYVelocity;
+
+        if (jumpPressed && controller.isGrounded && !IsCrouching)
+            verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+        verticalVelocity.y += gravity * Time.deltaTime;
+
+        Vector3 finalMove = horizontalMove;
+        finalMove.y = verticalVelocity.y;
+
+        controller.Move(finalMove * Time.deltaTime);
+    }
+
+    private void HandleCrouch()
+    {
+        if (inputSettings == null)
+            return;
+
+        if (inputSettings.crouchToggle)
+        {
+            if (Input.GetKeyDown(inputSettings.crouchKey))
+                IsCrouching = !IsCrouching;
+        }
+        else
+        {
+            IsCrouching = Input.GetKey(inputSettings.crouchKey);
+        }
+
+        float targetHeight = IsCrouching ? crouchingHeight : standingHeight;
+
+        if (!Mathf.Approximately(currentHeight, targetHeight))
+        {
+            currentHeight = Mathf.MoveTowards(
+                currentHeight,
+                targetHeight,
+                crouchTransitionSpeed * Time.deltaTime
+            );
+
+            ApplyControllerHeight(currentHeight);
+        }
+    }
+
+    private void ApplyControllerHeight(float height)
+    {
+        controller.height = height;
+        controller.center = Vector3.up * height / 2f;
+    }
+
+    private void UpdateAnimator()
+    {
+        if (animator == null)
+            return;
+
+        animator.SetFloat(horParam, inputAxis.x);
+        animator.SetFloat(vertParam, inputAxis.y);
+        animator.SetBool(jumpParam, !controller.isGrounded);
+    }
+
+    public float GetCenterY()
+    {
+        return controller.center.y;
+    }
+
+    public void SetInputEnabled(bool value)
+    {
+        canReadInput = value;
+
+        if (!value)
+        {
+            inputAxis = Vector2.zero;
+            isRunning = false;
+            jumpPressed = false;
+        }
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Settings\SettingsManager.cs
+==================================================
+
+using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+
+public sealed class SettingsManager : MonoBehaviour
+{
+    public static SettingsManager Instance { get; private set; }
+
+    // ==================================================
+    // PLAYERPREFS KEYS
+    // ==================================================
+
+    private const string SensitivityKey =
+        "Settings_Sensitivity";
+
+    private const string FieldOfViewKey =
+        "Settings_FieldOfView";
+
+    private const string MasterVolumeKey =
+        "Settings_MasterVolume";
+
+    private const string MusicVolumeKey =
+        "Settings_MusicVolume";
+
+    private const string QualityLevelKey =
+        "Settings_QualityLevel";
+
+    private const string FullScreenModeKey =
+        "Settings_FullScreenMode";
+
+    private const string ResolutionWidthKey =
+        "Settings_ResolutionWidth";
+
+    private const string ResolutionHeightKey =
+        "Settings_ResolutionHeight";
+
+    private const string VSyncKey =
+        "Settings_VSync";
+
+    private const string FpsLimitKey =
+        "Settings_FpsLimit";
+
+    // ==================================================
+    // AUDIO
+    // ==================================================
+
+    [Header("Audio Mixer")]
+    [SerializeField] private AudioMixer audioMixer;
+
+    [Tooltip(
+        "Muss exakt dem exponierten Master-Parameter entsprechen."
+    )]
+    [SerializeField]
+    private string masterVolumeParameter =
+        "MasterVolumeDb";
+
+    [Tooltip(
+        "Muss exakt dem exponierten Music-Parameter entsprechen."
+    )]
+    [SerializeField]
+    private string musicVolumeParameter =
+        "MusicVolumeDb";
+
+    // ==================================================
+    // DEFAULTS
+    // ==================================================
+
+    [Header("Default Gameplay Settings")]
+    [SerializeField, Range(0.1f, 10f)]
+    private float defaultSensitivity = 2f;
+
+    [SerializeField, Range(60f, 100f)]
+    private float defaultFieldOfView = 60f;
+
+    [Header("Default Audio Settings")]
+    [SerializeField, Range(0f, 1f)]
+    private float defaultMasterVolume = 1f;
+
+    [SerializeField, Range(0f, 1f)]
+    private float defaultMusicVolume = 0.8f;
+
+    [Header("Default Graphics Settings")]
+    [Tooltip(
+        "-1 verwendet das beim Spielstart aktive Quality-Level."
+    )]
+    [SerializeField]
+    private int defaultQualityLevel = -1;
+
+    [SerializeField]
+    private UnityEngine.FullScreenMode defaultFullScreenMode =
+        UnityEngine.FullScreenMode.FullScreenWindow;
+
+    [SerializeField]
+    private bool defaultVSync = true;
+
+    [Tooltip("-1 bedeutet Unlimited.")]
+    [SerializeField]
+    private int defaultFpsLimit = -1;
+
+    // ==================================================
+    // CURRENT VALUES
+    // ==================================================
+
+    public float Sensitivity { get; private set; }
+
+    public float FieldOfView { get; private set; }
+
+    public float MasterVolume { get; private set; }
+
+    public float MusicVolume { get; private set; }
+
+    public int QualityLevel { get; private set; }
+
+    public UnityEngine.FullScreenMode FullScreenMode
+    {
+        get;
+        private set;
+    }
+
+    public int ResolutionWidth { get; private set; }
+
+    public int ResolutionHeight { get; private set; }
+
+    public bool VSyncEnabled { get; private set; }
+
+    public int FpsLimit { get; private set; }
+
+    // ==================================================
+    // EVENTS
+    // ==================================================
+
+    public event Action<float> SensitivityChanged;
+
+    public event Action<float> FieldOfViewChanged;
+
+    public event Action<float> MasterVolumeChanged;
+
+    public event Action<float> MusicVolumeChanged;
+
+    public event Action<int> QualityLevelChanged;
+
+    public event Action<UnityEngine.FullScreenMode>
+        FullScreenModeChanged;
+
+    public event Action<int, int> ResolutionChanged;
+
+    public event Action<bool> VSyncChanged;
+
+    public event Action<int> FpsLimitChanged;
+
+    private int startupQualityLevel;
+
+    private bool missingMixerWarningShown;
+    private bool missingMasterParameterWarningShown;
+    private bool missingMusicParameterWarningShown;
+
+    // ==================================================
+    // UNITY LIFECYCLE
+    // ==================================================
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        startupQualityLevel =
+            QualitySettings.GetQualityLevel();
+
+        LoadSettings();
+        ApplyNonAudioSettings();
+    }
+
+    private void Start()
+    {
+        ApplyAudioSettings();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance != this)
+            return;
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        Instance = null;
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveSettings();
+    }
+
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused)
+            SaveSettings();
+    }
+
+    private void OnSceneLoaded(
+        Scene scene,
+        LoadSceneMode loadMode
+    )
+    {
+        StartCoroutine(
+            ReapplyAfterSceneLoad()
+        );
+    }
+
+    private IEnumerator ReapplyAfterSceneLoad()
+    {
+        /*
+         * Einen Frame warten, damit die neuen Objekte
+         * der Szene bereits initialisiert sind.
+         */
+        yield return null;
+
+        ApplyAllSettings();
+        BroadcastAllSettings();
+    }
+
+    // ==================================================
+    // LOAD
+    // ==================================================
+
+    private void LoadSettings()
+    {
+        Sensitivity = Mathf.Clamp(
+            PlayerPrefs.GetFloat(
+                SensitivityKey,
+                defaultSensitivity
+            ),
+            0.1f,
+            10f
+        );
+
+        FieldOfView = Mathf.Clamp(
+            PlayerPrefs.GetFloat(
+                FieldOfViewKey,
+                defaultFieldOfView
+            ),
+            60f,
+            100f
+        );
+
+        MasterVolume = Mathf.Clamp01(
+            PlayerPrefs.GetFloat(
+                MasterVolumeKey,
+                defaultMasterVolume
+            )
+        );
+
+        MusicVolume = Mathf.Clamp01(
+            PlayerPrefs.GetFloat(
+                MusicVolumeKey,
+                defaultMusicVolume
+            )
+        );
+
+        QualityLevel = Mathf.Clamp(
+            PlayerPrefs.GetInt(
+                QualityLevelKey,
+                GetDefaultQualityLevel()
+            ),
+            0,
+            Mathf.Max(
+                0,
+                QualitySettings.names.Length - 1
+            )
+        );
+
+        int savedFullscreenMode =
+            PlayerPrefs.GetInt(
+                FullScreenModeKey,
+                (int)defaultFullScreenMode
+            );
+
+        FullScreenMode =
+            IsValidFullScreenMode(savedFullscreenMode)
+                ? (UnityEngine.FullScreenMode)savedFullscreenMode
+                : defaultFullScreenMode;
+
+        ResolutionWidth = Mathf.Max(
+            640,
+            PlayerPrefs.GetInt(
+                ResolutionWidthKey,
+                Screen.width
+            )
+        );
+
+        ResolutionHeight = Mathf.Max(
+            360,
+            PlayerPrefs.GetInt(
+                ResolutionHeightKey,
+                Screen.height
+            )
+        );
+
+        VSyncEnabled =
+            PlayerPrefs.GetInt(
+                VSyncKey,
+                defaultVSync ? 1 : 0
+            ) == 1;
+
+        FpsLimit = NormalizeFpsLimit(
+            PlayerPrefs.GetInt(
+                FpsLimitKey,
+                defaultFpsLimit
+            )
+        );
+    }
+
+    // ==================================================
+    // SAVE
+    // ==================================================
+
+    public void SaveSettings()
+    {
+        PlayerPrefs.SetFloat(
+            SensitivityKey,
+            Sensitivity
+        );
+
+        PlayerPrefs.SetFloat(
+            FieldOfViewKey,
+            FieldOfView
+        );
+
+        PlayerPrefs.SetFloat(
+            MasterVolumeKey,
+            MasterVolume
+        );
+
+        PlayerPrefs.SetFloat(
+            MusicVolumeKey,
+            MusicVolume
+        );
+
+        PlayerPrefs.SetInt(
+            QualityLevelKey,
+            QualityLevel
+        );
+
+        PlayerPrefs.SetInt(
+            FullScreenModeKey,
+            (int)FullScreenMode
+        );
+
+        PlayerPrefs.SetInt(
+            ResolutionWidthKey,
+            ResolutionWidth
+        );
+
+        PlayerPrefs.SetInt(
+            ResolutionHeightKey,
+            ResolutionHeight
+        );
+
+        PlayerPrefs.SetInt(
+            VSyncKey,
+            VSyncEnabled ? 1 : 0
+        );
+
+        PlayerPrefs.SetInt(
+            FpsLimitKey,
+            FpsLimit
+        );
+
+        PlayerPrefs.Save();
+    }
+
+    // ==================================================
+    // APPLY
+    // ==================================================
+
+    public void ReapplyAllSettings()
+    {
+        ApplyAllSettings();
+        BroadcastAllSettings();
+    }
+
+    private void ApplyAllSettings()
+    {
+        ApplyAudioSettings();
+        ApplyNonAudioSettings();
+    }
+
+    private void ApplyNonAudioSettings()
+    {
+        ApplyQualitySettings();
+        ApplyResolutionSettings();
+        ApplyFrameSettings();
+    }
+
+    private void ApplyAudioSettings()
+    {
+        if (audioMixer == null)
+        {
+            AudioListener.volume =
+                MasterVolume;
+
+            if (!missingMixerWarningShown)
+            {
+                Debug.LogWarning(
+                    "Beim SettingsManager fehlt der AudioMixer. " +
+                    "Master Volume wird über AudioListener geregelt. " +
+                    "Music Volume kann ohne Mixer nicht separat wirken.",
+                    gameObject
+                );
+
+                missingMixerWarningShown = true;
+            }
+
+            return;
+        }
+
+        AudioListener.volume = 1f;
+
+        ApplyMixerVolume(
+            masterVolumeParameter,
+            MasterVolume,
+            ref missingMasterParameterWarningShown
+        );
+
+        ApplyMixerVolume(
+            musicVolumeParameter,
+            MusicVolume,
+            ref missingMusicParameterWarningShown
+        );
+    }
+
+    private void ApplyMixerVolume(
+        string parameterName,
+        float linearVolume,
+        ref bool warningShown
+    )
+    {
+        if (audioMixer == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(parameterName))
+            return;
+
+        float decibelValue =
+            ConvertLinearVolumeToDecibels(
+                linearVolume
+            );
+
+        bool parameterFound =
+            audioMixer.SetFloat(
+                parameterName,
+                decibelValue
+            );
+
+        if (!parameterFound && !warningShown)
+        {
+            Debug.LogWarning(
+                "AudioMixer-Parameter '" +
+                parameterName +
+                "' wurde nicht gefunden.",
+                gameObject
+            );
+
+            warningShown = true;
+        }
+    }
+
+    private float ConvertLinearVolumeToDecibels(
+        float linearVolume
+    )
+    {
+        if (linearVolume <= 0.0001f)
+            return -80f;
+
+        return Mathf.Log10(
+            Mathf.Clamp01(linearVolume)
+        ) * 20f;
+    }
+
+    private void ApplyQualitySettings()
+    {
+        if (QualitySettings.names.Length == 0)
+            return;
+
+        QualitySettings.SetQualityLevel(
+            QualityLevel,
+            true
+        );
+    }
+
+    private void ApplyResolutionSettings()
+    {
+        Screen.SetResolution(
+            ResolutionWidth,
+            ResolutionHeight,
+            FullScreenMode
+        );
+    }
+
+    private void ApplyFrameSettings()
+    {
+        QualitySettings.vSyncCount =
+            VSyncEnabled ? 1 : 0;
+
+        Application.targetFrameRate =
+            VSyncEnabled
+                ? -1
+                : FpsLimit;
+    }
+
+    // ==================================================
+    // GAMEPLAY
+    // ==================================================
+
+    public void SetSensitivity(float value)
+    {
+        float newValue = Mathf.Clamp(
+            value,
+            0.1f,
+            10f
+        );
+
+        if (Mathf.Approximately(
+                Sensitivity,
+                newValue))
+        {
+            return;
+        }
+
+        Sensitivity = newValue;
+
+        SaveSettings();
+
+        SensitivityChanged?.Invoke(
+            Sensitivity
+        );
+    }
+
+    public void SetFieldOfView(float value)
+    {
+        float newValue = Mathf.Clamp(
+            value,
+            60f,
+            100f
+        );
+
+        if (Mathf.Approximately(
+                FieldOfView,
+                newValue))
+        {
+            return;
+        }
+
+        FieldOfView = newValue;
+
+        SaveSettings();
+
+        FieldOfViewChanged?.Invoke(
+            FieldOfView
+        );
+    }
+
+    // ==================================================
+    // AUDIO
+    // ==================================================
+
+    public void SetMasterVolume(float value)
+    {
+        float newValue =
+            Mathf.Clamp01(value);
+
+        if (Mathf.Approximately(
+                MasterVolume,
+                newValue))
+        {
+            return;
+        }
+
+        MasterVolume = newValue;
+
+        ApplyAudioSettings();
+        SaveSettings();
+
+        MasterVolumeChanged?.Invoke(
+            MasterVolume
+        );
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        float newValue =
+            Mathf.Clamp01(value);
+
+        if (Mathf.Approximately(
+                MusicVolume,
+                newValue))
+        {
+            return;
+        }
+
+        MusicVolume = newValue;
+
+        ApplyAudioSettings();
+        SaveSettings();
+
+        MusicVolumeChanged?.Invoke(
+            MusicVolume
+        );
+    }
+
+    // ==================================================
+    // GRAPHICS
+    // ==================================================
+
+    public void SetQualityLevel(int qualityIndex)
+    {
+        if (QualitySettings.names.Length == 0)
+            return;
+
+        int newQualityLevel = Mathf.Clamp(
+            qualityIndex,
+            0,
+            QualitySettings.names.Length - 1
+        );
+
+        if (QualityLevel == newQualityLevel)
+            return;
+
+        QualityLevel = newQualityLevel;
+
+        ApplyQualitySettings();
+        SaveSettings();
+
+        QualityLevelChanged?.Invoke(
+            QualityLevel
+        );
+    }
+
+    public void SetFullscreen(bool enabled)
+    {
+        SetFullScreenMode(
+            enabled
+                ? UnityEngine.FullScreenMode.FullScreenWindow
+                : UnityEngine.FullScreenMode.Windowed
+        );
+    }
+
+    public void SetFullScreenMode(
+        UnityEngine.FullScreenMode mode
+    )
+    {
+        if (FullScreenMode == mode)
+            return;
+
+        FullScreenMode = mode;
+
+        ApplyResolutionSettings();
+        SaveSettings();
+
+        FullScreenModeChanged?.Invoke(
+            FullScreenMode
+        );
+    }
+
+    public void SetResolution(
+        int width,
+        int height
+    )
+    {
+        int validWidth =
+            Mathf.Max(640, width);
+
+        int validHeight =
+            Mathf.Max(360, height);
+
+        if (ResolutionWidth == validWidth &&
+            ResolutionHeight == validHeight)
+        {
+            return;
+        }
+
+        ResolutionWidth = validWidth;
+        ResolutionHeight = validHeight;
+
+        ApplyResolutionSettings();
+        SaveSettings();
+
+        ResolutionChanged?.Invoke(
+            ResolutionWidth,
+            ResolutionHeight
+        );
+    }
+
+    public void SetVSync(bool enabled)
+    {
+        if (VSyncEnabled == enabled)
+            return;
+
+        VSyncEnabled = enabled;
+
+        ApplyFrameSettings();
+        SaveSettings();
+
+        VSyncChanged?.Invoke(
+            VSyncEnabled
+        );
+    }
+
+    public void SetFpsLimit(int fpsLimit)
+    {
+        int newValue =
+            NormalizeFpsLimit(fpsLimit);
+
+        if (FpsLimit == newValue)
+            return;
+
+        FpsLimit = newValue;
+
+        ApplyFrameSettings();
+        SaveSettings();
+
+        FpsLimitChanged?.Invoke(
+            FpsLimit
+        );
+    }
+
+    // ==================================================
+    // RESET
+    // ==================================================
+
+    public void ResetToDefaults()
+    {
+        Sensitivity = Mathf.Clamp(
+            defaultSensitivity,
+            0.1f,
+            10f
+        );
+
+        FieldOfView = Mathf.Clamp(
+            defaultFieldOfView,
+            60f,
+            100f
+        );
+
+        MasterVolume =
+            Mathf.Clamp01(
+                defaultMasterVolume
+            );
+
+        MusicVolume =
+            Mathf.Clamp01(
+                defaultMusicVolume
+            );
+
+        QualityLevel =
+            GetDefaultQualityLevel();
+
+        FullScreenMode =
+            defaultFullScreenMode;
+
+        ResolutionWidth =
+            Screen.currentResolution.width;
+
+        ResolutionHeight =
+            Screen.currentResolution.height;
+
+        VSyncEnabled =
+            defaultVSync;
+
+        FpsLimit =
+            NormalizeFpsLimit(
+                defaultFpsLimit
+            );
+
+        ApplyAllSettings();
+        SaveSettings();
+        BroadcastAllSettings();
+    }
+
+    // ==================================================
+    // EVENTS
+    // ==================================================
+
+    private void BroadcastAllSettings()
+    {
+        SensitivityChanged?.Invoke(
+            Sensitivity
+        );
+
+        FieldOfViewChanged?.Invoke(
+            FieldOfView
+        );
+
+        MasterVolumeChanged?.Invoke(
+            MasterVolume
+        );
+
+        MusicVolumeChanged?.Invoke(
+            MusicVolume
+        );
+
+        QualityLevelChanged?.Invoke(
+            QualityLevel
+        );
+
+        FullScreenModeChanged?.Invoke(
+            FullScreenMode
+        );
+
+        ResolutionChanged?.Invoke(
+            ResolutionWidth,
+            ResolutionHeight
+        );
+
+        VSyncChanged?.Invoke(
+            VSyncEnabled
+        );
+
+        FpsLimitChanged?.Invoke(
+            FpsLimit
+        );
+    }
+
+    // ==================================================
+    // HELPERS
+    // ==================================================
+
+    private int GetDefaultQualityLevel()
+    {
+        int qualityLevel =
+            defaultQualityLevel >= 0
+                ? defaultQualityLevel
+                : startupQualityLevel;
+
+        return Mathf.Clamp(
+            qualityLevel,
+            0,
+            Mathf.Max(
+                0,
+                QualitySettings.names.Length - 1
+            )
+        );
+    }
+
+    private int NormalizeFpsLimit(int value)
+    {
+        if (value <= 0)
+            return -1;
+
+        return Mathf.Clamp(
+            value,
+            30,
+            1000
+        );
+    }
+
+    private bool IsValidFullScreenMode(
+        int modeIndex
+    )
+    {
+        return Enum.IsDefined(
+            typeof(UnityEngine.FullScreenMode),
+            modeIndex
+        );
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Settings\SettingsMenuUI.cs
+==================================================
+
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed class SettingsMenuUI : MonoBehaviour
+{
+    [Header("Optional Panel Root")]
+    [Tooltip(
+        "Das gesamte OptionsPanel. Kann leer bleiben, " +
+        "wenn das Script direkt darauf liegt."
+    )]
+    [SerializeField] private GameObject panelRoot;
+
+    // ==================================================
+    // GAMEPLAY
+    // ==================================================
+
+    [Header("Gameplay")]
+    [SerializeField] private Slider sensitivitySlider;
+    [SerializeField] private TMP_Text sensitivityValueText;
+
+    [SerializeField] private Slider fieldOfViewSlider;
+    [SerializeField] private TMP_Text fieldOfViewValueText;
+
+    // ==================================================
+    // AUDIO
+    // ==================================================
+
+    [Header("Audio")]
+    [SerializeField] private Slider masterVolumeSlider;
+    [SerializeField] private TMP_Text masterVolumeValueText;
+
+    [SerializeField] private Slider musicVolumeSlider;
+    [SerializeField] private TMP_Text musicVolumeValueText;
+
+    // ==================================================
+    // GRAPHICS
+    // ==================================================
+
+    [Header("Graphics")]
+    [SerializeField] private TMP_Dropdown qualityDropdown;
+    [SerializeField] private TMP_Dropdown resolutionDropdown;
+
+    [SerializeField] private Toggle fullscreenToggle;
+    [SerializeField] private Toggle vSyncToggle;
+
+    [SerializeField] private TMP_Dropdown fpsLimitDropdown;
+
+    [Tooltip("Wird später über Localization übersetzt.")]
+    [SerializeField] private string unlimitedFpsText = "Unlimited";
+
+    // ==================================================
+    // FESTE FPS-OPTIONEN
+    // ==================================================
+
+    /*
+     * Nicht serialisiert.
+     * Dadurch können keine alten Werte aus dem Inspector
+     * die Liste überschreiben.
+     */
+    private readonly int[] fpsOptions =
+    {
+        -1,
+        240,
+        180,
+        60
+    };
+
+    // ==================================================
+    // FESTE AUFLÖSUNGEN
+    // ==================================================
+
+    /*
+     * Es werden immer nur diese drei Auflösungen angezeigt.
+     */
+    private readonly Vector2Int[] resolutionOptions =
+    {
+        new Vector2Int(1280, 720),
+        new Vector2Int(1920, 1080),
+        new Vector2Int(3840, 2160)
+    };
+
+    private readonly List<Vector2Int> availableResolutions =
+        new List<Vector2Int>();
+
+    private bool listenersRegistered;
+
+    private SettingsManager Manager =>
+        SettingsManager.Instance;
+
+    // ==================================================
+    // UNITY LIFECYCLE
+    // ==================================================
+
+    private void Awake()
+    {
+        if (panelRoot == null)
+        {
+            panelRoot = gameObject;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (!CheckSettingsManager())
+        {
+            return;
+        }
+
+        BuildDropdownOptions();
+
+        /*
+         * Alte gespeicherte Werte wie 144 FPS oder
+         * 2560 × 1440 werden auf unsere neue Auswahl
+         * angepasst.
+         */
+        NormalizeRestrictedSettings();
+
+        RegisterListeners();
+        RefreshUI();
+    }
+
+    private void OnDisable()
+    {
+        RemoveListeners();
+        SaveSettingsImmediately();
+    }
+
+    // ==================================================
+    // INITIALIZATION
+    // ==================================================
+
+    private bool CheckSettingsManager()
+    {
+        if (Manager != null)
+        {
+            return true;
+        }
+
+        Debug.LogWarning(
+            "SettingsMenuUI konnte keinen SettingsManager finden.",
+            gameObject
+        );
+
+        return false;
+    }
+
+    private void BuildDropdownOptions()
+    {
+        BuildQualityOptions();
+        BuildResolutionOptions();
+        BuildFpsOptions();
+    }
+
+    private void BuildQualityOptions()
+    {
+        if (qualityDropdown == null)
+        {
+            return;
+        }
+
+        qualityDropdown.ClearOptions();
+
+        List<string> qualityNames =
+            new List<string>(QualitySettings.names);
+
+        qualityDropdown.AddOptions(qualityNames);
+        qualityDropdown.RefreshShownValue();
+    }
+
+    // ==================================================
+    // RESOLUTION OPTIONS
+    // ==================================================
+
+    private void BuildResolutionOptions()
+    {
+        if (resolutionDropdown == null)
+        {
+            return;
+        }
+
+        availableResolutions.Clear();
+        resolutionDropdown.ClearOptions();
+
+        List<string> resolutionNames =
+            new List<string>();
+
+        foreach (Vector2Int resolution in resolutionOptions)
+        {
+            availableResolutions.Add(resolution);
+
+            /*
+             * Keine Zusätze und keine Klammern.
+             *
+             * Anzeige:
+             * 1280 × 720
+             * 1920 × 1080
+             * 3840 × 2160
+             */
+            resolutionNames.Add(
+                resolution.x + " × " + resolution.y
+            );
+        }
+
+        resolutionDropdown.AddOptions(resolutionNames);
+        resolutionDropdown.RefreshShownValue();
+    }
+
+    // ==================================================
+    // FPS OPTIONS
+    // ==================================================
+
+    private void BuildFpsOptions()
+    {
+        if (fpsLimitDropdown == null)
+        {
+            return;
+        }
+
+        fpsLimitDropdown.ClearOptions();
+
+        List<string> fpsNames =
+            new List<string>();
+
+        foreach (int fpsOption in fpsOptions)
+        {
+            string optionName =
+                fpsOption <= 0
+                    ? unlimitedFpsText
+                    : fpsOption + " FPS";
+
+            fpsNames.Add(optionName);
+        }
+
+        fpsLimitDropdown.AddOptions(fpsNames);
+        fpsLimitDropdown.RefreshShownValue();
+    }
+
+    // ==================================================
+    // SETTINGS NORMALIZATION
+    // ==================================================
+
+    private void NormalizeRestrictedSettings()
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        bool settingsChanged = false;
+
+        /*
+         * Alte FPS-Werte wie 120, 144 oder 165
+         * werden auf Unlimited gesetzt.
+         */
+        if (!ContainsFpsOption(Manager.FpsLimit))
+        {
+            Manager.SetFpsLimit(-1);
+            settingsChanged = true;
+        }
+
+        Vector2Int savedResolution =
+            new Vector2Int(
+                Manager.ResolutionWidth,
+                Manager.ResolutionHeight
+            );
+
+        /*
+         * Alte Auflösungen werden auf die nächstgelegene
+         * unserer drei festen Auflösungen gesetzt.
+         */
+        if (!availableResolutions.Contains(savedResolution))
+        {
+            Vector2Int closestResolution =
+                GetClosestAvailableResolution(savedResolution);
+
+            Manager.SetResolution(
+                closestResolution.x,
+                closestResolution.y
+            );
+
+            settingsChanged = true;
+        }
+
+        if (settingsChanged)
+        {
+            Manager.SaveSettings();
+        }
+    }
+
+    private bool ContainsFpsOption(int fpsValue)
+    {
+        foreach (int fpsOption in fpsOptions)
+        {
+            if (fpsOption == fpsValue)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Vector2Int GetClosestAvailableResolution(
+        Vector2Int requestedResolution
+    )
+    {
+        if (availableResolutions.Count == 0)
+        {
+            return requestedResolution;
+        }
+
+        Vector2Int closestResolution =
+            availableResolutions[0];
+
+        long closestDistance = long.MaxValue;
+
+        foreach (Vector2Int resolution in availableResolutions)
+        {
+            long widthDifference =
+                resolution.x - requestedResolution.x;
+
+            long heightDifference =
+                resolution.y - requestedResolution.y;
+
+            long distance =
+                widthDifference * widthDifference +
+                heightDifference * heightDifference;
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestResolution = resolution;
+            }
+        }
+
+        return closestResolution;
+    }
+
+    private void SaveSettingsImmediately()
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SaveSettings();
+    }
+
+    // ==================================================
+    // UI REFRESH
+    // ==================================================
+
+    public void RefreshUI()
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        RefreshGameplayUI();
+        RefreshAudioUI();
+        RefreshGraphicsUI();
+    }
+
+    private void RefreshGameplayUI()
+    {
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.minValue = 0.1f;
+            sensitivitySlider.maxValue = 10f;
+            sensitivitySlider.wholeNumbers = false;
+
+            sensitivitySlider.SetValueWithoutNotify(
+                Manager.Sensitivity
+            );
+        }
+
+        if (fieldOfViewSlider != null)
+        {
+            fieldOfViewSlider.minValue = 60f;
+            fieldOfViewSlider.maxValue = 100f;
+            fieldOfViewSlider.wholeNumbers = true;
+
+            fieldOfViewSlider.SetValueWithoutNotify(
+                Manager.FieldOfView
+            );
+        }
+
+        UpdateSensitivityText(
+            Manager.Sensitivity
+        );
+
+        UpdateFieldOfViewText(
+            Manager.FieldOfView
+        );
+    }
+
+    private void RefreshAudioUI()
+    {
+        if (masterVolumeSlider != null)
+        {
+            masterVolumeSlider.minValue = 0f;
+            masterVolumeSlider.maxValue = 1f;
+            masterVolumeSlider.wholeNumbers = false;
+
+            masterVolumeSlider.SetValueWithoutNotify(
+                Manager.MasterVolume
+            );
+        }
+
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.minValue = 0f;
+            musicVolumeSlider.maxValue = 1f;
+            musicVolumeSlider.wholeNumbers = false;
+
+            musicVolumeSlider.SetValueWithoutNotify(
+                Manager.MusicVolume
+            );
+        }
+
+        UpdateMasterVolumeText(
+            Manager.MasterVolume
+        );
+
+        UpdateMusicVolumeText(
+            Manager.MusicVolume
+        );
+    }
+
+    private void RefreshGraphicsUI()
+    {
+        if (qualityDropdown != null &&
+            qualityDropdown.options.Count > 0)
+        {
+            int qualityIndex = Mathf.Clamp(
+                Manager.QualityLevel,
+                0,
+                qualityDropdown.options.Count - 1
+            );
+
+            qualityDropdown.SetValueWithoutNotify(
+                qualityIndex
+            );
+
+            qualityDropdown.RefreshShownValue();
+        }
+
+        RefreshResolutionDropdown();
+
+        if (fullscreenToggle != null)
+        {
+            bool isFullscreen =
+                Manager.FullScreenMode !=
+                FullScreenMode.Windowed;
+
+            fullscreenToggle.SetIsOnWithoutNotify(
+                isFullscreen
+            );
+        }
+
+        if (vSyncToggle != null)
+        {
+            vSyncToggle.SetIsOnWithoutNotify(
+                Manager.VSyncEnabled
+            );
+        }
+
+        RefreshFpsDropdown();
+
+        if (fpsLimitDropdown != null)
+        {
+            fpsLimitDropdown.interactable =
+                !Manager.VSyncEnabled;
+        }
+    }
+
+    private void RefreshResolutionDropdown()
+    {
+        if (resolutionDropdown == null ||
+            availableResolutions.Count == 0)
+        {
+            return;
+        }
+
+        Vector2Int savedResolution =
+            new Vector2Int(
+                Manager.ResolutionWidth,
+                Manager.ResolutionHeight
+            );
+
+        int selectedIndex = 0;
+
+        for (int i = 0; i < availableResolutions.Count; i++)
+        {
+            if (availableResolutions[i] == savedResolution)
+            {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        resolutionDropdown.SetValueWithoutNotify(
+            selectedIndex
+        );
+
+        resolutionDropdown.RefreshShownValue();
+    }
+
+    private void RefreshFpsDropdown()
+    {
+        if (fpsLimitDropdown == null ||
+            fpsOptions.Length == 0)
+        {
+            return;
+        }
+
+        int selectedIndex = 0;
+
+        for (int i = 0; i < fpsOptions.Length; i++)
+        {
+            if (fpsOptions[i] == Manager.FpsLimit)
+            {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        fpsLimitDropdown.SetValueWithoutNotify(
+            selectedIndex
+        );
+
+        fpsLimitDropdown.RefreshShownValue();
+    }
+
+    // ==================================================
+    // LISTENERS
+    // ==================================================
+
+    private void RegisterListeners()
+    {
+        RemoveListeners();
+
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.onValueChanged.AddListener(
+                OnSensitivityChanged
+            );
+        }
+
+        if (fieldOfViewSlider != null)
+        {
+            fieldOfViewSlider.onValueChanged.AddListener(
+                OnFieldOfViewChanged
+            );
+        }
+
+        if (masterVolumeSlider != null)
+        {
+            masterVolumeSlider.onValueChanged.AddListener(
+                OnMasterVolumeChanged
+            );
+        }
+
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.onValueChanged.AddListener(
+                OnMusicVolumeChanged
+            );
+        }
+
+        if (qualityDropdown != null)
+        {
+            qualityDropdown.onValueChanged.AddListener(
+                OnQualityChanged
+            );
+        }
+
+        if (resolutionDropdown != null)
+        {
+            resolutionDropdown.onValueChanged.AddListener(
+                OnResolutionChanged
+            );
+        }
+
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.onValueChanged.AddListener(
+                OnFullscreenChanged
+            );
+        }
+
+        if (vSyncToggle != null)
+        {
+            vSyncToggle.onValueChanged.AddListener(
+                OnVSyncChanged
+            );
+        }
+
+        if (fpsLimitDropdown != null)
+        {
+            fpsLimitDropdown.onValueChanged.AddListener(
+                OnFpsLimitChanged
+            );
+        }
+
+        listenersRegistered = true;
+    }
+
+    private void RemoveListeners()
+    {
+        if (!listenersRegistered)
+        {
+            return;
+        }
+
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.onValueChanged.RemoveListener(
+                OnSensitivityChanged
+            );
+        }
+
+        if (fieldOfViewSlider != null)
+        {
+            fieldOfViewSlider.onValueChanged.RemoveListener(
+                OnFieldOfViewChanged
+            );
+        }
+
+        if (masterVolumeSlider != null)
+        {
+            masterVolumeSlider.onValueChanged.RemoveListener(
+                OnMasterVolumeChanged
+            );
+        }
+
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.onValueChanged.RemoveListener(
+                OnMusicVolumeChanged
+            );
+        }
+
+        if (qualityDropdown != null)
+        {
+            qualityDropdown.onValueChanged.RemoveListener(
+                OnQualityChanged
+            );
+        }
+
+        if (resolutionDropdown != null)
+        {
+            resolutionDropdown.onValueChanged.RemoveListener(
+                OnResolutionChanged
+            );
+        }
+
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.onValueChanged.RemoveListener(
+                OnFullscreenChanged
+            );
+        }
+
+        if (vSyncToggle != null)
+        {
+            vSyncToggle.onValueChanged.RemoveListener(
+                OnVSyncChanged
+            );
+        }
+
+        if (fpsLimitDropdown != null)
+        {
+            fpsLimitDropdown.onValueChanged.RemoveListener(
+                OnFpsLimitChanged
+            );
+        }
+
+        listenersRegistered = false;
+    }
+
+    // ==================================================
+    // GAMEPLAY CALLBACKS
+    // ==================================================
+
+    private void OnSensitivityChanged(float value)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetSensitivity(value);
+
+        UpdateSensitivityText(value);
+        SaveSettingsImmediately();
+    }
+
+    private void OnFieldOfViewChanged(float value)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetFieldOfView(value);
+
+        UpdateFieldOfViewText(value);
+        SaveSettingsImmediately();
+    }
+
+    private void UpdateSensitivityText(float value)
+    {
+        if (sensitivityValueText == null)
+        {
+            return;
+        }
+
+        sensitivityValueText.text =
+            value.ToString("0.0");
+    }
+
+    private void UpdateFieldOfViewText(float value)
+    {
+        if (fieldOfViewValueText == null)
+        {
+            return;
+        }
+
+        fieldOfViewValueText.text =
+            Mathf.RoundToInt(value) + "°";
+    }
+
+    // ==================================================
+    // AUDIO CALLBACKS
+    // ==================================================
+
+    private void OnMasterVolumeChanged(float value)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetMasterVolume(value);
+
+        UpdateMasterVolumeText(value);
+        SaveSettingsImmediately();
+    }
+
+    private void OnMusicVolumeChanged(float value)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetMusicVolume(value);
+
+        UpdateMusicVolumeText(value);
+        SaveSettingsImmediately();
+    }
+
+    private void UpdateMasterVolumeText(float value)
+    {
+        if (masterVolumeValueText == null)
+        {
+            return;
+        }
+
+        masterVolumeValueText.text =
+            Mathf.RoundToInt(value * 100f) + "%";
+    }
+
+    private void UpdateMusicVolumeText(float value)
+    {
+        if (musicVolumeValueText == null)
+        {
+            return;
+        }
+
+        musicVolumeValueText.text =
+            Mathf.RoundToInt(value * 100f) + "%";
+    }
+
+    // ==================================================
+    // GRAPHICS CALLBACKS
+    // ==================================================
+
+    private void OnQualityChanged(int qualityIndex)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetQualityLevel(qualityIndex);
+        SaveSettingsImmediately();
+    }
+
+    private void OnResolutionChanged(int resolutionIndex)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        if (resolutionIndex < 0 ||
+            resolutionIndex >= availableResolutions.Count)
+        {
+            return;
+        }
+
+        Vector2Int resolution =
+            availableResolutions[resolutionIndex];
+
+        Manager.SetResolution(
+            resolution.x,
+            resolution.y
+        );
+
+        SaveSettingsImmediately();
+    }
+
+    private void OnFullscreenChanged(bool isFullscreen)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetFullscreen(isFullscreen);
+        SaveSettingsImmediately();
+    }
+
+    private void OnVSyncChanged(bool enabled)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.SetVSync(enabled);
+
+        if (fpsLimitDropdown != null)
+        {
+            fpsLimitDropdown.interactable =
+                !enabled;
+        }
+
+        SaveSettingsImmediately();
+    }
+
+    private void OnFpsLimitChanged(int optionIndex)
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        if (optionIndex < 0 ||
+            optionIndex >= fpsOptions.Length)
+        {
+            return;
+        }
+
+        Manager.SetFpsLimit(
+            fpsOptions[optionIndex]
+        );
+
+        SaveSettingsImmediately();
+    }
+
+    // ==================================================
+    // BUTTONS
+    // ==================================================
+
+    public void OnResetButton()
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        Manager.ResetToDefaults();
+
+        BuildDropdownOptions();
+        NormalizeRestrictedSettings();
+        RefreshUI();
+
+        SaveSettingsImmediately();
+    }
+
+    public void OnCloseButton()
+    {
+        SaveSettingsImmediately();
+
+        if (panelRoot != null)
+        {
+            panelRoot.SetActive(false);
+        }
+    }
+
+    public void OpenMenu()
+    {
+        if (!CheckSettingsManager())
+        {
+            return;
+        }
+
+        if (panelRoot == null)
+        {
+            return;
+        }
+
+        bool wasAlreadyOpen =
+            panelRoot.activeSelf;
+
+        panelRoot.SetActive(true);
+
+        /*
+         * Wenn das Menü bereits aktiv war,
+         * wird OnEnable nicht erneut ausgeführt.
+         */
+        if (wasAlreadyOpen)
+        {
+            BuildDropdownOptions();
+            NormalizeRestrictedSettings();
+            RefreshUI();
+        }
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Settings\SettingsTabController.cs
+==================================================
+
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+public sealed class SettingsTabController : MonoBehaviour
+{
+    [Header("Tabs")]
+    [SerializeField] private Button[] tabButtons;
+    [SerializeField] private TMP_Text[] tabTexts;
+
+    [Header("Content Pages")]
+    [SerializeField] private GameObject[] contentPages;
+
+    [Header("Colors")]
+    [SerializeField] private Color normalTextColor = Color.white;
+
+    [SerializeField]
+    private Color selectedTextColor =
+        new Color(0.56f, 0.75f, 0.45f, 1f);
+
+    [Header("Default Tab")]
+    [SerializeField, Min(0)] private int defaultTabIndex = 0;
+
+    [Tooltip("Wenn aktiviert, öffnet sich das Menü immer beim Standard-Tab.")]
+    [SerializeField] private bool resetTabOnOpen = true;
+
+    private UnityAction[] tabActions;
+    private int selectedTabIndex = -1;
+    private bool buttonsRegistered;
+
+    public int SelectedTabIndex => selectedTabIndex;
+
+    private void Awake()
+    {
+        RegisterButtons();
+    }
+
+    private void OnEnable()
+    {
+        if (!buttonsRegistered)
+            RegisterButtons();
+
+        if (resetTabOnOpen)
+            SelectTab(defaultTabIndex);
+        else if (selectedTabIndex < 0)
+            SelectTab(defaultTabIndex);
+        else
+            SelectTab(selectedTabIndex);
+    }
+
+    private void OnDestroy()
+    {
+        UnregisterButtons();
+    }
+
+    private void RegisterButtons()
+    {
+        if (buttonsRegistered || tabButtons == null)
+            return;
+
+        tabActions = new UnityAction[tabButtons.Length];
+
+        for (int i = 0; i < tabButtons.Length; i++)
+        {
+            if (tabButtons[i] == null)
+                continue;
+
+            int tabIndex = i;
+
+            tabActions[i] = () => SelectTab(tabIndex);
+            tabButtons[i].onClick.AddListener(tabActions[i]);
+        }
+
+        buttonsRegistered = true;
+    }
+
+    private void UnregisterButtons()
+    {
+        if (!buttonsRegistered ||
+            tabButtons == null ||
+            tabActions == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < tabButtons.Length; i++)
+        {
+            if (tabButtons[i] == null ||
+                tabActions[i] == null)
+            {
+                continue;
+            }
+
+            tabButtons[i].onClick.RemoveListener(tabActions[i]);
+        }
+
+        buttonsRegistered = false;
+    }
+
+    public void SelectTab(int tabIndex)
+    {
+        int buttonCount =
+            tabButtons != null ? tabButtons.Length : 0;
+
+        int textCount =
+            tabTexts != null ? tabTexts.Length : 0;
+
+        int pageCount =
+            contentPages != null ? contentPages.Length : 0;
+
+        int tabCount = Mathf.Min(
+            buttonCount,
+            Mathf.Min(textCount, pageCount)
+        );
+
+        if (tabIndex < 0 || tabIndex >= tabCount)
+        {
+            Debug.LogWarning(
+                "Ungültiger Settings-Tab-Index: " + tabIndex,
+                gameObject
+            );
+
+            return;
+        }
+
+        selectedTabIndex = tabIndex;
+
+        for (int i = 0; i < tabCount; i++)
+        {
+            bool isSelected = i == selectedTabIndex;
+
+            if (tabTexts[i] != null)
+            {
+                tabTexts[i].color = isSelected
+                    ? selectedTextColor
+                    : normalTextColor;
+            }
+
+            if (contentPages[i] != null)
+                contentPages[i].SetActive(isSelected);
+        }
+    }
+
+    public void ResetToDefaultTab()
+    {
+        SelectTab(defaultTabIndex);
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Trash\CarryTrash.cs
+==================================================
+
+using UnityEngine;
+
+public class CarryTrash : MonoBehaviour
+{
+    [Header("Player / Input")]
+    [SerializeField] private Transform playerCamera;
+    [SerializeField] private InputSettings inputSettings;
+
+    [Header("Carry Settings")]
+    [SerializeField] private float pickupRange = 2f;
+    [SerializeField] private float carryDistance = 1.5f;
+    [SerializeField] private float throwVelocityMultiplier = 1f;
+
+    [Header("Control")]
+    [SerializeField] private bool canCarry = true;
+
+    private bool isCarrying;
+
+    private Trash carriedTrash;
+    private Rigidbody carriedRigidbody;
+    private Collider[] carriedColliders;
+
+    private Vector3 lastCarryPosition;
+    private Vector3 calculatedVelocity;
+
+    public bool IsCarrying => isCarrying;
+    public Trash CarriedTrash => carriedTrash;
+
+    private void Update()
+    {
+        if (!canCarry ||
+            playerCamera == null ||
+            inputSettings == null)
+        {
+            return;
+        }
+
+        HandleCarryInput();
+    }
+
+    private void LateUpdate()
+    {
+        if (isCarrying)
+            UpdateCarriedTrashPosition();
+    }
+
+    private void HandleCarryInput()
+    {
+        if (inputSettings.pickupHold)
+        {
+            // E drücken: Müll aufnehmen
+            if (Input.GetKeyDown(inputSettings.pickupKey))
+                TryPickup();
+
+            // E loslassen: Müll fallen lassen
+            if (Input.GetKeyUp(inputSettings.pickupKey))
+                DropTrash();
+        }
+        else
+        {
+            // Alternative Toggle-Steuerung
+            if (Input.GetKeyDown(inputSettings.pickupKey))
+            {
+                if (isCarrying)
+                    DropTrash();
+                else
+                    TryPickup();
+            }
+        }
+    }
+
+    private void TryPickup()
+    {
+        if (isCarrying)
+            return;
+
+        bool hasHit = Physics.Raycast(
+            playerCamera.position,
+            playerCamera.forward,
+            out RaycastHit hit,
+            pickupRange
+        );
+
+        if (!hasHit)
+            return;
+
+        Trash trash = hit.collider.GetComponentInParent<Trash>();
+
+        if (trash == null)
+            return;
+
+        Rigidbody trashRigidbody =
+            trash.GetComponent<Rigidbody>();
+
+        if (trashRigidbody == null)
+        {
+            Debug.LogWarning(
+                $"Das Müllobjekt '{trash.name}' besitzt keinen Rigidbody.",
+                trash
+            );
+
+            return;
+        }
+
+        carriedTrash = trash;
+        carriedRigidbody = trashRigidbody;
+
+        carriedColliders =
+            carriedTrash.GetComponentsInChildren<Collider>(true);
+
+        /*
+         * Geschwindigkeit zuerst zurücksetzen.
+         * Erst danach wird der Rigidbody kinematisch.
+         */
+        carriedRigidbody.linearVelocity = Vector3.zero;
+        carriedRigidbody.angularVelocity = Vector3.zero;
+
+        carriedRigidbody.useGravity = false;
+        carriedRigidbody.isKinematic = true;
+
+        SetCarriedCollidersEnabled(false);
+
+        isCarrying = true;
+
+        lastCarryPosition = GetCarryPosition();
+        calculatedVelocity = Vector3.zero;
+
+        UpdateCarriedTrashPosition();
+    }
+
+    private void UpdateCarriedTrashPosition()
+    {
+        if (carriedTrash == null ||
+            carriedRigidbody == null)
+        {
+            ClearCarryState();
+            return;
+        }
+
+        Vector3 targetPosition = GetCarryPosition();
+
+        float safeDeltaTime =
+            Mathf.Max(Time.deltaTime, 0.0001f);
+
+        calculatedVelocity =
+            (targetPosition - lastCarryPosition) /
+            safeDeltaTime;
+
+        lastCarryPosition = targetPosition;
+
+        carriedTrash.transform.SetPositionAndRotation(
+            targetPosition,
+            Quaternion.LookRotation(
+                playerCamera.forward,
+                Vector3.up
+            )
+        );
+    }
+
+    private Vector3 GetCarryPosition()
+    {
+        return playerCamera.position +
+               playerCamera.forward * carryDistance;
+    }
+
+    public void DropTrash()
+    {
+        if (!isCarrying ||
+            carriedTrash == null ||
+            carriedRigidbody == null)
+        {
+            ClearCarryState();
+            return;
+        }
+
+        SetCarriedCollidersEnabled(true);
+
+        carriedRigidbody.isKinematic = false;
+        carriedRigidbody.useGravity = true;
+
+        carriedRigidbody.linearVelocity =
+            calculatedVelocity * throwVelocityMultiplier;
+
+        ClearCarryState();
+    }
+
+    private void SetCarriedCollidersEnabled(bool enabled)
+    {
+        if (carriedColliders == null)
+            return;
+
+        foreach (Collider trashCollider in carriedColliders)
+        {
+            if (trashCollider != null)
+                trashCollider.enabled = enabled;
+        }
+    }
+
+    private void ClearCarryState()
+    {
+        carriedTrash = null;
+        carriedRigidbody = null;
+        carriedColliders = null;
+
+        isCarrying = false;
+        calculatedVelocity = Vector3.zero;
+    }
+
+    public void SetCarryEnabled(bool value)
+    {
+        canCarry = value;
+
+        if (!value && isCarrying)
+            DropTrash();
+    }
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Trash\Trash.cs
+==================================================
+
+using UnityEngine;
+
+public class Trash : MonoBehaviour
+{
+    [Header("Trash Info")]
+    [SerializeField] private string trashName = "Trash Bag";
+    [SerializeField] private TrashClass trashClass = TrashClass.A;
+
+    [Header("Value")]
+    [SerializeField] private int baseValue = 50;
+
+    [Header("Processing")]
+    [SerializeField] private float baseProcessingTime = 300f; // 5 Minuten
+
+    [Header("Illegal")]
+    [SerializeField] private bool isIllegal;
+    [SerializeField] private int heatAmount;
+
+    public string TrashName => trashName;
+    public TrashClass TrashClass => trashClass;
+    public int BaseValue => baseValue;
+    public float BaseProcessingTime => baseProcessingTime;
+    public bool IsIllegal => isIllegal;
+    public int HeatAmount => heatAmount;
+}
+
+
+==================================================
+DATEI: C:\OwnGame\My project\Assets\Scripts\Trash\TrashEnum.cs
+==================================================
+
+using UnityEngine;
+
+public enum TrashClass
+{
+    A,
+    B,
+    C
+}

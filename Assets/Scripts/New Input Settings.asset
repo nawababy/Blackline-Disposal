@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c46cba9ddc75dc742bed7be4ce4f78bc, type: 3}
+  m_Name: New Input Settings
+  m_EditorClassIdentifier: Assembly-CSharp::InputSettings
+  jumpKey: 32
+  crouchKey: 99
+  sprintKey: 304
+  pauseKey: 27
+  crouchToggle: 1
