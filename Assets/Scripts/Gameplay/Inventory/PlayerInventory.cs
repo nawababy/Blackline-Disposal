@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,6 +16,22 @@ public sealed class PlayerInventory : MonoBehaviour
     [SerializeField]
     private HotbarItem[] hotbarItems =
         new HotbarItem[DefaultHotbarSize];
+
+    [Header("Known Hotbar Item Definitions")]
+    [Tooltip(
+        "Katalog bekannter Hotbar-Items. Wird beim Laden genutzt, " +
+        "um gespeicherte Item IDs wieder in vollständige Items aufzulösen."
+    )]
+    [SerializeField]
+    private HotbarItem[] knownHotbarItems =
+        new HotbarItem[0];
+
+    private readonly Dictionary<string, HotbarItem> knownHotbarItemsById =
+        new Dictionary<string, HotbarItem>(
+            StringComparer.Ordinal
+        );
+
+    private bool knownHotbarItemLookupBuilt;
 
     [Header("Selected Slot")]
     [FormerlySerializedAs("selectedSlot")]
@@ -93,6 +110,7 @@ public sealed class PlayerInventory : MonoBehaviour
     private void Awake()
     {
         EnsureValidHotbar();
+        BuildKnownHotbarItemLookup();
         ClampSelectedSlot();
 
         currentCash =
@@ -102,6 +120,7 @@ public sealed class PlayerInventory : MonoBehaviour
     private void OnValidate()
     {
         EnsureValidHotbar();
+        BuildKnownHotbarItemLookup();
 
         currentCash =
             Mathf.Max(0, currentCash);
@@ -315,6 +334,144 @@ public sealed class PlayerInventory : MonoBehaviour
     public bool HasFreeSlot()
     {
         return FindFirstEmptySlot() >= 0;
+    }
+
+    // ==================================================
+    // HOTBAR LOAD SUPPORT
+    // ==================================================
+
+    public void ClearHotbarForLoad()
+    {
+        EnsureValidHotbar();
+
+        for (int i = 0;
+             i < SlotCount;
+             i++)
+        {
+            hotbarItems[i] = null;
+        }
+    }
+
+    public bool TryLoadKnownItemIntoSlot(
+        int slotIndex,
+        string itemId
+    )
+    {
+        EnsureValidHotbar();
+
+        if (!IsValidSlotIndex(slotIndex))
+        {
+            Debug.LogWarning(
+                $"Hotbar-Item konnte nicht geladen werden. " +
+                $"Ungültiger Slot: {slotIndex}",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(itemId))
+        {
+            Debug.LogWarning(
+                $"Hotbar-Slot {slotIndex} konnte nicht geladen werden, " +
+                "weil die Item ID leer ist.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (!TryGetKnownHotbarItem(
+                itemId.Trim(),
+                out HotbarItem item))
+        {
+            Debug.LogWarning(
+                $"Hotbar-Slot {slotIndex} konnte nicht geladen werden. " +
+                $"Unbekannte Item ID: {itemId}",
+                gameObject
+            );
+
+            return false;
+        }
+
+        hotbarItems[slotIndex] = item;
+
+        return true;
+    }
+
+    public void NotifyHotbarLoadCompleted()
+    {
+        ClampSelectedSlot();
+
+        HotbarChanged?.Invoke();
+    }
+
+    private bool TryGetKnownHotbarItem(
+        string itemId,
+        out HotbarItem item
+    )
+    {
+        if (!knownHotbarItemLookupBuilt)
+            BuildKnownHotbarItemLookup();
+
+        return knownHotbarItemsById.TryGetValue(
+            itemId,
+            out item
+        );
+    }
+
+    private void BuildKnownHotbarItemLookup()
+    {
+        knownHotbarItemsById.Clear();
+        knownHotbarItemLookupBuilt = true;
+
+        if (knownHotbarItems == null ||
+            knownHotbarItems.Length == 0)
+        {
+            return;
+        }
+
+        for (int i = 0;
+             i < knownHotbarItems.Length;
+             i++)
+        {
+            HotbarItem item =
+                knownHotbarItems[i];
+
+            if (item == null)
+                continue;
+
+            if (!item.IsValid)
+            {
+                Debug.LogWarning(
+                    $"Known Hotbar Item an Index {i} ist ungültig " +
+                    "und wird ignoriert.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            string itemId =
+                item.ItemId.Trim();
+
+            if (knownHotbarItemsById.ContainsKey(
+                    itemId))
+            {
+                Debug.LogWarning(
+                    $"Doppelte Hotbar Item ID '{itemId}' " +
+                    $"an Index {i}. Diese Definition wird ignoriert.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            knownHotbarItemsById.Add(
+                itemId,
+                item
+            );
+        }
     }
 
     private void NotifyHotbarChanged(

@@ -816,6 +816,11 @@ public sealed class SaveManager : MonoBehaviour
                 saveData.player.personalCash
             );
 
+            ApplyHotbarData(
+                saveData,
+                inventory
+            );
+
             inventory.SetSelectedSlot(
                 saveData.player.selectedHotbarSlot
             );
@@ -843,6 +848,109 @@ public sealed class SaveManager : MonoBehaviour
                 gameObject
             );
         }
+    }
+
+    private void ApplyHotbarData(
+        SaveGameData saveData,
+        PlayerInventory inventory
+    )
+    {
+        if (saveData == null ||
+            saveData.player == null ||
+            inventory == null)
+        {
+            return;
+        }
+
+        if (saveData.saveVersion < 2)
+            return;
+
+        List<HotbarSlotSaveData> savedHotbarSlots =
+            saveData.player.hotbarSlots;
+
+        if (savedHotbarSlots == null)
+        {
+            Debug.LogWarning(
+                $"Spielstand {saveData.slotIndex + 1} enthält keine " +
+                "Hotbar-Daten. Die aktuelle Hotbar bleibt unverändert.",
+                gameObject
+            );
+
+            return;
+        }
+
+        inventory.ClearHotbarForLoad();
+
+        HashSet<int> restoredSlotIndices =
+            new HashSet<int>();
+
+        foreach (HotbarSlotSaveData savedSlot in
+                 savedHotbarSlots)
+        {
+            if (savedSlot == null)
+            {
+                Debug.LogWarning(
+                    $"Spielstand {saveData.slotIndex + 1} enthält " +
+                    "einen leeren Hotbar-Eintrag.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            if (savedSlot.slotIndex < 0 ||
+                savedSlot.slotIndex >= inventory.SlotCount)
+            {
+                Debug.LogWarning(
+                    $"Hotbar-Slot {savedSlot.slotIndex} aus " +
+                    $"Spielstand {saveData.slotIndex + 1} ist ungültig " +
+                    "und wird übersprungen.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            if (savedSlot.amount <= 0)
+            {
+                Debug.LogWarning(
+                    $"Hotbar-Slot {savedSlot.slotIndex} aus " +
+                    $"Spielstand {saveData.slotIndex + 1} hat eine " +
+                    $"ungültige Menge: {savedSlot.amount}.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            if (restoredSlotIndices.Contains(
+                    savedSlot.slotIndex))
+            {
+                Debug.LogWarning(
+                    $"Hotbar-Slot {savedSlot.slotIndex} kommt in " +
+                    $"Spielstand {saveData.slotIndex + 1} mehrfach vor. " +
+                    "Der erste gültige Eintrag bleibt erhalten.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            bool wasLoaded =
+                inventory.TryLoadKnownItemIntoSlot(
+                    savedSlot.slotIndex,
+                    savedSlot.itemId
+                );
+
+            if (!wasLoaded)
+                continue;
+
+            restoredSlotIndices.Add(
+                savedSlot.slotIndex
+            );
+        }
+
+        inventory.NotifyHotbarLoadCompleted();
     }
 
     private void ApplyPlayerTransform(
@@ -1365,12 +1473,6 @@ public sealed class SaveManager : MonoBehaviour
         {
             saveData.player.rotation =
                 new SerializableVector3();
-        }
-
-        if (saveData.player.hotbarSlots == null)
-        {
-            saveData.player.hotbarSlots =
-                new List<HotbarSlotSaveData>();
         }
 
         if (saveData.sharedWorld.facilities == null)
