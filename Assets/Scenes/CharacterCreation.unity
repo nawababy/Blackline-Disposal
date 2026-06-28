@@ -201,7 +201,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 91242200}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: PreviousHair
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &91242200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,7 +334,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 113154379}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: NextUpper
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &113154379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,7 +467,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 190167584}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: PreviousPants
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &190167584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,7 +683,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 284151559}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: NextFace
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &284151559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -905,7 +953,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 469635253}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: NextHair
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &469635253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1102,7 +1162,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 511196737}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: NextBody
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &511196737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1141,6 +1213,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511196734}
   m_CullTransparentMesh: 1
+--- !u!1 &524458963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 524458964}
+  - component: {fileID: 524458966}
+  - component: {fileID: 524458965}
+  m_Layer: 0
+  m_Name: ModularCharacterCreation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &524458964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524458963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 530656551}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &524458965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524458963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cda8817adcb2abd4082c978c179e2ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAppearanceCreationController
+  database: {fileID: 11400000, guid: 568fdd4329a69274fad9661163877e32, type: 2}
+  applier: {fileID: 524458966}
+  currentAppearance:
+    appearanceVersion: 1
+    bodyId: 
+    hairId: 
+    faceId: 
+    upperId: 
+    pantsId: 
+    shoesId: 
+  applyOnEnable: 1
+--- !u!114 &524458966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524458963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c3cbcfc40b94724baac80fc7061c1b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAppearanceApplier
+  database: {fileID: 11400000, guid: 568fdd4329a69274fad9661163877e32, type: 2}
+  visualRoot: {fileID: 1307041558}
+  managedRootName: AppliedAppearance
 --- !u!1 &530656550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1172,6 +1315,7 @@ Transform:
   m_Children:
   - {fileID: 1235291990}
   - {fileID: 1444706726}
+  - {fileID: 524458964}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &596570025
@@ -1393,7 +1537,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 625921858}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: PreviousShoes
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &625921858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1651,7 +1807,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 660892109}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: NextShoes
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &660892109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2160,7 +2328,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -580}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1307041558}
   m_Father: {fileID: 483310896}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2779,7 +2948,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1062294814}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: PreviousUpper
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1062294814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3114,7 +3295,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1162687501}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: NextPants
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1162687501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3304,7 +3497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1235291989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3367,6 +3560,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 530656551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1307041557
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1307041558}
+  m_Layer: 5
+  m_Name: ModularAppearanceRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1307041558
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307041557}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 150, y: 150, z: 150}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 892549774}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1410463056
 GameObject:
   m_ObjectHideFlags: 0
@@ -3665,7 +3893,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1454969515}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: PreviousBody
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1454969515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4109,7 +4349,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1754798936}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524458965}
+        m_TargetAssemblyTypeName: CharacterAppearanceCreationController, Assembly-CSharp
+        m_MethodName: PreviousFace
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1754798936
 MonoBehaviour:
   m_ObjectHideFlags: 0

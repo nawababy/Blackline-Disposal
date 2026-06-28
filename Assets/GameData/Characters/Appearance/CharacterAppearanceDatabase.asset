@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe3c75ca04ea5f341beab8a0f9a7daac, type: 3}
+  m_Name: CharacterAppearanceDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAppearanceDatabase
+  defaultBodyId: adult_female_body_01
+  defaultHairId: adult_female_hair_01
+  defaultFaceId: adult_female_face_01
+  defaultUpperId: adult_female_upper_01
+  defaultPantsId: adult_female_pants_01
+  defaultShoesId: adult_female_shoes_01
+  bodyDefinitions:
+  - id: adult_female_body_01
+    displayName: Body 01
+    category: 0
+    compatibilityKey: adult_female
+    prefab: {fileID: 8659910988401533909, guid: 0bccf882cac819543b7416686f18683a, type: 3}
+  hairDefinitions:
+  - id: adult_female_hair_01
+    displayName: Hair 01
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 5296428632075364320, guid: 8ab5e2fbb6c8a8845a7d65af7843539f, type: 3}
+  - id: adult_female_hair_02
+    displayName: Hair 02
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 4623559677924846726, guid: 0f34b97c80b23fb4c8d4af6b87fd73eb, type: 3}
+  faceDefinitions:
+  - id: adult_female_face_01
+    displayName: Face 01
+    category: 2
+    compatibilityKey: adult_female
+    prefab: {fileID: 6703444493532891275, guid: 30fe01710f9ab2a418778afb44f54125, type: 3}
+  upperDefinitions:
+  - id: adult_female_upper_01
+    displayName: Shirt 01
+    category: 3
+    compatibilityKey: adult_female
+    prefab: {fileID: 6244305286046366682, guid: da683fc28d95d1046b6d1cb0c2c3bb6d, type: 3}
+  - id: adult_female_upper_02
+    displayName: Shirt 02
+    category: 3
+    compatibilityKey: adult_female
+    prefab: {fileID: 3913047839885015090, guid: ce13d4bf02a37304f829be7c5583a8fb, type: 3}
+  pantsDefinitions:
+  - id: adult_female_pants_01
+    displayName: Pants 01
+    category: 4
+    compatibilityKey: adult_female
+    prefab: {fileID: 2348479629543598302, guid: 6c78897854bf61f4fbdc8934d13af139, type: 3}
+  shoesDefinitions:
+  - id: adult_female_shoes_01
+    displayName: Shoes 01
+    category: 5
+    compatibilityKey: adult_female
+    prefab: {fileID: 1149586380680395697, guid: 0740b5b63820ce14481fc86959ee7419, type: 3}
+  - id: adult_female_shoes_02
+    displayName: Shoes 02
+    category: 5
+    compatibilityKey: adult_female
+    prefab: {fileID: 3599038921729908850, guid: 0cad5d9bd43c9184eac6b6c4a2d3dbce, type: 3}
