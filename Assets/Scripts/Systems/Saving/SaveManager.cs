@@ -1123,8 +1123,13 @@ public sealed class SaveManager : MonoBehaviour
         string temporaryFilePath =
             GetTemporarySaveFilePath(slotIndex);
 
+        bool temporaryFileValidated = false;
+
         try
         {
+            if (File.Exists(temporaryFilePath))
+                File.Delete(temporaryFilePath);
+
             string json =
                 JsonUtility.ToJson(
                     saveData,
@@ -1136,25 +1141,200 @@ public sealed class SaveManager : MonoBehaviour
                 json
             );
 
-            if (File.Exists(saveFilePath))
-                File.Delete(saveFilePath);
+            if (!ValidateTemporarySaveFile(
+                    slotIndex,
+                    temporaryFilePath))
+            {
+                DeleteTemporarySaveFileBestEffort(
+                    slotIndex,
+                    temporaryFilePath
+                );
 
-            File.Move(
-                temporaryFilePath,
-                saveFilePath
-            );
+                return false;
+            }
+
+            temporaryFileValidated = true;
+
+            if (File.Exists(saveFilePath))
+            {
+                File.Replace(
+                    temporaryFilePath,
+                    saveFilePath,
+                    null
+                );
+            }
+            else
+            {
+                File.Move(
+                    temporaryFilePath,
+                    saveFilePath
+                );
+            }
+
+            if (File.Exists(temporaryFilePath))
+            {
+                DeleteTemporarySaveFileBestEffort(
+                    slotIndex,
+                    temporaryFilePath
+                );
+            }
 
             return true;
         }
         catch (Exception exception)
         {
             Debug.LogError(
-                $"Spielstand {slotIndex + 1} konnte nicht gespeichert werden.\n" +
+                $"Spielstand {slotIndex + 1} konnte nicht sicher gespeichert werden.\n" +
+                $"Ziel: {saveFilePath}\n" +
+                $"Temporäre Datei: {temporaryFilePath}\n" +
+                exception,
+                gameObject
+            );
+
+            if (!temporaryFileValidated)
+            {
+                DeleteTemporarySaveFileBestEffort(
+                    slotIndex,
+                    temporaryFilePath
+                );
+            }
+
+            return false;
+        }
+    }
+
+    private bool ValidateTemporarySaveFile(
+        int expectedSlotIndex,
+        string temporaryFilePath
+    )
+    {
+        if (!File.Exists(temporaryFilePath))
+        {
+            Debug.LogError(
+                $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+                $"wurde nicht erstellt.\n{temporaryFilePath}",
+                gameObject
+            );
+
+            return false;
+        }
+
+        FileInfo temporaryFileInfo =
+            new FileInfo(temporaryFilePath);
+
+        if (temporaryFileInfo.Length <= 0L)
+        {
+            Debug.LogError(
+                $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+                $"ist leer.\n{temporaryFilePath}",
+                gameObject
+            );
+
+            return false;
+        }
+
+        try
+        {
+            string json =
+                File.ReadAllText(
+                    temporaryFilePath
+                );
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                Debug.LogError(
+                    $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+                    $"enthält keinen gültigen JSON-Inhalt.\n{temporaryFilePath}",
+                    gameObject
+                );
+
+                return false;
+            }
+
+            SaveGameData temporarySaveData =
+                JsonUtility.FromJson<SaveGameData>(
+                    json
+                );
+
+            if (temporarySaveData == null)
+            {
+                Debug.LogError(
+                    $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+                    $"konnte nicht als SaveGameData gelesen werden.\n" +
+                    temporaryFilePath,
+                    gameObject
+                );
+
+                return false;
+            }
+
+            if (temporarySaveData.player == null ||
+                temporarySaveData.sharedWorld == null ||
+                temporarySaveData.player.position == null ||
+                temporarySaveData.player.rotation == null ||
+                temporarySaveData.player.hotbarSlots == null ||
+                temporarySaveData.sharedWorld.facilities == null ||
+                temporarySaveData.sharedWorld.worldTrashObjects == null)
+            {
+                Debug.LogError(
+                    $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+                    $"enthält nicht alle notwendigen Save-Bereiche.\n" +
+                    temporaryFilePath,
+                    gameObject
+                );
+
+                return false;
+            }
+
+            if (temporarySaveData.slotIndex !=
+                expectedSlotIndex)
+            {
+                Debug.LogError(
+                    $"Temporäre Save-Datei hat den falschen Slot. " +
+                    $"Erwartet: {expectedSlotIndex}, " +
+                    $"gefunden: {temporarySaveData.slotIndex}.\n" +
+                    temporaryFilePath,
+                    gameObject
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError(
+                $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+                $"konnte nicht validiert werden.\n" +
+                $"{temporaryFilePath}\n" +
                 exception,
                 gameObject
             );
 
             return false;
+        }
+    }
+
+    private void DeleteTemporarySaveFileBestEffort(
+        int slotIndex,
+        string temporaryFilePath
+    )
+    {
+        try
+        {
+            if (File.Exists(temporaryFilePath))
+                File.Delete(temporaryFilePath);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning(
+                $"Temporäre Save-Datei für Slot {slotIndex + 1} " +
+                $"konnte nicht entfernt werden.\n" +
+                $"{temporaryFilePath}\n" +
+                exception,
+                gameObject
+            );
         }
     }
 
