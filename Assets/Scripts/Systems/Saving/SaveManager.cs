@@ -315,6 +315,115 @@ public sealed class SaveManager : MonoBehaviour
     }
 
     // ==================================================
+    // SET PLAYER CHARACTER
+    // ==================================================
+
+    public bool SetPlayerCharacterId(
+        int slotIndex,
+        string characterId
+    )
+    {
+        if (!IsValidSlotIndex(slotIndex))
+        {
+            Debug.LogWarning(
+                $"Ungueltiger Speicherplatz fuer Character-Auswahl: " +
+                $"{slotIndex}",
+                gameObject
+            );
+
+            return false;
+        }
+
+        string normalizedCharacterId =
+            string.IsNullOrWhiteSpace(characterId)
+                ? string.Empty
+                : characterId.Trim();
+
+        if (string.IsNullOrWhiteSpace(
+                normalizedCharacterId))
+        {
+            Debug.LogWarning(
+                $"Character-Auswahl fuer Slot {slotIndex + 1} " +
+                "konnte nicht gespeichert werden, weil die " +
+                "characterId leer ist.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (!HasSave(slotIndex))
+        {
+            Debug.LogError(
+                $"Character-Auswahl fuer Slot {slotIndex + 1} " +
+                "konnte nicht gespeichert werden, weil keine " +
+                "bestehende Save-Datei gefunden wurde. " +
+                "StartNewGame muss den Slot vorher erstellen.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        SaveGameData saveData =
+            ReadSaveFile(slotIndex);
+
+        if (saveData == null)
+        {
+            Debug.LogError(
+                $"Character-Auswahl fuer Slot {slotIndex + 1} " +
+                "konnte nicht gespeichert werden, weil die " +
+                "Save-Datei nicht gelesen werden konnte.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        EnsureSaveDataSectionsExist(
+            saveData
+        );
+
+        if (saveData.slotIndex != slotIndex)
+        {
+            Debug.LogError(
+                $"Character-Auswahl fuer Slot {slotIndex + 1} " +
+                "konnte nicht gespeichert werden, weil die " +
+                $"Save-Datei Slot {saveData.slotIndex} enthaelt.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        saveData.player.characterId =
+            normalizedCharacterId;
+
+        bool wasWritten =
+            WriteSaveFile(
+                slotIndex,
+                saveData
+            );
+
+        if (!wasWritten)
+            return false;
+
+        if (CurrentSave == null ||
+            CurrentSave.slotIndex == slotIndex)
+        {
+            CurrentSave = saveData;
+        }
+
+        Debug.Log(
+            $"Character-Auswahl '{normalizedCharacterId}' " +
+            $"wurde fuer Slot {slotIndex + 1} gespeichert.",
+            gameObject
+        );
+
+        return true;
+    }
+
+    // ==================================================
     // SAVE GAME
     // ==================================================
 

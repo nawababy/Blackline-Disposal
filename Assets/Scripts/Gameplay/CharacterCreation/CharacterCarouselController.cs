@@ -7,6 +7,9 @@ public class CharacterCarouselController : MonoBehaviour
     public GameObject[] characterPrefabs;
     public float previewScale = 150f;
 
+    [SerializeField]
+    private CharacterDatabase characterDatabase;
+
     public Button leftArrowButton;
     public Button rightArrowButton;
     public Button finishButton;
@@ -17,6 +20,9 @@ public class CharacterCarouselController : MonoBehaviour
     private int currentIndex;
     private bool listenersRegistered;
     private bool isFinishing;
+
+    private bool UsesCharacterDatabase =>
+        characterDatabase != null;
 
     private void OnEnable()
     {
@@ -83,15 +89,49 @@ public class CharacterCarouselController : MonoBehaviour
             return;
         }
 
-        if (!TryGetSelectedPrefab(
-                out _))
+        if (!TryGetSelectedCharacterId(
+                out string selectedCharacterId))
         {
-            UpdateButtonStates(false);
+            UpdateButtonStates(true);
+            return;
+        }
+
+        SaveManager saveManager =
+            SaveManager.Instance;
+
+        if (saveManager == null)
+        {
+            Debug.LogError(
+                "CharacterCarouselController kann die Auswahl nicht " +
+                "speichern, weil kein SaveManager aktiv ist.",
+                gameObject
+            );
+
             return;
         }
 
         isFinishing = true;
         UpdateButtonStates(true);
+
+        bool wasSaved =
+            saveManager.SetPlayerCharacterId(
+                slotIndex,
+                selectedCharacterId
+            );
+
+        if (!wasSaved)
+        {
+            Debug.LogError(
+                "CharacterCarouselController konnte die gewaehlte " +
+                $"characterId '{selectedCharacterId}' nicht in Slot " +
+                $"{slotIndex + 1} speichern.",
+                gameObject
+            );
+
+            isFinishing = false;
+            RefreshControllerState(false);
+            return;
+        }
 
         PlayerPrefs.SetString(
             LegacySaveSlotKeyPrefix + slotIndex,
@@ -233,18 +273,6 @@ public class CharacterCarouselController : MonoBehaviour
             isValid = false;
         }
 
-        if (characterPrefabs == null ||
-            characterPrefabs.Length == 0)
-        {
-            Debug.LogError(
-                "CharacterCarouselController ist ungueltig: " +
-                "characterPrefabs ist leer oder nicht gesetzt.",
-                gameObject
-            );
-
-            isValid = false;
-        }
-
         if (leftArrowButton == null)
         {
             Debug.LogError(
@@ -281,6 +309,81 @@ public class CharacterCarouselController : MonoBehaviour
         if (!isValid)
             return false;
 
+        if (UsesCharacterDatabase)
+            return ValidateDatabaseConfiguration();
+
+        return ValidateLegacyPrefabConfiguration();
+    }
+
+    private bool ValidateDatabaseConfiguration()
+    {
+        if (!characterDatabase.ValidateDatabase(gameObject))
+            return false;
+
+        if (currentIndex < 0 ||
+            currentIndex >= characterDatabase.Count)
+        {
+            Debug.LogWarning(
+                "CharacterCarouselController hatte einen ungueltigen " +
+                $"currentIndex: {currentIndex}. Der Index wird korrigiert.",
+                gameObject
+            );
+
+            currentIndex =
+                Mathf.Clamp(
+                    currentIndex,
+                    0,
+                    characterDatabase.Count - 1
+                );
+        }
+
+        if (characterDatabase.TryGetDefinitionAt(
+                currentIndex,
+                out _))
+        {
+            return true;
+        }
+
+        int validIndex =
+            FindFirstValidCharacterIndex();
+
+        if (validIndex < 0)
+        {
+            Debug.LogError(
+                "CharacterCarouselController ist ungueltig: " +
+                "CharacterDatabase enthaelt keinen gueltigen " +
+                "Character-Eintrag.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        Debug.LogWarning(
+            "CharacterCarouselController ueberspringt einen " +
+            $"ungueltigen CharacterDatabase-Eintrag an Index {currentIndex}.",
+            gameObject
+        );
+
+        currentIndex = validIndex;
+
+        return true;
+    }
+
+    private bool ValidateLegacyPrefabConfiguration()
+    {
+        if (characterPrefabs == null ||
+            characterPrefabs.Length == 0)
+        {
+            Debug.LogError(
+                "CharacterCarouselController ist ungueltig: " +
+                "characterPrefabs ist leer oder nicht gesetzt.",
+                gameObject
+            );
+
+            return false;
+        }
+
         if (currentIndex < 0 ||
             currentIndex >= characterPrefabs.Length)
         {
@@ -302,7 +405,7 @@ public class CharacterCarouselController : MonoBehaviour
             return true;
 
         int validIndex =
-            FindFirstValidPrefabIndex();
+            FindFirstValidCharacterIndex();
 
         if (validIndex < 0)
         {
@@ -361,33 +464,127 @@ public class CharacterCarouselController : MonoBehaviour
         out GameObject selectedPrefab
     )
     {
-        selectedPrefab = null;
+        return TryGetPrefabAt(
+            currentIndex,
+            true,
+            out selectedPrefab
+        );
+    }
 
-        if (previewParent == null ||
-            characterPrefabs == null ||
-            characterPrefabs.Length == 0)
+    private bool TryGetSelectedCharacterId(
+        out string selectedCharacterId
+    )
+    {
+        selectedCharacterId = string.Empty;
+
+        if (!UsesCharacterDatabase)
         {
+            Debug.LogError(
+                "CharacterCarouselController kann die Auswahl nicht " +
+                "speichern, weil keine CharacterDatabase zugewiesen ist. " +
+                "Das Legacy-characterPrefabs-Array ist nur ein " +
+                "Preview-Fallback und darf keine characterId erzeugen.",
+                gameObject
+            );
+
             return false;
         }
 
-        if (currentIndex < 0 ||
-            currentIndex >= characterPrefabs.Length)
+        if (!characterDatabase.ValidateDatabase(gameObject))
+            return false;
+
+        if (!characterDatabase.TryGetDefinitionAt(
+                currentIndex,
+                out CharacterDatabase.CharacterDefinition definition))
         {
+            Debug.LogError(
+                "CharacterCarouselController kann die Auswahl nicht " +
+                $"speichern, weil der Datenbankeintrag an Index " +
+                $"{currentIndex} ungueltig ist.",
+                gameObject
+            );
+
             return false;
         }
 
-        selectedPrefab =
-            characterPrefabs[currentIndex];
+        selectedCharacterId =
+            definition.CharacterId;
 
-        if (selectedPrefab != null)
+        if (!string.IsNullOrWhiteSpace(
+                selectedCharacterId))
+        {
             return true;
+        }
 
-        Debug.LogWarning(
-            "CharacterCarouselController kann das ausgewaehlte " +
-            $"Character-Prefab an Index {currentIndex} nicht laden, " +
-            "weil der Eintrag leer ist.",
+        Debug.LogError(
+            "CharacterCarouselController kann die Auswahl nicht " +
+            "speichern, weil die characterId leer ist.",
             gameObject
         );
+
+        return false;
+    }
+
+    private bool TryGetPrefabAt(
+        int index,
+        bool logWarning,
+        out GameObject prefab
+    )
+    {
+        prefab = null;
+
+        if (UsesCharacterDatabase)
+        {
+            if (characterDatabase == null ||
+                index < 0 ||
+                index >= characterDatabase.Count)
+            {
+                return false;
+            }
+
+            if (characterDatabase.TryGetDefinitionAt(
+                    index,
+                    out CharacterDatabase.CharacterDefinition definition))
+            {
+                prefab = definition.CharacterPrefab;
+                return prefab != null;
+            }
+
+            if (logWarning)
+            {
+                Debug.LogWarning(
+                    "CharacterCarouselController kann den " +
+                    $"CharacterDatabase-Eintrag an Index {index} " +
+                    "nicht fuer die Preview laden.",
+                    gameObject
+                );
+            }
+
+            return false;
+        }
+
+        if (characterPrefabs == null ||
+            index < 0 ||
+            index >= characterPrefabs.Length)
+        {
+            return false;
+        }
+
+        prefab =
+            characterPrefabs[index];
+
+        if (prefab != null)
+            return true;
+
+        if (logWarning)
+        {
+            Debug.LogWarning(
+                "CharacterCarouselController kann das ausgewaehlte " +
+                $"Character-Prefab an Index {index} nicht laden, " +
+                "weil der Eintrag leer ist.",
+                gameObject
+            );
+        }
 
         return false;
     }
@@ -396,11 +593,11 @@ public class CharacterCarouselController : MonoBehaviour
         int direction
     )
     {
-        if (characterPrefabs == null ||
-            characterPrefabs.Length == 0)
-        {
+        int count =
+            GetCharacterEntryCount();
+
+        if (count <= 0)
             return -1;
-        }
 
         int step =
             direction < 0
@@ -411,53 +608,77 @@ public class CharacterCarouselController : MonoBehaviour
             currentIndex;
 
         for (int i = 0;
-             i < characterPrefabs.Length;
+             i < count;
              i++)
         {
             index =
-                (index + step +
-                 characterPrefabs.Length) %
-                characterPrefabs.Length;
+                (index + step + count) %
+                count;
 
-            if (characterPrefabs[index] != null)
+            if (TryGetPrefabAt(
+                    index,
+                    false,
+                    out _))
+            {
                 return index;
+            }
         }
 
         return -1;
     }
 
-    private int FindFirstValidPrefabIndex()
+    private int FindFirstValidCharacterIndex()
     {
-        if (characterPrefabs == null)
-            return -1;
+        int count =
+            GetCharacterEntryCount();
 
         for (int i = 0;
-             i < characterPrefabs.Length;
+             i < count;
              i++)
         {
-            if (characterPrefabs[i] != null)
+            if (TryGetPrefabAt(
+                    i,
+                    false,
+                    out _))
+            {
                 return i;
+            }
         }
 
         return -1;
     }
 
-    private int CountValidPrefabs()
+    private int CountValidCharacters()
     {
-        if (characterPrefabs == null)
-            return 0;
+        int count =
+            GetCharacterEntryCount();
 
-        int count = 0;
+        int validCount = 0;
 
         for (int i = 0;
-             i < characterPrefabs.Length;
+             i < count;
              i++)
         {
-            if (characterPrefabs[i] != null)
-                count++;
+            if (TryGetPrefabAt(
+                    i,
+                    false,
+                    out _))
+            {
+                validCount++;
+            }
         }
 
-        return count;
+        return validCount;
+    }
+
+    private int GetCharacterEntryCount()
+    {
+        if (UsesCharacterDatabase)
+            return characterDatabase.Count;
+
+        return characterPrefabs != null
+            ? characterPrefabs.Length
+            : 0;
     }
 
     private void UpdateButtonStates(
@@ -467,7 +688,7 @@ public class CharacterCarouselController : MonoBehaviour
         bool canNavigate =
             hasValidConfiguration &&
             !isFinishing &&
-            CountValidPrefabs() > 1;
+            CountValidCharacters() > 1;
 
         bool canFinish =
             hasValidConfiguration &&
