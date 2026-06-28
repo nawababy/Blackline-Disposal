@@ -1219,6 +1219,7 @@ MonoBehaviour:
     itemName: 
     icon: {fileID: 0}
     heldPrefab: {fileID: 0}
+  knownHotbarItems: []
   currentSelectedSlot: 0
   currentCash: 0
 --- !u!1 &492980407
