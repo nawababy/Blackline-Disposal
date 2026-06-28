@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467033b4652ec044ca86e4dd54980148, type: 3}
+  m_Name: CharacterDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterDatabase
+  characters:
+  - characterId: adult_female_body_01
+    displayName: Female 01
+    characterPrefab: {fileID: 8659910988401533909, guid: 0bccf882cac819543b7416686f18683a, type: 3}
+  - characterId: adult_female_body_02
+    displayName: Female 02
+    characterPrefab: {fileID: 4684028063070992731, guid: b89a0adbad270e046afcd535883d83a8, type: 3}
+  - characterId: adult_female_body_03
+    displayName: Female 03
+    characterPrefab: {fileID: 2771820830776399320, guid: b393005eda84ef3448355d69c93fb2c0, type: 3}
+  - characterId: adult_female_body_04
+    displayName: Female 04
+    characterPrefab: {fileID: 7556284595058908472, guid: 03e25678159588f46adde47777b1b639, type: 3}
+  - characterId: adult_male_body_01
+    displayName: Male 01
+    characterPrefab: {fileID: 5370335429791120385, guid: 988663c8222c6a94599416b8dee67a53, type: 3}
+  - characterId: adult_male_body_02
+    displayName: Male 02
+    characterPrefab: {fileID: 6699545107184897123, guid: de168d79d55a190498a2d05c5d31bfdc, type: 3}
+  - characterId: adult_male_body_03
+    displayName: Male 03
+    characterPrefab: {fileID: 4129126121490899468, guid: 5bc1e27eff377284e92eb84e31fa3a50, type: 3}
+  - characterId: adult_male_body_04
+    displayName: Male 04
+    characterPrefab: {fileID: 1138521823378566213, guid: 0a05fe040b7b22543b814cd314e415d2, type: 3}
+  - characterId: plussize_female_body_01
+    displayName: Plus Female 01
+    characterPrefab: {fileID: 63114896077856190, guid: c4002c1b290a13047bccba058dd4af9f, type: 3}
+  - characterId: plussize_female_body_02
+    displayName: Plus Female 02
+    characterPrefab: {fileID: 1088216401295715023, guid: 55fd06dcc8486eb4ab0570bedc3cef39, type: 3}
+  - characterId: plussize_female_body_03
+    displayName: Plus Female 03
+    characterPrefab: {fileID: 689025647139500077, guid: 1f5d6257106e4aa4980a9c92d0ea1dec, type: 3}
+  - characterId: plussize_female_body_04
+    displayName: Plus Female 04
+    characterPrefab: {fileID: 689025647139500077, guid: 1f5d6257106e4aa4980a9c92d0ea1dec, type: 3}
+  - characterId: plussize_male_body_01
+    displayName: Plus Male 01
+    characterPrefab: {fileID: 517220371718947831, guid: b8fe24c2a57fa8b41b90dc9092fcde52, type: 3}
+  - characterId: plussize_male_body_02
+    displayName: Plus Male 02
+    characterPrefab: {fileID: 1693918588272164472, guid: 56ee3a75dffbb734f9f18f3cdf12d6fe, type: 3}
+  - characterId: plussize_male_body_03
+    displayName: Plus Male 03
+    characterPrefab: {fileID: 5897855953934116875, guid: dab158c1c966d03458e1736383f17356, type: 3}
+  - characterId: plussize_male_body_04
+    displayName: Plus Male 04
+    characterPrefab: {fileID: 686243980799999296, guid: 58580f2dd38f8224795c63eb93898b27, type: 3}
+  defaultCharacterId: adult_female_body_01

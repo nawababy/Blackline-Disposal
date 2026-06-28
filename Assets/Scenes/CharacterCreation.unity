@@ -3348,6 +3348,7 @@ MonoBehaviour:
   - {fileID: 7478981832029087370, guid: 764e09a3a4143b84db2d5e4449070fac, type: 3}
   - {fileID: 5846987473127385681, guid: a4f4e9e05f51b50438a608a4487b46fc, type: 3}
   previewScale: 150
+  characterDatabase: {fileID: 11400000, guid: da37a7a022f963b4f87620f4fdd6b16a, type: 2}
   leftArrowButton: {fileID: 1454969514}
   rightArrowButton: {fileID: 511196736}
   finishButton: {fileID: 935348421}
