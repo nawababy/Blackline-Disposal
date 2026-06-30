@@ -12,195 +12,1353 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3c75ca04ea5f341beab8a0f9a7daac, type: 3}
   m_Name: CharacterAppearanceDatabase
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAppearanceDatabase
-  defaultBodyId: adult_female_body_01
-  defaultHairId: adult_female_hairstyle_01
-  defaultFaceId: adult_female_face_01
-  defaultUpperId: adult_female_upper_01
-  defaultPantsId: adult_female_pants_01
-  defaultShoesId: adult_female_shoes_01
+  defaultBodyTypeId: adult_female
+  bodyTypeDefinitions:
+  - bodyTypeId: adult_female
+    displayName: Adult Female
+    defaultSkinId: skin_01
+    defaultHairId: adult_female_hair_01
+    defaultFaceId: adult_female_face_neutral
+    defaultUpperId: adult_female_upper_01
+    defaultPantsId: adult_female_pants_01
+    defaultShoesId: adult_female_shoes_01
+  - bodyTypeId: adult_male
+    displayName: Adult Male
+    defaultSkinId: skin_01
+    defaultHairId: adult_male_hair_01
+    defaultFaceId: adult_male_face_neutral
+    defaultUpperId: adult_male_upper_01
+    defaultPantsId: adult_male_pants_01
+    defaultShoesId: adult_male_shoes_01
+  - bodyTypeId: plussize_female
+    displayName: Plus-Size Female
+    defaultSkinId: skin_01
+    defaultHairId: plussize_female_hair_01
+    defaultFaceId: plussize_female_face_neutral
+    defaultUpperId: plussize_female_upper_01
+    defaultPantsId: plussize_female_pants_01
+    defaultShoesId: plussize_female_shoes_01
+  - bodyTypeId: plussize_male
+    displayName: Plus-Size Male
+    defaultSkinId: skin_01
+    defaultHairId: plussize_male_hair_01
+    defaultFaceId: plussize_male_face_neutral
+    defaultUpperId: plussize_male_upper_01
+    defaultPantsId: plussize_male_pants_01
+    defaultShoesId: plussize_male_shoes_01
   bodyDefinitions:
-  - id: adult_female_body_01
-    displayName: Body 01
-    category: 0
-    compatibilityKey: adult_female
+  - id: adult_female_skin_01
+    bodyTypeId: adult_female
+    skinId: skin_01
+    displayName: Adult Female Skin 01
     prefab: {fileID: 8659910988401533909, guid: 0bccf882cac819543b7416686f18683a, type: 3}
-  - id: adult_female_body_02
-    displayName: Body 02
-    category: 0
-    compatibilityKey: adult_female
+  - id: adult_female_skin_02
+    bodyTypeId: adult_female
+    skinId: skin_02
+    displayName: Adult Female Skin 02
     prefab: {fileID: 4684028063070992731, guid: b89a0adbad270e046afcd535883d83a8, type: 3}
-  - id: adult_female_body_03
-    displayName: Body 03
-    category: 0
-    compatibilityKey: adult_female
+  - id: adult_female_skin_03
+    bodyTypeId: adult_female
+    skinId: skin_03
+    displayName: Adult Female Skin 03
     prefab: {fileID: 2771820830776399320, guid: b393005eda84ef3448355d69c93fb2c0, type: 3}
-  - id: adult_female_body_04
-    displayName: Body 04
-    category: 0
-    compatibilityKey: adult_female
+  - id: adult_female_skin_04
+    bodyTypeId: adult_female
+    skinId: skin_04
+    displayName: Adult Female Skin 04
     prefab: {fileID: 7556284595058908472, guid: 03e25678159588f46adde47777b1b639, type: 3}
-  - id: adult_male_body_05
-    displayName: Body 05
-    category: 0
-    compatibilityKey: adult_male
-    prefab: {fileID: 919132149155446097, guid: ce5ae22a01fc457458935dcf6d254061, type: 3}
-  - id: adult_male_body_06
-    displayName: Body 06
-    category: 0
-    compatibilityKey: adult_male
+  - id: adult_male_skin_01
+    bodyTypeId: adult_male
+    skinId: skin_01
+    displayName: Adult Male Skin 01
+    prefab: {fileID: 5370335429791120385, guid: 988663c8222c6a94599416b8dee67a53, type: 3}
+  - id: adult_male_skin_02
+    bodyTypeId: adult_male
+    skinId: skin_02
+    displayName: Adult Male Skin 02
     prefab: {fileID: 6699545107184897123, guid: de168d79d55a190498a2d05c5d31bfdc, type: 3}
-  - id: adult_male_body_07
-    displayName: Body 07
-    category: 0
-    compatibilityKey: adult_male
+  - id: adult_male_skin_03
+    bodyTypeId: adult_male
+    skinId: skin_03
+    displayName: Adult Male Skin 03
     prefab: {fileID: 4129126121490899468, guid: 5bc1e27eff377284e92eb84e31fa3a50, type: 3}
-  - id: adult_male_body_08
-    displayName: Body 08
-    category: 0
-    compatibilityKey: adult_male
+  - id: adult_male_skin_04
+    bodyTypeId: adult_male
+    skinId: skin_04
+    displayName: Adult Male Skin 04
     prefab: {fileID: 1138521823378566213, guid: 0a05fe040b7b22543b814cd314e415d2, type: 3}
-  - id: plussize_female_body_09
-    displayName: Body 09
-    category: 0
-    compatibilityKey: plussize_female
+  - id: plussize_female_skin_01
+    bodyTypeId: plussize_female
+    skinId: skin_01
+    displayName: Plus-Size Female Skin 01
     prefab: {fileID: 63114896077856190, guid: c4002c1b290a13047bccba058dd4af9f, type: 3}
-  - id: plussize_female_body_10
-    displayName: Body 10
-    category: 0
-    compatibilityKey: plussize_female
+  - id: plussize_female_skin_02
+    bodyTypeId: plussize_female
+    skinId: skin_02
+    displayName: Plus-Size Female Skin 02
     prefab: {fileID: 1088216401295715023, guid: 55fd06dcc8486eb4ab0570bedc3cef39, type: 3}
-  - id: plussize_female_body_11
-    displayName: Body 11
-    category: 0
-    compatibilityKey: plussize_female
+  - id: plussize_female_skin_03
+    bodyTypeId: plussize_female
+    skinId: skin_03
+    displayName: Plus-Size Female Skin 03
     prefab: {fileID: 689025647139500077, guid: 1f5d6257106e4aa4980a9c92d0ea1dec, type: 3}
-  - id: plussize_female_body_12
-    displayName: Body 12
-    category: 0
-    compatibilityKey: plussize_female
+  - id: plussize_female_skin_04
+    bodyTypeId: plussize_female
+    skinId: skin_04
+    displayName: Plus-Size Female Skin 04
     prefab: {fileID: 4176570094083700603, guid: 95fd201a532b8414cb30696600fd09a0, type: 3}
-  - id: plussize_male_body_13
-    displayName: Body 13
-    category: 0
-    compatibilityKey: plussize_male
-    prefab: {fileID: 919132149155446097, guid: 469ea111967267042aa44c44f53b9f9a, type: 3}
-  - id: plussize_male_body_14
-    displayName: Body 14
-    category: 0
-    compatibilityKey: plussize_male
+  - id: plussize_male_skin_01
+    bodyTypeId: plussize_male
+    skinId: skin_01
+    displayName: Plus-Size Male Skin 01
+    prefab: {fileID: 517220371718947831, guid: b8fe24c2a57fa8b41b90dc9092fcde52, type: 3}
+  - id: plussize_male_skin_02
+    bodyTypeId: plussize_male
+    skinId: skin_02
+    displayName: Plus-Size Male Skin 02
     prefab: {fileID: 1693918588272164472, guid: 56ee3a75dffbb734f9f18f3cdf12d6fe, type: 3}
-  - id: plussize_male_body_15
-    displayName: Body 15
-    category: 0
-    compatibilityKey: plussize_male
+  - id: plussize_male_skin_03
+    bodyTypeId: plussize_male
+    skinId: skin_03
+    displayName: Plus-Size Male Skin 03
     prefab: {fileID: 5897855953934116875, guid: dab158c1c966d03458e1736383f17356, type: 3}
-  - id: plussize_male_body_16
-    displayName: Body 16
-    category: 0
-    compatibilityKey: plussize_male
+  - id: plussize_male_skin_04
+    bodyTypeId: plussize_male
+    skinId: skin_04
+    displayName: Plus-Size Male Skin 04
     prefab: {fileID: 686243980799999296, guid: 58580f2dd38f8224795c63eb93898b27, type: 3}
   hairDefinitions:
-  - id: adult_female_hairstyle_01
-    displayName: Hair 01
+  - id: adult_female_hair_01
+    displayName: Adult Female Hair 01
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 5296428632075364320, guid: 8ab5e2fbb6c8a8845a7d65af7843539f, type: 3}
-  - id: adult_female_hairstyle_02
-    displayName: Hair 02
+  - id: adult_female_hair_02
+    displayName: Adult Female Hair 02
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 4623559677924846726, guid: 0f34b97c80b23fb4c8d4af6b87fd73eb, type: 3}
-  - id: adult_female_hairstyle_03
-    displayName: Hair 03
+  - id: adult_female_hair_03
+    displayName: Adult Female Hair 03
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 1994982735802717737, guid: 5fe9be684af27d949abe455854be97c9, type: 3}
-  - id: adult_female_hairstyle_04
-    displayName: Hair 04
+  - id: adult_female_hair_04
+    displayName: Adult Female Hair 04
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 7145647658609944763, guid: 53d12ce9f427c9a4891520e48251c68f, type: 3}
-  - id: adult_female_hairstyle_05
-    displayName: Hair 05
+  - id: adult_female_hair_05
+    displayName: Adult Female Hair 05
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 6338174312574058707, guid: 70bdcbf7dff481843a39b0e723a250a3, type: 3}
-  - id: adult_female_hairstyle_06
-    displayName: Hair 06
+  - id: adult_female_hair_06
+    displayName: Adult Female Hair 06
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 8361631857208197047, guid: 490f324534ed3364bb6a93e2045da9a6, type: 3}
-  - id: adult_female_hairstyle_07
-    displayName: Hair 07
+  - id: adult_female_hair_07
+    displayName: Adult Female Hair 07
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 7171814340358457345, guid: 8efbd1552b7f59240996e5e618015552, type: 3}
-  - id: adult_female_hairstyle_08
-    displayName: Hair 08
+  - id: adult_female_hair_08
+    displayName: Adult Female Hair 08
     category: 1
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 3212276326074295255, guid: 230a9aba6224e7f449b06c340022a0e8, type: 3}
+  - id: adult_male_hair_01
+    displayName: Adult Male Hair 01
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 9067137936374815029, guid: bb32b27cca561504b8219bbfb0fac719, type: 3}
+  - id: adult_male_hair_02
+    displayName: Adult Male Hair 02
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 9022910101183537087, guid: 8eef2869de93d79459d00885f1ec7401, type: 3}
+  - id: adult_male_hair_03
+    displayName: Adult Male Hair 03
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7383591951984177858, guid: dccc3e3fd558cd34bb67d0560b44bbbb, type: 3}
+  - id: adult_male_hair_04
+    displayName: Adult Male Hair 04
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2814200919450541088, guid: 23b177163eab01d4a9b175c624c695e9, type: 3}
+  - id: adult_male_hair_05
+    displayName: Adult Male Hair 05
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3064467438618093861, guid: 86abd41094c4731498c2c8256fdf5ebc, type: 3}
+  - id: adult_male_hair_06
+    displayName: Adult Male Hair 06
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 608576463314715035, guid: ef02fa9ccc329dc43b780e88e523ccf0, type: 3}
+  - id: adult_male_hair_07
+    displayName: Adult Male Hair 07
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2416562290158578120, guid: 04bf494f47fdbe74a92a9b585f26e79f, type: 3}
+  - id: adult_male_hair_08
+    displayName: Adult Male Hair 08
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2144740093699264027, guid: 512503d2719d9a64ca3f87ef5f728393, type: 3}
+  - id: adult_male_hair_09
+    displayName: Adult Male Hair 09
+    category: 1
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2361840518781495996, guid: 33b1f63f16c58c34ea04e88bdc2a63fa, type: 3}
+  - id: plussize_female_hair_01
+    displayName: Plus-Size Female Hair 01
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8676984371268893837, guid: 2f49d8a9813dcb449bb93922a1628f12, type: 3}
+  - id: plussize_female_hair_02
+    displayName: Plus-Size Female Hair 02
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8542875014877722694, guid: 14ba177a60dd74f41b7e256cefa405ec, type: 3}
+  - id: plussize_female_hair_03
+    displayName: Plus-Size Female Hair 03
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 9059406266327862316, guid: b3c999f5fd0838242a6d65f93c9aff14, type: 3}
+  - id: plussize_female_hair_04
+    displayName: Plus-Size Female Hair 04
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5568565733460369267, guid: 3adb7bb37782ce748a33868aff352896, type: 3}
+  - id: plussize_female_hair_05
+    displayName: Plus-Size Female Hair 05
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 739494561130869203, guid: 7ccc142c10b62854c87c930324fd6ab6, type: 3}
+  - id: plussize_female_hair_06
+    displayName: Plus-Size Female Hair 06
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 6940808045383207355, guid: a9895ca8e75536243879535e3aa52e61, type: 3}
+  - id: plussize_female_hair_07
+    displayName: Plus-Size Female Hair 07
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2239506162275727942, guid: 061893574e5b1e546ad49b0bc68a6f14, type: 3}
+  - id: plussize_female_hair_08
+    displayName: Plus-Size Female Hair 08
+    category: 1
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1308828401469545034, guid: a912ff53b8b7bbd4184435ad4e3e316e, type: 3}
+  - id: plussize_male_hair_01
+    displayName: Plus-Size Male Hair 01
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6552145350575427471, guid: e9e9abe523d850d44927a0c607b4970a, type: 3}
+  - id: plussize_male_hair_02
+    displayName: Plus-Size Male Hair 02
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4281415382514060438, guid: c7aa1fea9775dff42a2e2a6558837d48, type: 3}
+  - id: plussize_male_hair_03
+    displayName: Plus-Size Male Hair 03
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6061904402206764086, guid: f11c5b246d3e1c943924c0e6d03fadf1, type: 3}
+  - id: plussize_male_hair_04
+    displayName: Plus-Size Male Hair 04
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3000472004272246929, guid: a8d08d5835101f446be3343783cbc1c3, type: 3}
+  - id: plussize_male_hair_05
+    displayName: Plus-Size Male Hair 05
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5789324029989671508, guid: e814ab444e8e967459935034d549b877, type: 3}
+  - id: plussize_male_hair_06
+    displayName: Plus-Size Male Hair 06
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5788247668576536375, guid: cbb20e586a9d4b44aba963c5691aaa7e, type: 3}
+  - id: plussize_male_hair_07
+    displayName: Plus-Size Male Hair 07
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 2192799956308879186, guid: 9728b87660cd0d044a1ec3b1e41d337f, type: 3}
+  - id: plussize_male_hair_08
+    displayName: Plus-Size Male Hair 08
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8795084504125855436, guid: 4139a654135e1f649bf0192a9daef954, type: 3}
+  - id: plussize_male_hair_09
+    displayName: Plus-Size Male Hair 09
+    category: 1
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5643889134436454427, guid: 06d71329673d85d46ab62872cdeda00b, type: 3}
   faceDefinitions:
-  - id: adult_female_face_01
-    displayName: Face 01
+  - id: adult_female_face_anger
+    displayName: Adult Female Face Anger
     category: 2
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 6703444493532891275, guid: 30fe01710f9ab2a418778afb44f54125, type: 3}
-  - id: adult_female_face_02
-    displayName: Face 02
+  - id: adult_female_face_angry
+    displayName: Adult Female Face Angry
     category: 2
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 5976725226985819499, guid: be29fe32b9a9ae84795fe6f680ee0d41, type: 3}
-  - id: adult_female_face_03
-    displayName: Face 03
+  - id: adult_female_face_confuse
+    displayName: Adult Female Face Confuse
     category: 2
-    compatibilityKey: adult_female
+    bodyTypeId: adult_female
+    skinId: 
     prefab: {fileID: 7288528408227310691, guid: 1d66a0b8c67200245994c19e412723e8, type: 3}
+  - id: adult_female_face_evil
+    displayName: Adult Female Face Evil
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1641152747284541475, guid: 98998a7d09dd91945a9b5ebb825078c9, type: 3}
+  - id: adult_female_face_happy
+    displayName: Adult Female Face Happy
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8393936610732164680, guid: ade30377f1f2b944185f1f287724395e, type: 3}
+  - id: adult_female_face_impatience
+    displayName: Adult Female Face Impatience
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6075093095849530907, guid: 0413df60e7c053b43ad33ec1ece25620, type: 3}
+  - id: adult_female_face_neutral
+    displayName: Adult Female Face Neutral
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6676595344099191864, guid: 7266c48162948b24c9b510fdf44777de, type: 3}
+  - id: adult_female_face_sad
+    displayName: Adult Female Face Sad
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2917790687464619314, guid: f8ff6c9da159d8e48bdd85bf716afbee, type: 3}
+  - id: adult_female_face_surprised
+    displayName: Adult Female Face Surprised
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4459090600497460886, guid: d68c136727f0b9849be7029eb3206a2f, type: 3}
+  - id: adult_female_face_usual
+    displayName: Adult Female Face Usual
+    category: 2
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7936815314371324868, guid: 7024dbee94c17f043add9d415b8a01cf, type: 3}
+  - id: adult_male_face_anger
+    displayName: Adult Male Face Anger
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3872903717622049408, guid: 0e32e8e6bbd2e8b44a50a984b31bd704, type: 3}
+  - id: adult_male_face_angry
+    displayName: Adult Male Face Angry
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3230804565918765941, guid: a84652621ab3e724f913c7499101fe1a, type: 3}
+  - id: adult_male_face_confuse
+    displayName: Adult Male Face Confuse
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3838166159918847661, guid: 34469f2563b3a6a4f866a1457444ddad, type: 3}
+  - id: adult_male_face_evil
+    displayName: Adult Male Face Evil
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3007918324222196885, guid: 15f4ff2b510ab724994502992f137d2c, type: 3}
+  - id: adult_male_face_happy
+    displayName: Adult Male Face Happy
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8377549183499682751, guid: 6fb5b0a6df80a5448a284e5c268b30bc, type: 3}
+  - id: adult_male_face_impatience
+    displayName: Adult Male Face Impatience
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7284952286779279243, guid: 23a13c08d5ba31942b0c3695e75976c1, type: 3}
+  - id: adult_male_face_neutral
+    displayName: Adult Male Face Neutral
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2760194158309421514, guid: b1c4b3ef86d370842bb1c1ddaf7d395c, type: 3}
+  - id: adult_male_face_sad
+    displayName: Adult Male Face Sad
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3859253675915936338, guid: 5271856f7832b8d438a0d777ee9fccd7, type: 3}
+  - id: adult_male_face_surprised
+    displayName: Adult Male Face Surprised
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3625523403662082723, guid: 1f62701996989524e80d686e7ff8f1d3, type: 3}
+  - id: adult_male_face_usual
+    displayName: Adult Male Face Usual
+    category: 2
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1054324334924609793, guid: abe88c6b88ea1224a8ada8ef9a86678c, type: 3}
+  - id: plussize_female_face_anger
+    displayName: Plus-Size Female Face Anger
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 7395163392058420116, guid: b73c0159038e14843b86db874287f893, type: 3}
+  - id: plussize_female_face_angry
+    displayName: Plus-Size Female Face Angry
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5942146150589564595, guid: 8cbf66753755cef44950febdb2c69d67, type: 3}
+  - id: plussize_female_face_confuse
+    displayName: Plus-Size Female Face Confuse
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1328720650031233158, guid: de6eb3f9d0d626b4a90f47f20111dbf0, type: 3}
+  - id: plussize_female_face_evil
+    displayName: Plus-Size Female Face Evil
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 3044498943508826825, guid: aac1e4018dd6490479fa3c04f1989aac, type: 3}
+  - id: plussize_female_face_happy
+    displayName: Plus-Size Female Face Happy
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 937667368596972513, guid: e688072bd089bee4198fca626657835a, type: 3}
+  - id: plussize_female_face_impatience
+    displayName: Plus-Size Female Face Impatience
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8362436498536090475, guid: 7c8c281f41189b14ea3b041c3183081e, type: 3}
+  - id: plussize_female_face_neutral
+    displayName: Plus-Size Female Face Neutral
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1617778239118480015, guid: 8a89ba906217b804abecd8befc0e5acb, type: 3}
+  - id: plussize_female_face_sad
+    displayName: Plus-Size Female Face Sad
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 539357623051002551, guid: 6b56b70487fe3224b92f7a74953921b7, type: 3}
+  - id: plussize_female_face_surprised
+    displayName: Plus-Size Female Face Surprised
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8564441336860578030, guid: 2d7463d7b16ed624aad687620140eab2, type: 3}
+  - id: plussize_female_face_usual
+    displayName: Plus-Size Female Face Usual
+    category: 2
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1392977651161702808, guid: 50f8a409ee133064f93bb49fe45bc2d5, type: 3}
+  - id: plussize_male_face_anger
+    displayName: Plus-Size Male Face Anger
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7744216146282051174, guid: 935ed5265d18b034bacca91d7686422a, type: 3}
+  - id: plussize_male_face_angry
+    displayName: Plus-Size Male Face Angry
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 1802339326873806366, guid: b948f54f37611994398afb2a47b3d07c, type: 3}
+  - id: plussize_male_face_confuse
+    displayName: Plus-Size Male Face Confuse
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3298467824249423694, guid: d1214e51b7a5756468bc466c717769e6, type: 3}
+  - id: plussize_male_face_evil
+    displayName: Plus-Size Male Face Evil
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4739555664632120589, guid: 890732da3d83b4c499f60e97536344ef, type: 3}
+  - id: plussize_male_face_happy
+    displayName: Plus-Size Male Face Happy
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3109064990365694129, guid: 6f50cd9a1dbbeb245ba8fc6936b631af, type: 3}
+  - id: plussize_male_face_impatience
+    displayName: Plus-Size Male Face Impatience
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7234537606976698637, guid: ba3c8326f48bd2048bcb971781e09588, type: 3}
+  - id: plussize_male_face_neutral
+    displayName: Plus-Size Male Face Neutral
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3856240128384496611, guid: 84ef69f712ddc804f815c36aa3baa8ac, type: 3}
+  - id: plussize_male_face_sad
+    displayName: Plus-Size Male Face Sad
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3565050861001979783, guid: 88ab261ef63092e42bb184d1048daef0, type: 3}
+  - id: plussize_male_face_surprised
+    displayName: Plus-Size Male Face Surprised
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3072427547605607770, guid: b2402334bb5c82640ae6a8fab25bc03c, type: 3}
+  - id: plussize_male_face_usual
+    displayName: Plus-Size Male Face Usual
+    category: 2
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4715827627640274147, guid: 3d9c3331e361bfa43944d794c165c68e, type: 3}
   upperDefinitions:
   - id: adult_female_upper_01
-    displayName: Shirt 01
+    displayName: Adult Female Upper 01
     category: 3
-    compatibilityKey: adult_female
-    prefab: {fileID: 7857183502567428377, guid: b06123002dd1b7b4eaf753a6add5124d, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3899307017215297286, guid: 27aa7e74abeb2c840b00af1fa37a7138, type: 3}
   - id: adult_female_upper_02
-    displayName: Shirt 02
+    displayName: Adult Female Upper 02
     category: 3
-    compatibilityKey: adult_female
-    prefab: {fileID: 3913047839885015090, guid: ce13d4bf02a37304f829be7c5583a8fb, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8653102548034310526, guid: 0033e981ba2d0e142b7b75ae1c517801, type: 3}
   - id: adult_female_upper_03
-    displayName: Shirt 03
+    displayName: Adult Female Upper 03
     category: 3
-    compatibilityKey: adult_female
-    prefab: {fileID: 116081502677557143, guid: 16d2cfe96f4d0024ca1cc7f942f68d2a, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8139179503014477648, guid: a162bf4dbae7d51419ca9056e2c8e5c0, type: 3}
+  - id: adult_female_upper_04
+    displayName: Adult Female Upper 04
+    category: 3
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2700187405964150325, guid: 6e9b32c528fa5454ebaf47c65d9a6b43, type: 3}
+  - id: adult_female_upper_05
+    displayName: Adult Female Upper 05
+    category: 3
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 253626745042525175, guid: c93a1eeb5e7f09742910af67fd0fdec7, type: 3}
+  - id: adult_female_upper_06
+    displayName: Adult Female Upper 06
+    category: 3
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6314949700410957733, guid: ece8e84c67fe0a34bb1a76b083cdfd81, type: 3}
+  - id: adult_female_upper_07
+    displayName: Adult Female Upper 07
+    category: 3
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4988098772915421193, guid: 6bf1375594701e747bd39dddc677122e, type: 3}
+  - id: adult_female_upper_08
+    displayName: Adult Female Upper 08
+    category: 3
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4449083789372902699, guid: ec85e5f11d24a80458569af381144f02, type: 3}
+  - id: adult_female_upper_09
+    displayName: Adult Female Upper 09
+    category: 3
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7319840174745993577, guid: 3da9761a94d8546409b9520e9d61de7f, type: 3}
+  - id: adult_male_upper_01
+    displayName: Adult Male Upper 01
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 399377011751339730, guid: 456ad78ccc9966f49abeaa3c49ea107a, type: 3}
+  - id: adult_male_upper_02
+    displayName: Adult Male Upper 02
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 293002950218556036, guid: c924e64239b3c5a4eba30d77f74c78cb, type: 3}
+  - id: adult_male_upper_03
+    displayName: Adult Male Upper 03
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4344712393365183276, guid: 373e283f50da2a947b3936ea187edb56, type: 3}
+  - id: adult_male_upper_04
+    displayName: Adult Male Upper 04
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1402463703970809389, guid: 6143fa00435cd5f46904fcb1f3533f70, type: 3}
+  - id: adult_male_upper_05
+    displayName: Adult Male Upper 05
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 636955017013072192, guid: f987aac26819d4f4dbf6fa8413565ca0, type: 3}
+  - id: adult_male_upper_06
+    displayName: Adult Male Upper 06
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5040641468543375433, guid: 176b405b5884b3248945ae576157ad1a, type: 3}
+  - id: adult_male_upper_07
+    displayName: Adult Male Upper 07
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5771539332836023424, guid: 56a2b20a07d0d1944ad0d3eb693bcc6a, type: 3}
+  - id: adult_male_upper_08
+    displayName: Adult Male Upper 08
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8081446289629653914, guid: 8aecc05ee57922a4fb74677f78583e07, type: 3}
+  - id: adult_male_upper_09
+    displayName: Adult Male Upper 09
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7445835996338209524, guid: 3a64f937b9656e84cbbeb41b240fad2e, type: 3}
+  - id: adult_male_upper_10
+    displayName: Adult Male Upper 10
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6136998261335849882, guid: bac8103b32f2dd34eaf60e133fb00689, type: 3}
+  - id: adult_male_upper_11
+    displayName: Adult Male Upper 11
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2961000016887476404, guid: 69fc3f057716008458354a3525723df5, type: 3}
+  - id: adult_male_upper_12
+    displayName: Adult Male Upper 12
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8642395550367967791, guid: 96ee73185368924469cffd68268b4b20, type: 3}
+  - id: adult_male_upper_13
+    displayName: Adult Male Upper 13
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2383468237802773516, guid: d3992a7030d6212478a7e47ebd505285, type: 3}
+  - id: adult_male_upper_14
+    displayName: Adult Male Upper 14
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8702714887287662859, guid: e9a3910a5c4b2dc428e2e008f935b578, type: 3}
+  - id: adult_male_upper_15
+    displayName: Adult Male Upper 15
+    category: 3
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4304945846445960815, guid: daf7ca99acd448d40857caffa2d1b1cd, type: 3}
+  - id: plussize_female_upper_01
+    displayName: Plus-Size Female Upper 01
+    category: 3
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8771020124157800844, guid: acfbda2792ccd7145b7645818dc88622, type: 3}
+  - id: plussize_female_upper_02
+    displayName: Plus-Size Female Upper 02
+    category: 3
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 4243594265786583916, guid: 3064fc0baaff49f46a672369ede36bc8, type: 3}
+  - id: plussize_female_upper_03
+    displayName: Plus-Size Female Upper 03
+    category: 3
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2586779979307302798, guid: 9013badcfe7f62b4e8523768af1f520f, type: 3}
+  - id: plussize_female_upper_04
+    displayName: Plus-Size Female Upper 04
+    category: 3
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 7015589150465824295, guid: 9aa41f9c8b560714d9ec760d9fcd06f4, type: 3}
+  - id: plussize_female_upper_05
+    displayName: Plus-Size Female Upper 05
+    category: 3
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 614903746375067473, guid: 3ef66c5bbbfd3ce41a7e9d62db58d919, type: 3}
+  - id: plussize_male_upper_01
+    displayName: Plus-Size Male Upper 01
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3743242389993107559, guid: 65000ac9bb217134dabafc5451edd123, type: 3}
+  - id: plussize_male_upper_02
+    displayName: Plus-Size Male Upper 02
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5828459207084125462, guid: 56e0ddce6134af34e9af515bc3e36bdc, type: 3}
+  - id: plussize_male_upper_03
+    displayName: Plus-Size Male Upper 03
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 252599587400377006, guid: 6becb1ca86c10bf46a0feef46765a8d1, type: 3}
+  - id: plussize_male_upper_04
+    displayName: Plus-Size Male Upper 04
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4230663208256306370, guid: d383d26c22d88ab428caeb6ed59f17f1, type: 3}
+  - id: plussize_male_upper_05
+    displayName: Plus-Size Male Upper 05
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 1829516872522421383, guid: 79acb5cd6b7e21541af1604d71aafbab, type: 3}
+  - id: plussize_male_upper_06
+    displayName: Plus-Size Male Upper 06
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3547302101466098898, guid: efa452e1ca4187e4ea0b48139677a2b8, type: 3}
+  - id: plussize_male_upper_07
+    displayName: Plus-Size Male Upper 07
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 2222518132544986361, guid: 2c441b279e3ad5747b44029429eb8297, type: 3}
+  - id: plussize_male_upper_08
+    displayName: Plus-Size Male Upper 08
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7530615764713515747, guid: df4939d5e53f8fb4f9a732bca9f0e1a4, type: 3}
+  - id: plussize_male_upper_09
+    displayName: Plus-Size Male Upper 09
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3603934127075461312, guid: b5f938523cf887247b83d654071b7301, type: 3}
+  - id: plussize_male_upper_10
+    displayName: Plus-Size Male Upper 10
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3863270484692488575, guid: 699b604ab7f4ea541a64fb5f0ff6de09, type: 3}
+  - id: plussize_male_upper_11
+    displayName: Plus-Size Male Upper 11
+    category: 3
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 2892397082110038449, guid: 39e14cadfc8d9fc42a92bb122473acde, type: 3}
   pantsDefinitions:
   - id: adult_female_pants_01
-    displayName: Pants 01
+    displayName: Adult Female Pants 01
     category: 4
-    compatibilityKey: adult_female
-    prefab: {fileID: 3376692683868350275, guid: 684325c2c2584234e962614166988883, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 9032901386484814328, guid: 2e6d603a18377a1418ec32435c6c78ca, type: 3}
   - id: adult_female_pants_02
-    displayName: Pants 02
+    displayName: Adult Female Pants 02
     category: 4
-    compatibilityKey: adult_female
-    prefab: {fileID: 1847980466359678464, guid: d6a4f3f3a2df741438543090a190c5f5, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 212225172037894780, guid: 51e5f9f8b9465c94890a7b5f470ee091, type: 3}
   - id: adult_female_pants_03
-    displayName: Pants 03
+    displayName: Adult Female Pants 03
     category: 4
-    compatibilityKey: adult_female
-    prefab: {fileID: 6944839418097645708, guid: 05cb983181ffac541b954038cf3e87cb, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3274504946141053188, guid: adaebc7508cba904eaf16b9b131c7b9c, type: 3}
+  - id: adult_female_pants_04
+    displayName: Adult Female Pants 04
+    category: 4
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3409148536433940963, guid: 871f6f37354c69040a7def64997fef1d, type: 3}
+  - id: adult_female_pants_05
+    displayName: Adult Female Pants 05
+    category: 4
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7328446795086646624, guid: 1727fbf8e613c51419f0d090cea61e16, type: 3}
+  - id: adult_female_pants_06
+    displayName: Adult Female Pants 06
+    category: 4
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4289854305757811213, guid: 99790c1bee5dc04438de969bef4018b8, type: 3}
+  - id: adult_female_pants_07
+    displayName: Adult Female Pants 07
+    category: 4
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1885855142007908882, guid: ad3140077f9d9b04a855aecf2f9ec1a6, type: 3}
+  - id: adult_female_pants_08
+    displayName: Adult Female Pants 08
+    category: 4
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4724764670817515873, guid: 1e67842710d997f46b2862e360cc899f, type: 3}
+  - id: adult_female_pants_09
+    displayName: Adult Female Pants 09
+    category: 4
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4218132600876423498, guid: 9c504cdc31fbbca48966d14d8a5042b4, type: 3}
+  - id: adult_male_pants_01
+    displayName: Adult Male Pants 01
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 875208500696394404, guid: 8469ced249311254d85af5fafe2d4f06, type: 3}
+  - id: adult_male_pants_02
+    displayName: Adult Male Pants 02
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 385963830796775988, guid: b59b198328b2b4149abe46d6f371cda6, type: 3}
+  - id: adult_male_pants_03
+    displayName: Adult Male Pants 03
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8721173832372932499, guid: 3babe916c13c4794da562b07583e9db2, type: 3}
+  - id: adult_male_pants_04
+    displayName: Adult Male Pants 04
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5146002359083647054, guid: abc83b7c3b93b654ab4476319d1c7a22, type: 3}
+  - id: adult_male_pants_05
+    displayName: Adult Male Pants 05
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1373945848305789165, guid: da77713433ad11f4a817d4f65805f5ef, type: 3}
+  - id: adult_male_pants_06
+    displayName: Adult Male Pants 06
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7220610319923252858, guid: 3f9a88738aa6e124dbb29e8fb55f34e3, type: 3}
+  - id: adult_male_pants_07
+    displayName: Adult Male Pants 07
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8523630042483278062, guid: 93b9848358ef53640bf1abb70c001fda, type: 3}
+  - id: adult_male_pants_08
+    displayName: Adult Male Pants 08
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1697437281770333686, guid: 0ba3007be505b834e837e09269d6e3c5, type: 3}
+  - id: adult_male_pants_09
+    displayName: Adult Male Pants 09
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5038474997843919407, guid: f253b8bdfc914ed4681fd9b24cbfbd19, type: 3}
+  - id: adult_male_pants_10
+    displayName: Adult Male Pants 10
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 42743841510124720, guid: 1047a76500ef19245afbb8c859314043, type: 3}
+  - id: adult_male_pants_11
+    displayName: Adult Male Pants 11
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4970628937114839397, guid: 3673aea9e0b4fee4f8ba9c0b358cd58b, type: 3}
+  - id: adult_male_pants_12
+    displayName: Adult Male Pants 12
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6908297305353255205, guid: 7620275671dc94c4093c0807839f388a, type: 3}
+  - id: adult_male_pants_13
+    displayName: Adult Male Pants 13
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4348426997432825007, guid: 287b9a05daacf344ebf10d09957621e5, type: 3}
+  - id: adult_male_pants_14
+    displayName: Adult Male Pants 14
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8090814206475098083, guid: 53271a525665cd541823812cb7586c39, type: 3}
+  - id: adult_male_pants_15
+    displayName: Adult Male Pants 15
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8063992420263158762, guid: c05e7a05ef214aa47897e494dd52095d, type: 3}
+  - id: adult_male_pants_16
+    displayName: Adult Male Pants 16
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1960561619390645916, guid: 9c8177ed72595b24ea9f42b32816ba93, type: 3}
+  - id: adult_male_pants_17
+    displayName: Adult Male Pants 17
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3345050025918098430, guid: e9a1370a827b19840bbd6e85b03b39ae, type: 3}
+  - id: adult_male_pants_18
+    displayName: Adult Male Pants 18
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5611695160002367555, guid: d833a8f38e3215a4d84cfec60b777d35, type: 3}
+  - id: adult_male_pants_19
+    displayName: Adult Male Pants 19
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1067722377362197137, guid: 26dc58fb922f91444838642149560ca9, type: 3}
+  - id: adult_male_pants_20
+    displayName: Adult Male Pants 20
+    category: 4
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 126260067477543512, guid: 96fa40b214438e44ab988c70f09a78f4, type: 3}
+  - id: plussize_female_pants_01
+    displayName: Plus-Size Female Pants 01
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5254195260252158785, guid: e83317e643fa5074dbcc8aab51a5e0af, type: 3}
+  - id: plussize_female_pants_02
+    displayName: Plus-Size Female Pants 02
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 76471830536765110, guid: c201890321f058a4786f98dc3d29e6c8, type: 3}
+  - id: plussize_female_pants_03
+    displayName: Plus-Size Female Pants 03
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1555236150475761636, guid: c84a283fe27042b42bdfa7ae0b1daa1e, type: 3}
+  - id: plussize_female_pants_04
+    displayName: Plus-Size Female Pants 04
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 7905695343552430210, guid: 8f8999c036f7da1498e1ba50e7f94381, type: 3}
+  - id: plussize_female_pants_05
+    displayName: Plus-Size Female Pants 05
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 3312973678186609643, guid: 6efff71bccdcf7943bdd455da4786a36, type: 3}
+  - id: plussize_female_pants_06
+    displayName: Plus-Size Female Pants 06
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2298695245542998953, guid: 82473fe366f58714a87804f34355fd0d, type: 3}
+  - id: plussize_female_pants_07
+    displayName: Plus-Size Female Pants 07
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 7079342549467945960, guid: 47d930e1edf05d64aa8d2b6275477abc, type: 3}
+  - id: plussize_female_pants_08
+    displayName: Plus-Size Female Pants 08
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1077242216591922408, guid: 052a14ad879740b428fe281074d8c1bc, type: 3}
+  - id: plussize_female_pants_09
+    displayName: Plus-Size Female Pants 09
+    category: 4
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5048332760875195760, guid: 0202f942c2c1aed4fb1d625081882e41, type: 3}
+  - id: plussize_male_pants_01
+    displayName: Plus-Size Male Pants 01
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 2324724740678710484, guid: 9ca514850ecf1fc4fab99af31745e2b0, type: 3}
+  - id: plussize_male_pants_02
+    displayName: Plus-Size Male Pants 02
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6052699876647757114, guid: 492bb510d6718314583b717e931b811e, type: 3}
+  - id: plussize_male_pants_03
+    displayName: Plus-Size Male Pants 03
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 44136845356214728, guid: f68bf3e512e344c48b686b44c0d80b36, type: 3}
+  - id: plussize_male_pants_04
+    displayName: Plus-Size Male Pants 04
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 9136664168757495689, guid: 3c9c86a90d743414ba58cb5a4e5e340b, type: 3}
+  - id: plussize_male_pants_05
+    displayName: Plus-Size Male Pants 05
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4230016239304832588, guid: cc22606becd1ae446a4e3768d6971202, type: 3}
+  - id: plussize_male_pants_06
+    displayName: Plus-Size Male Pants 06
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6228133028330586392, guid: 5a9135cad1d91e8419ae672de3aa0181, type: 3}
+  - id: plussize_male_pants_07
+    displayName: Plus-Size Male Pants 07
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4395425441115788783, guid: 132e48f54fa9863468203750dcec7d65, type: 3}
+  - id: plussize_male_pants_08
+    displayName: Plus-Size Male Pants 08
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 936445044336148748, guid: 15e517ae0d8f2f24f95d57f74b7ae219, type: 3}
+  - id: plussize_male_pants_09
+    displayName: Plus-Size Male Pants 09
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5277779752889113553, guid: 5299183a17c183d49aebc12f9b3c6239, type: 3}
+  - id: plussize_male_pants_10
+    displayName: Plus-Size Male Pants 10
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8468402825790379332, guid: 405834c6ee59037458087b9beb191e0e, type: 3}
+  - id: plussize_male_pants_11
+    displayName: Plus-Size Male Pants 11
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5382790199142692770, guid: 8b3fa584aad35b043be9f2136f4bb3d2, type: 3}
+  - id: plussize_male_pants_12
+    displayName: Plus-Size Male Pants 12
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7142900355938433393, guid: 9d97f851f4a234342933ee4e5b42fddb, type: 3}
+  - id: plussize_male_pants_13
+    displayName: Plus-Size Male Pants 13
+    category: 4
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 747254713664384852, guid: 165097644f578eb41adfdcf149f5b9e9, type: 3}
   shoesDefinitions:
   - id: adult_female_shoes_01
-    displayName: Shoes 01
+    displayName: Adult Female Shoes 01
     category: 5
-    compatibilityKey: adult_female
-    prefab: {fileID: 1149586380680395697, guid: 0740b5b63820ce14481fc86959ee7419, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8480154397680370392, guid: 31b910c884314d74e9b6b1945fb2cdd9, type: 3}
   - id: adult_female_shoes_02
-    displayName: Shoes 02
+    displayName: Adult Female Shoes 02
     category: 5
-    compatibilityKey: adult_female
-    prefab: {fileID: 919132149155446097, guid: d3857fcc38708b544a95a92e1c9c5dae, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1975764370299448206, guid: 03d9a165e11846d469b83719c07d70d8, type: 3}
   - id: adult_female_shoes_03
-    displayName: Shoes 03
+    displayName: Adult Female Shoes 03
     category: 5
-    compatibilityKey: adult_female
-    prefab: {fileID: 919132149155446097, guid: d3857fcc38708b544a95a92e1c9c5dae, type: 3}
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3578685756272565305, guid: fec8a63f2ca151941ac4324509f7842b, type: 3}
+  - id: adult_female_shoes_04
+    displayName: Adult Female Shoes 04
+    category: 5
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2157042468904114850, guid: 285e7fe2a54dcc74d9427f8d2a5f49e6, type: 3}
+  - id: adult_female_shoes_05
+    displayName: Adult Female Shoes 05
+    category: 5
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 5544925139900501974, guid: 926e14e027659e04f8affb702c65dc62, type: 3}
+  - id: adult_female_shoes_06
+    displayName: Adult Female Shoes 06
+    category: 5
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 5508719279719149970, guid: e886e26f197b2d644a8ae7eca3a95386, type: 3}
+  - id: adult_female_shoes_07
+    displayName: Adult Female Shoes 07
+    category: 5
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4396135030181586783, guid: bcf9f2207dd1a24478a6677ee6417b5b, type: 3}
+  - id: adult_female_shoes_08
+    displayName: Adult Female Shoes 08
+    category: 5
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7171023899398661092, guid: 43f8261503d98d9429bb8beae7f14baa, type: 3}
+  - id: adult_male_shoes_01
+    displayName: Adult Male Shoes 01
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8030996637037812424, guid: 4e393026f3ee9a34698185df7d6e5bb9, type: 3}
+  - id: adult_male_shoes_02
+    displayName: Adult Male Shoes 02
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2705544409760509255, guid: d073734d41255d14bb70769b6c94ec84, type: 3}
+  - id: adult_male_shoes_03
+    displayName: Adult Male Shoes 03
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5445259816347980123, guid: c5c5b9e1d1e9987428d8e2ab654d8f76, type: 3}
+  - id: adult_male_shoes_04
+    displayName: Adult Male Shoes 04
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7355198194082339592, guid: 50814f629b8ea3549bc9879ca3d22a0a, type: 3}
+  - id: adult_male_shoes_05
+    displayName: Adult Male Shoes 05
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7330930228060774653, guid: f6aa8d73dce1f204381752e40e083e56, type: 3}
+  - id: adult_male_shoes_06
+    displayName: Adult Male Shoes 06
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2411735909626868746, guid: 5e15cbf1a38fe1c4f90f150307be5be4, type: 3}
+  - id: adult_male_shoes_07
+    displayName: Adult Male Shoes 07
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3332033719124251484, guid: 35dfb0f85bb18544aa8a780cdb5aee58, type: 3}
+  - id: adult_male_shoes_08
+    displayName: Adult Male Shoes 08
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 605226328614656900, guid: 26709d949e6447f4bb0adbf71ab4e29b, type: 3}
+  - id: adult_male_shoes_09
+    displayName: Adult Male Shoes 09
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8365188644655112214, guid: 990e9a4e89b756b44a77055f026eb079, type: 3}
+  - id: adult_male_shoes_10
+    displayName: Adult Male Shoes 10
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5093177278781318198, guid: 7a5076991a66bcc47a205fe489640573, type: 3}
+  - id: adult_male_shoes_11
+    displayName: Adult Male Shoes 11
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4997940944755882413, guid: 7489b13b3a8ee0a48aa90d7d513ef59a, type: 3}
+  - id: adult_male_shoes_12
+    displayName: Adult Male Shoes 12
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8600280451780108891, guid: 6e3b4869a2b9168409513fd3771aa0f5, type: 3}
+  - id: adult_male_shoes_13
+    displayName: Adult Male Shoes 13
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7453172489570752042, guid: f7d3fae3a431bd9429f27cc49deb00aa, type: 3}
+  - id: adult_male_shoes_14
+    displayName: Adult Male Shoes 14
+    category: 5
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6209678445858692868, guid: bab144d6f7a6a3348b45aa305fcc0d8c, type: 3}
+  - id: plussize_female_shoes_01
+    displayName: Plus-Size Female Shoes 01
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8039169831311630868, guid: 126c94a284579b14da1440e81b57521b, type: 3}
+  - id: plussize_female_shoes_02
+    displayName: Plus-Size Female Shoes 02
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 6413671717391465208, guid: e165afe71697ac744a8e2d66060a47e9, type: 3}
+  - id: plussize_female_shoes_03
+    displayName: Plus-Size Female Shoes 03
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 4758106030365297684, guid: fcb569ea7079d9e4ebdd361a3a80289e, type: 3}
+  - id: plussize_female_shoes_04
+    displayName: Plus-Size Female Shoes 04
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 660642868113192028, guid: 9b336cdba35bfd744b2df2d80eb3e238, type: 3}
+  - id: plussize_female_shoes_05
+    displayName: Plus-Size Female Shoes 05
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2377582810521645003, guid: 00a44b4fc9584924d83d718b838ff434, type: 3}
+  - id: plussize_female_shoes_06
+    displayName: Plus-Size Female Shoes 06
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1703127239716197290, guid: cb7b795ba249ca943b45c479df442e7f, type: 3}
+  - id: plussize_female_shoes_07
+    displayName: Plus-Size Female Shoes 07
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 3473560263783493184, guid: 192b28e84a603d0449fe555f6c60b80c, type: 3}
+  - id: plussize_female_shoes_08
+    displayName: Plus-Size Female Shoes 08
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 9117155300870279931, guid: 697381f3270a61e41b3d1bc392a85be4, type: 3}
+  - id: plussize_female_shoes_10
+    displayName: Plus-Size Female Shoes 10
+    category: 5
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5485644198165034667, guid: f43c097f68dbf1748bc1a0f33a09e61f, type: 3}
+  - id: plussize_male_shoes_01
+    displayName: Plus-Size Male Shoes 01
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8696332304586673696, guid: 5681a2ddaad09184cae03e33bdd32cca, type: 3}
+  - id: plussize_male_shoes_02
+    displayName: Plus-Size Male Shoes 02
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5328801969527458323, guid: 9fc96f2b3c813b84296ec09191f9e032, type: 3}
+  - id: plussize_male_shoes_03
+    displayName: Plus-Size Male Shoes 03
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6026093020675903165, guid: a0dee134a2ab2f54da3fa88419b879a6, type: 3}
+  - id: plussize_male_shoes_04
+    displayName: Plus-Size Male Shoes 04
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7243283625758631133, guid: 6e04545069e76c942853d501e942ff2b, type: 3}
+  - id: plussize_male_shoes_05
+    displayName: Plus-Size Male Shoes 05
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6826753678810533666, guid: 9323f8e9b219a3844b4fe0f1b0d1d366, type: 3}
+  - id: plussize_male_shoes_06
+    displayName: Plus-Size Male Shoes 06
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5034771260187484146, guid: 4ef97bbaf27c2954a828bcb075c318d1, type: 3}
+  - id: plussize_male_shoes_07
+    displayName: Plus-Size Male Shoes 07
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8036392606168170431, guid: bee74dcd43b54684588f86f1014a6043, type: 3}
+  - id: plussize_male_shoes_08
+    displayName: Plus-Size Male Shoes 08
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7324440960009627458, guid: a8f9d395aa92f3343a1443e991061cd0, type: 3}
+  - id: plussize_male_shoes_09
+    displayName: Plus-Size Male Shoes 09
+    category: 5
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8178166721132037268, guid: 5ada351b6c03d6f41a130753b0667afc, type: 3}
