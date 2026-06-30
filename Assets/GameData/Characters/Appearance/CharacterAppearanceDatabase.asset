@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CharacterAppearanceDatabase
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAppearanceDatabase
   defaultBodyId: adult_female_body_01
-  defaultHairId: adult_female_hair_01
+  defaultHairId: adult_female_hairstyle_01
   defaultFaceId: adult_female_face_01
   defaultUpperId: adult_female_upper_01
   defaultPantsId: adult_female_pants_01
@@ -24,40 +24,170 @@ MonoBehaviour:
     category: 0
     compatibilityKey: adult_female
     prefab: {fileID: 8659910988401533909, guid: 0bccf882cac819543b7416686f18683a, type: 3}
+  - id: adult_female_body_02
+    displayName: Body 02
+    category: 0
+    compatibilityKey: adult_female
+    prefab: {fileID: 4684028063070992731, guid: b89a0adbad270e046afcd535883d83a8, type: 3}
+  - id: adult_female_body_03
+    displayName: Body 03
+    category: 0
+    compatibilityKey: adult_female
+    prefab: {fileID: 2771820830776399320, guid: b393005eda84ef3448355d69c93fb2c0, type: 3}
+  - id: adult_female_body_04
+    displayName: Body 04
+    category: 0
+    compatibilityKey: adult_female
+    prefab: {fileID: 7556284595058908472, guid: 03e25678159588f46adde47777b1b639, type: 3}
+  - id: adult_male_body_05
+    displayName: Body 05
+    category: 0
+    compatibilityKey: adult_male
+    prefab: {fileID: 919132149155446097, guid: ce5ae22a01fc457458935dcf6d254061, type: 3}
+  - id: adult_male_body_06
+    displayName: Body 06
+    category: 0
+    compatibilityKey: adult_male
+    prefab: {fileID: 6699545107184897123, guid: de168d79d55a190498a2d05c5d31bfdc, type: 3}
+  - id: adult_male_body_07
+    displayName: Body 07
+    category: 0
+    compatibilityKey: adult_male
+    prefab: {fileID: 4129126121490899468, guid: 5bc1e27eff377284e92eb84e31fa3a50, type: 3}
+  - id: adult_male_body_08
+    displayName: Body 08
+    category: 0
+    compatibilityKey: adult_male
+    prefab: {fileID: 1138521823378566213, guid: 0a05fe040b7b22543b814cd314e415d2, type: 3}
+  - id: plussize_female_body_09
+    displayName: Body 09
+    category: 0
+    compatibilityKey: plussize_female
+    prefab: {fileID: 63114896077856190, guid: c4002c1b290a13047bccba058dd4af9f, type: 3}
+  - id: plussize_female_body_10
+    displayName: Body 10
+    category: 0
+    compatibilityKey: plussize_female
+    prefab: {fileID: 1088216401295715023, guid: 55fd06dcc8486eb4ab0570bedc3cef39, type: 3}
+  - id: plussize_female_body_11
+    displayName: Body 11
+    category: 0
+    compatibilityKey: plussize_female
+    prefab: {fileID: 689025647139500077, guid: 1f5d6257106e4aa4980a9c92d0ea1dec, type: 3}
+  - id: plussize_female_body_12
+    displayName: Body 12
+    category: 0
+    compatibilityKey: plussize_female
+    prefab: {fileID: 4176570094083700603, guid: 95fd201a532b8414cb30696600fd09a0, type: 3}
+  - id: plussize_male_body_13
+    displayName: Body 13
+    category: 0
+    compatibilityKey: plussize_male
+    prefab: {fileID: 919132149155446097, guid: 469ea111967267042aa44c44f53b9f9a, type: 3}
+  - id: plussize_male_body_14
+    displayName: Body 14
+    category: 0
+    compatibilityKey: plussize_male
+    prefab: {fileID: 1693918588272164472, guid: 56ee3a75dffbb734f9f18f3cdf12d6fe, type: 3}
+  - id: plussize_male_body_15
+    displayName: Body 15
+    category: 0
+    compatibilityKey: plussize_male
+    prefab: {fileID: 5897855953934116875, guid: dab158c1c966d03458e1736383f17356, type: 3}
+  - id: plussize_male_body_16
+    displayName: Body 16
+    category: 0
+    compatibilityKey: plussize_male
+    prefab: {fileID: 686243980799999296, guid: 58580f2dd38f8224795c63eb93898b27, type: 3}
   hairDefinitions:
-  - id: adult_female_hair_01
+  - id: adult_female_hairstyle_01
     displayName: Hair 01
     category: 1
     compatibilityKey: adult_female
     prefab: {fileID: 5296428632075364320, guid: 8ab5e2fbb6c8a8845a7d65af7843539f, type: 3}
-  - id: adult_female_hair_02
+  - id: adult_female_hairstyle_02
     displayName: Hair 02
     category: 1
     compatibilityKey: adult_female
     prefab: {fileID: 4623559677924846726, guid: 0f34b97c80b23fb4c8d4af6b87fd73eb, type: 3}
+  - id: adult_female_hairstyle_03
+    displayName: Hair 03
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 1994982735802717737, guid: 5fe9be684af27d949abe455854be97c9, type: 3}
+  - id: adult_female_hairstyle_04
+    displayName: Hair 04
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 7145647658609944763, guid: 53d12ce9f427c9a4891520e48251c68f, type: 3}
+  - id: adult_female_hairstyle_05
+    displayName: Hair 05
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 6338174312574058707, guid: 70bdcbf7dff481843a39b0e723a250a3, type: 3}
+  - id: adult_female_hairstyle_06
+    displayName: Hair 06
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 8361631857208197047, guid: 490f324534ed3364bb6a93e2045da9a6, type: 3}
+  - id: adult_female_hairstyle_07
+    displayName: Hair 07
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 7171814340358457345, guid: 8efbd1552b7f59240996e5e618015552, type: 3}
+  - id: adult_female_hairstyle_08
+    displayName: Hair 08
+    category: 1
+    compatibilityKey: adult_female
+    prefab: {fileID: 3212276326074295255, guid: 230a9aba6224e7f449b06c340022a0e8, type: 3}
   faceDefinitions:
   - id: adult_female_face_01
     displayName: Face 01
     category: 2
     compatibilityKey: adult_female
     prefab: {fileID: 6703444493532891275, guid: 30fe01710f9ab2a418778afb44f54125, type: 3}
+  - id: adult_female_face_02
+    displayName: Face 02
+    category: 2
+    compatibilityKey: adult_female
+    prefab: {fileID: 5976725226985819499, guid: be29fe32b9a9ae84795fe6f680ee0d41, type: 3}
+  - id: adult_female_face_03
+    displayName: Face 03
+    category: 2
+    compatibilityKey: adult_female
+    prefab: {fileID: 7288528408227310691, guid: 1d66a0b8c67200245994c19e412723e8, type: 3}
   upperDefinitions:
   - id: adult_female_upper_01
     displayName: Shirt 01
     category: 3
     compatibilityKey: adult_female
-    prefab: {fileID: 6244305286046366682, guid: da683fc28d95d1046b6d1cb0c2c3bb6d, type: 3}
+    prefab: {fileID: 7857183502567428377, guid: b06123002dd1b7b4eaf753a6add5124d, type: 3}
   - id: adult_female_upper_02
     displayName: Shirt 02
     category: 3
     compatibilityKey: adult_female
     prefab: {fileID: 3913047839885015090, guid: ce13d4bf02a37304f829be7c5583a8fb, type: 3}
+  - id: adult_female_upper_03
+    displayName: Shirt 03
+    category: 3
+    compatibilityKey: adult_female
+    prefab: {fileID: 116081502677557143, guid: 16d2cfe96f4d0024ca1cc7f942f68d2a, type: 3}
   pantsDefinitions:
   - id: adult_female_pants_01
     displayName: Pants 01
     category: 4
     compatibilityKey: adult_female
-    prefab: {fileID: 2348479629543598302, guid: 6c78897854bf61f4fbdc8934d13af139, type: 3}
+    prefab: {fileID: 3376692683868350275, guid: 684325c2c2584234e962614166988883, type: 3}
+  - id: adult_female_pants_02
+    displayName: Pants 02
+    category: 4
+    compatibilityKey: adult_female
+    prefab: {fileID: 1847980466359678464, guid: d6a4f3f3a2df741438543090a190c5f5, type: 3}
+  - id: adult_female_pants_03
+    displayName: Pants 03
+    category: 4
+    compatibilityKey: adult_female
+    prefab: {fileID: 6944839418097645708, guid: 05cb983181ffac541b954038cf3e87cb, type: 3}
   shoesDefinitions:
   - id: adult_female_shoes_01
     displayName: Shoes 01
@@ -68,4 +198,9 @@ MonoBehaviour:
     displayName: Shoes 02
     category: 5
     compatibilityKey: adult_female
-    prefab: {fileID: 3599038921729908850, guid: 0cad5d9bd43c9184eac6b6c4a2d3dbce, type: 3}
+    prefab: {fileID: 919132149155446097, guid: d3857fcc38708b544a95a92e1c9c5dae, type: 3}
+  - id: adult_female_shoes_03
+    displayName: Shoes 03
+    category: 5
+    compatibilityKey: adult_female
+    prefab: {fileID: 919132149155446097, guid: d3857fcc38708b544a95a92e1c9c5dae, type: 3}
