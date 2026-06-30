@@ -23,7 +23,7 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
             return;
         }
 
-        ApplyDefaultsIfNeeded();
+        ResolveCurrentAppearance();
         ApplyCurrentAppearance();
     }
 
@@ -54,7 +54,7 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
     {
         EnsureAppearanceData();
         currentAppearance.CopyFrom(appearanceData);
-        ApplyDefaultsIfNeeded();
+        ResolveCurrentAppearance();
         ApplyCurrentAppearance();
     }
 
@@ -78,118 +78,173 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
         applier.ApplyAppearance(currentAppearance);
     }
 
+    public void NextBodyType()
+    {
+        ChangeBodyType(1);
+    }
+
+    public void PreviousBodyType()
+    {
+        ChangeBodyType(-1);
+    }
+
+    public void NextSkin()
+    {
+        ChangeSkin(1);
+    }
+
+    public void PreviousSkin()
+    {
+        ChangeSkin(-1);
+    }
+
     public void NextBody()
     {
-        ChangeSelection(CharacterAppearanceCategory.Body, 1);
+        NextBodyType();
     }
 
     public void PreviousBody()
     {
-        ChangeSelection(CharacterAppearanceCategory.Body, -1);
+        PreviousBodyType();
     }
 
     public void NextHair()
     {
-        ChangeSelection(CharacterAppearanceCategory.Hair, 1);
+        ChangePartSelection(CharacterAppearanceCategory.Hair, 1);
     }
 
     public void PreviousHair()
     {
-        ChangeSelection(CharacterAppearanceCategory.Hair, -1);
+        ChangePartSelection(CharacterAppearanceCategory.Hair, -1);
     }
 
     public void NextFace()
     {
-        ChangeSelection(CharacterAppearanceCategory.Face, 1);
+        ChangePartSelection(CharacterAppearanceCategory.Face, 1);
     }
 
     public void PreviousFace()
     {
-        ChangeSelection(CharacterAppearanceCategory.Face, -1);
+        ChangePartSelection(CharacterAppearanceCategory.Face, -1);
     }
 
     public void NextUpper()
     {
-        ChangeSelection(CharacterAppearanceCategory.Upper, 1);
+        ChangePartSelection(CharacterAppearanceCategory.Upper, 1);
     }
 
     public void PreviousUpper()
     {
-        ChangeSelection(CharacterAppearanceCategory.Upper, -1);
+        ChangePartSelection(CharacterAppearanceCategory.Upper, -1);
     }
 
     public void NextPants()
     {
-        ChangeSelection(CharacterAppearanceCategory.Pants, 1);
+        ChangePartSelection(CharacterAppearanceCategory.Pants, 1);
     }
 
     public void PreviousPants()
     {
-        ChangeSelection(CharacterAppearanceCategory.Pants, -1);
+        ChangePartSelection(CharacterAppearanceCategory.Pants, -1);
     }
 
     public void NextShoes()
     {
-        ChangeSelection(CharacterAppearanceCategory.Shoes, 1);
+        ChangePartSelection(CharacterAppearanceCategory.Shoes, 1);
     }
 
     public void PreviousShoes()
     {
-        ChangeSelection(CharacterAppearanceCategory.Shoes, -1);
+        ChangePartSelection(CharacterAppearanceCategory.Shoes, -1);
     }
 
-    private void ChangeSelection(CharacterAppearanceCategory category, int direction)
+    private void ChangeBodyType(int direction)
     {
         EnsureAppearanceData();
-
-        if (database == null)
+        if (!CanUseDatabase())
         {
-            Debug.LogError("[CharacterAppearanceCreationController] Cannot change " + category + " because no CharacterAppearanceDatabase is assigned.", this);
             return;
         }
 
-        CharacterAppearanceDatabase.AppearanceDefinition nextDefinition;
-        if (!database.TryGetNextDefinition(category, currentAppearance.GetId(category), direction, out nextDefinition))
+        ResolveCurrentAppearance();
+
+        CharacterAppearanceDatabase.BodyTypeDefinition nextBodyType;
+        if (!database.TryGetNextBodyType(currentAppearance.bodyTypeId, direction, out nextBodyType))
         {
-            Debug.LogWarning("[CharacterAppearanceCreationController] No compatible Adult Female entries found for category " + category + ".", this);
+            Debug.LogWarning("[CharacterAppearanceCreationController] No body types are configured.", this);
+            return;
+        }
+
+        currentAppearance.bodyTypeId = nextBodyType.BodyTypeId;
+        currentAppearance.skinId = nextBodyType.DefaultSkinId;
+        ResolveCurrentAppearance();
+        ApplyCurrentAppearance();
+    }
+
+    private void ChangeSkin(int direction)
+    {
+        EnsureAppearanceData();
+        if (!CanUseDatabase())
+        {
+            return;
+        }
+
+        ResolveCurrentAppearance();
+
+        CharacterAppearanceDatabase.BodyDefinition nextSkin;
+        if (!database.TryGetNextSkin(currentAppearance.bodyTypeId, currentAppearance.skinId, direction, out nextSkin))
+        {
+            Debug.LogWarning("[CharacterAppearanceCreationController] No skin variants are configured for BodyType '" + currentAppearance.bodyTypeId + "'.", this);
+            return;
+        }
+
+        currentAppearance.skinId = nextSkin.SkinId;
+        ResolveCurrentAppearance();
+        ApplyCurrentAppearance();
+    }
+
+    private void ChangePartSelection(CharacterAppearanceCategory category, int direction)
+    {
+        EnsureAppearanceData();
+        if (!CanUseDatabase())
+        {
+            return;
+        }
+
+        ResolveCurrentAppearance();
+
+        CharacterAppearanceDatabase.AppearanceDefinition nextDefinition;
+        if (!database.TryGetNextDefinition(category, currentAppearance.bodyTypeId, currentAppearance.skinId, currentAppearance.GetId(category), direction, out nextDefinition))
+        {
+            Debug.LogWarning("[CharacterAppearanceCreationController] No compatible entries found for BodyType '" + currentAppearance.bodyTypeId + "' category " + category + ".", this);
             return;
         }
 
         currentAppearance.SetId(category, nextDefinition.Id);
-        ApplyDefaultsIfNeeded();
+        ResolveCurrentAppearance();
         ApplyCurrentAppearance();
     }
 
-    private void ApplyDefaultsIfNeeded()
+    private void ResolveCurrentAppearance()
     {
         EnsureAppearanceData();
-
         if (database == null)
         {
             return;
         }
 
-        ApplyDefaultIfNeeded(CharacterAppearanceCategory.Body);
-        ApplyDefaultIfNeeded(CharacterAppearanceCategory.Hair);
-        ApplyDefaultIfNeeded(CharacterAppearanceCategory.Face);
-        ApplyDefaultIfNeeded(CharacterAppearanceCategory.Upper);
-        ApplyDefaultIfNeeded(CharacterAppearanceCategory.Pants);
-        ApplyDefaultIfNeeded(CharacterAppearanceCategory.Shoes);
+        database.ResolveAppearance(currentAppearance, currentAppearance, this);
     }
 
-    private void ApplyDefaultIfNeeded(CharacterAppearanceCategory category)
+    private bool CanUseDatabase()
     {
-        CharacterAppearanceDatabase.AppearanceDefinition definition;
-        if (database.TryGetDefinition(category, currentAppearance.GetId(category), out definition))
+        if (database != null)
         {
-            currentAppearance.SetId(category, definition.Id);
-            return;
+            return true;
         }
 
-        if (database.TryGetDefaultDefinition(category, out definition))
-        {
-            currentAppearance.SetId(category, definition.Id);
-        }
+        Debug.LogError("[CharacterAppearanceCreationController] Cannot change appearance because no CharacterAppearanceDatabase is assigned.", this);
+        return false;
     }
 
     private void EnsureAppearanceData()

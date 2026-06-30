@@ -36,25 +36,30 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         database.ValidateDatabase(database);
 
         CharacterAppearanceData resolvedAppearance = new CharacterAppearanceData();
-        if (!ResolveAppearance(appearanceData, resolvedAppearance))
+        if (!database.ResolveAppearance(appearanceData, resolvedAppearance, this))
         {
+            return false;
+        }
+
+        CharacterAppearanceDatabase.BodyDefinition bodyDefinition;
+        if (!database.TryGetBodyDefinition(resolvedAppearance.bodyTypeId, resolvedAppearance.skinId, out bodyDefinition))
+        {
+            Debug.LogError("[CharacterAppearanceApplier] Cannot resolve body prefab for BodyType '" + resolvedAppearance.bodyTypeId + "' and Skin '" + resolvedAppearance.skinId + "'.", this);
             return false;
         }
 
         GameObject newAppearanceRoot = new GameObject(string.IsNullOrWhiteSpace(managedRootName) ? "AppliedAppearance" : managedRootName.Trim());
         newAppearanceRoot.transform.SetParent(visualRoot, false);
-        newAppearanceRoot.transform.localPosition = Vector3.zero;
-        newAppearanceRoot.transform.localRotation = Quaternion.identity;
-        newAppearanceRoot.transform.localScale = Vector3.one;
+        ResetLocalTransform(newAppearanceRoot.transform);
 
         try
         {
-            InstantiateDefinition(CharacterAppearanceCategory.Body, resolvedAppearance.bodyId, newAppearanceRoot.transform);
-            InstantiateDefinition(CharacterAppearanceCategory.Hair, resolvedAppearance.hairId, newAppearanceRoot.transform);
-            InstantiateDefinition(CharacterAppearanceCategory.Face, resolvedAppearance.faceId, newAppearanceRoot.transform);
-            InstantiateDefinition(CharacterAppearanceCategory.Upper, resolvedAppearance.upperId, newAppearanceRoot.transform);
-            InstantiateDefinition(CharacterAppearanceCategory.Pants, resolvedAppearance.pantsId, newAppearanceRoot.transform);
-            InstantiateDefinition(CharacterAppearanceCategory.Shoes, resolvedAppearance.shoesId, newAppearanceRoot.transform);
+            InstantiateBodyDefinition(bodyDefinition, newAppearanceRoot.transform);
+            InstantiatePartDefinition(CharacterAppearanceCategory.Hair, resolvedAppearance.hairId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiatePartDefinition(CharacterAppearanceCategory.Face, resolvedAppearance.faceId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiatePartDefinition(CharacterAppearanceCategory.Upper, resolvedAppearance.upperId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiatePartDefinition(CharacterAppearanceCategory.Pants, resolvedAppearance.pantsId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiatePartDefinition(CharacterAppearanceCategory.Shoes, resolvedAppearance.shoesId, resolvedAppearance, newAppearanceRoot.transform);
         }
         catch (Exception exception)
         {
@@ -79,67 +84,38 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         currentAppearanceRoot = null;
     }
 
-    private bool ResolveAppearance(CharacterAppearanceData source, CharacterAppearanceData resolvedAppearance)
+    private void InstantiateBodyDefinition(CharacterAppearanceDatabase.BodyDefinition definition, Transform parent)
     {
-        if (source == null)
+        if (definition == null || definition.Prefab == null)
         {
-            Debug.LogWarning("[CharacterAppearanceApplier] Appearance data is null. Falling back to database defaults.", this);
-        }
-
-        resolvedAppearance.appearanceVersion = CharacterAppearanceData.CurrentVersion;
-
-        bool resolvedAllCategories = true;
-        resolvedAllCategories &= ResolveCategory(source, CharacterAppearanceCategory.Body, resolvedAppearance);
-        resolvedAllCategories &= ResolveCategory(source, CharacterAppearanceCategory.Hair, resolvedAppearance);
-        resolvedAllCategories &= ResolveCategory(source, CharacterAppearanceCategory.Face, resolvedAppearance);
-        resolvedAllCategories &= ResolveCategory(source, CharacterAppearanceCategory.Upper, resolvedAppearance);
-        resolvedAllCategories &= ResolveCategory(source, CharacterAppearanceCategory.Pants, resolvedAppearance);
-        resolvedAllCategories &= ResolveCategory(source, CharacterAppearanceCategory.Shoes, resolvedAppearance);
-
-        return resolvedAllCategories;
-    }
-
-    private bool ResolveCategory(CharacterAppearanceData source, CharacterAppearanceCategory category, CharacterAppearanceData resolvedAppearance)
-    {
-        string requestedId = source == null ? string.Empty : source.GetId(category);
-        CharacterAppearanceDatabase.AppearanceDefinition definition;
-
-        if (database.TryGetDefinition(category, requestedId, out definition))
-        {
-            resolvedAppearance.SetId(category, definition.Id);
-            return true;
-        }
-
-        if (!string.IsNullOrEmpty(CharacterAppearanceData.NormalizeId(requestedId)))
-        {
-            Debug.LogWarning("[CharacterAppearanceApplier] Appearance id '" + requestedId + "' is invalid for category " + category + ". Falling back to the configured default.", this);
-        }
-
-        if (database.TryGetDefaultDefinition(category, out definition))
-        {
-            resolvedAppearance.SetId(category, definition.Id);
-            return true;
-        }
-
-        Debug.LogError("[CharacterAppearanceApplier] Cannot resolve a valid default for category " + category + ".", this);
-        return false;
-    }
-
-    private void InstantiateDefinition(CharacterAppearanceCategory category, string id, Transform parent)
-    {
-        CharacterAppearanceDatabase.AppearanceDefinition definition;
-        if (!database.TryGetDefinition(category, id, out definition))
-        {
-            throw new InvalidOperationException("Could not resolve definition '" + id + "' for category " + category + ".");
+            throw new InvalidOperationException("Body definition has no prefab.");
         }
 
         GameObject instance = Instantiate(definition.Prefab, parent);
         instance.name = definition.Id;
-        instance.transform.localPosition = Vector3.zero;
-        instance.transform.localRotation = Quaternion.identity;
-        instance.transform.localScale = Vector3.one;
-
+        ResetLocalTransform(instance.transform);
         RemoveDisallowedComponents(instance);
+    }
+
+    private void InstantiatePartDefinition(CharacterAppearanceCategory category, string id, CharacterAppearanceData appearanceData, Transform parent)
+    {
+        CharacterAppearanceDatabase.AppearanceDefinition definition;
+        if (!database.TryGetDefinition(category, appearanceData.bodyTypeId, appearanceData.skinId, id, out definition))
+        {
+            throw new InvalidOperationException("Could not resolve definition '" + id + "' for BodyType '" + appearanceData.bodyTypeId + "' category " + category + ".");
+        }
+
+        GameObject instance = Instantiate(definition.Prefab, parent);
+        instance.name = definition.Id;
+        ResetLocalTransform(instance.transform);
+        RemoveDisallowedComponents(instance);
+    }
+
+    private static void ResetLocalTransform(Transform target)
+    {
+        target.localPosition = Vector3.zero;
+        target.localRotation = Quaternion.identity;
+        target.localScale = Vector3.one;
     }
 
     private void RemoveDisallowedComponents(GameObject instance)

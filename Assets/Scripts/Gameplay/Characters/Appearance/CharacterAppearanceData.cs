@@ -1,12 +1,14 @@
 using System;
+using UnityEngine.Serialization;
 
 [Serializable]
 public sealed class CharacterAppearanceData
 {
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
 
     public int appearanceVersion = CurrentVersion;
-    public string bodyId = string.Empty;
+    [FormerlySerializedAs("bodyId")] public string bodyTypeId = string.Empty;
+    public string skinId = string.Empty;
     public string hairId = string.Empty;
     public string faceId = string.Empty;
     public string upperId = string.Empty;
@@ -32,7 +34,8 @@ public sealed class CharacterAppearanceData
         if (source == null)
         {
             appearanceVersion = CurrentVersion;
-            bodyId = string.Empty;
+            bodyTypeId = string.Empty;
+            skinId = string.Empty;
             hairId = string.Empty;
             faceId = string.Empty;
             upperId = string.Empty;
@@ -42,7 +45,8 @@ public sealed class CharacterAppearanceData
         }
 
         appearanceVersion = source.appearanceVersion <= 0 ? CurrentVersion : source.appearanceVersion;
-        bodyId = NormalizeId(source.bodyId);
+        bodyTypeId = NormalizeId(source.bodyTypeId);
+        skinId = NormalizeId(source.skinId);
         hairId = NormalizeId(source.hairId);
         faceId = NormalizeId(source.faceId);
         upperId = NormalizeId(source.upperId);
@@ -55,7 +59,7 @@ public sealed class CharacterAppearanceData
         switch (category)
         {
             case CharacterAppearanceCategory.Body:
-                return bodyId;
+                return bodyTypeId;
             case CharacterAppearanceCategory.Hair:
                 return hairId;
             case CharacterAppearanceCategory.Face:
@@ -78,7 +82,7 @@ public sealed class CharacterAppearanceData
         switch (category)
         {
             case CharacterAppearanceCategory.Body:
-                bodyId = normalizedId;
+                bodyTypeId = normalizedId;
                 break;
             case CharacterAppearanceCategory.Hair:
                 hairId = normalizedId;
