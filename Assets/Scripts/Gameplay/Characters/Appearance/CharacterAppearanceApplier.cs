@@ -240,9 +240,15 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         bodyInstance.name = bodyDefinition.Id;
         ResetLocalTransform(bodyInstance.transform);
 
-        runtimeAnimator = PrepareRuntimeBodyAnimator(bodyInstance, runtimeAnimatorController);
+        Transform fallbackSkeletonRoot = FindRendererSkeletonRoot(bodyInstance);
+        Avatar bodyAvatar = FindExistingRuntimeAvatar(bodyInstance);
+        runtimeAnimator = PrepareRuntimeBodyAnimator(bodyInstance, resolvedAppearance.bodyTypeId, bodyAvatar, runtimeAnimatorController);
+        if (runtimeAnimator == null)
+        {
+            return false;
+        }
 
-        Transform targetSkeletonRoot = FindSkeletonRoot(bodyInstance, runtimeAnimator);
+        Transform targetSkeletonRoot = FindSkeletonRoot(bodyInstance, runtimeAnimator, fallbackSkeletonRoot);
         if (targetSkeletonRoot == null)
         {
             Debug.LogError("[CharacterAppearanceApplier] Body prefab '" + bodyDefinition.Prefab.name + "' for BodyType '" + resolvedAppearance.bodyTypeId + "' has no usable skeleton root.", this);
@@ -344,12 +350,19 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         RemoveDisallowedComponents(instance, null);
     }
 
-    private Animator PrepareRuntimeBodyAnimator(GameObject bodyInstance, RuntimeAnimatorController runtimeAnimatorController)
+    private Animator PrepareRuntimeBodyAnimator(GameObject bodyInstance, string bodyTypeId, Avatar bodyAvatar, RuntimeAnimatorController runtimeAnimatorController)
     {
         Animator[] animators = bodyInstance.GetComponentsInChildren<Animator>(true);
-        Animator runtimeAnimator = animators.Length > 0 ? animators[0] : bodyInstance.AddComponent<Animator>();
+        Animator runtimeAnimator = SelectRuntimeAnimator(bodyInstance, animators);
+        Avatar runtimeAvatar;
+        if (!TryResolveRuntimeAvatar(bodyTypeId, bodyAvatar, out runtimeAvatar))
+        {
+            return null;
+        }
 
         RemoveDisallowedComponents(bodyInstance, runtimeAnimator);
+
+        runtimeAnimator.avatar = runtimeAvatar;
 
         if (runtimeAnimatorController != null)
         {
@@ -360,16 +373,66 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
             Debug.LogWarning("[CharacterAppearanceApplier] Runtime body has no AnimatorController assigned.", this);
         }
 
-        if (runtimeAnimator.avatar == null)
-        {
-            Debug.LogWarning("[CharacterAppearanceApplier] Runtime Animator on '" + bodyInstance.name + "' has no Avatar. Movement animations may not play until the body prefab provides one.", this);
-        }
-
         runtimeAnimator.applyRootMotion = false;
         return runtimeAnimator;
     }
 
-    private Transform FindSkeletonRoot(GameObject bodyInstance, Animator runtimeAnimator)
+    private Animator SelectRuntimeAnimator(GameObject bodyInstance, Animator[] animators)
+    {
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator animatorCandidate = animators[i];
+            if (animatorCandidate != null && IsUsableHumanoidAvatar(animatorCandidate.avatar))
+            {
+                return animatorCandidate;
+            }
+        }
+
+        return animators.Length > 0 ? animators[0] : bodyInstance.AddComponent<Animator>();
+    }
+
+    private Avatar FindExistingRuntimeAvatar(GameObject bodyInstance)
+    {
+        Animator[] animators = bodyInstance.GetComponentsInChildren<Animator>(true);
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator animatorCandidate = animators[i];
+            if (animatorCandidate != null && IsUsableHumanoidAvatar(animatorCandidate.avatar))
+            {
+                return animatorCandidate.avatar;
+            }
+        }
+
+        return null;
+    }
+
+    private bool TryResolveRuntimeAvatar(string bodyTypeId, Avatar bodyAvatar, out Avatar runtimeAvatar)
+    {
+        runtimeAvatar = null;
+
+        if (IsUsableHumanoidAvatar(bodyAvatar))
+        {
+            runtimeAvatar = bodyAvatar;
+            return true;
+        }
+
+        Avatar databaseAvatar;
+        if (database.TryGetRuntimeAvatar(bodyTypeId, out databaseAvatar) && IsUsableHumanoidAvatar(databaseAvatar))
+        {
+            runtimeAvatar = databaseAvatar;
+            return true;
+        }
+
+        Debug.LogError("[CharacterAppearanceApplier] Cannot animate runtime BodyType '" + bodyTypeId + "' because no valid Humanoid runtimeAvatar is assigned. Expected source: " + GetExpectedRuntimeAvatarSourcePath(bodyTypeId) + ".", this);
+        return false;
+    }
+
+    private static bool IsUsableHumanoidAvatar(Avatar avatar)
+    {
+        return avatar != null && avatar.isValid && avatar.isHuman;
+    }
+
+    private Transform FindSkeletonRoot(GameObject bodyInstance, Animator runtimeAnimator, Transform fallbackSkeletonRoot)
     {
         if (runtimeAnimator != null && runtimeAnimator.avatar != null && runtimeAnimator.avatar.isHuman)
         {
@@ -380,6 +443,16 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
             }
         }
 
+        if (fallbackSkeletonRoot != null)
+        {
+            return fallbackSkeletonRoot;
+        }
+
+        return FindRendererSkeletonRoot(bodyInstance);
+    }
+
+    private Transform FindRendererSkeletonRoot(GameObject bodyInstance)
+    {
         SkinnedMeshRenderer[] renderers = bodyInstance.GetComponentsInChildren<SkinnedMeshRenderer>(true);
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -390,6 +463,33 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         }
 
         return null;
+    }
+
+    private static string GetExpectedRuntimeAvatarSourcePath(string bodyTypeId)
+    {
+        string normalizedBodyTypeId = CharacterAppearanceData.NormalizeId(bodyTypeId);
+        switch (normalizedBodyTypeId)
+        {
+            case CharacterAppearanceDatabase.AdultFemaleBodyTypeId:
+            case CharacterAppearanceDatabase.AdultMaleBodyTypeId:
+                return "Assets/ithappy/City_Characters/Meshes/Basic_Character_Adult.fbx";
+            case CharacterAppearanceDatabase.PlusSizeFemaleBodyTypeId:
+            case CharacterAppearanceDatabase.PlusSizeMaleBodyTypeId:
+                return "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Plus-size.fbx";
+            case CharacterAppearanceDatabase.ChildFemaleBodyTypeId:
+            case CharacterAppearanceDatabase.ChildMaleBodyTypeId:
+                return "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Child.fbx";
+            case CharacterAppearanceDatabase.TeenFemaleBodyTypeId:
+            case CharacterAppearanceDatabase.TeenMaleBodyTypeId:
+                return "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Teen.fbx";
+            case CharacterAppearanceDatabase.SeniorFemaleBodyTypeId:
+            case CharacterAppearanceDatabase.SeniorMaleBodyTypeId:
+                return "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Senior.fbx";
+            case CharacterAppearanceDatabase.PumpedMaleBodyTypeId:
+                return "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Pumped.fbx";
+            default:
+                return "CharacterAppearanceDatabase BodyType runtimeAvatar";
+        }
     }
 
     private bool BindSkinnedMeshRenderers(

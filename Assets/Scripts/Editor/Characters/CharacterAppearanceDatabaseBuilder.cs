@@ -10,20 +10,21 @@ public static class CharacterAppearanceDatabaseBuilder
 {
     private const string MenuPath = "Tools/Blackline Disposal/Characters/Build Appearance Database";
     private const string AssetRoot = "Assets/ithappy/City_Characters";
+    private const string DefaultDatabasePath = "Assets/GameData/Characters/Appearance/CharacterAppearanceDatabase.asset";
 
     private static readonly BodyTypeSpec[] BodyTypes =
     {
-        new BodyTypeSpec(CharacterAppearanceDatabase.AdultFemaleBodyTypeId, "Adult Female", "Adult_Female", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Female", true),
-        new BodyTypeSpec(CharacterAppearanceDatabase.AdultMaleBodyTypeId, "Adult Male", "Adult_Male", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Male", true),
-        new BodyTypeSpec(CharacterAppearanceDatabase.PlusSizeFemaleBodyTypeId, "Plus-Size Female", "PlusSize_Female", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Female", true),
-        new BodyTypeSpec(CharacterAppearanceDatabase.PlusSizeMaleBodyTypeId, "Plus-Size Male", "PlusSize_Male", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Male", true),
-        new BodyTypeSpec(CharacterAppearanceDatabase.ChildFemaleBodyTypeId, "Child Female", "Child_Female", "Assets/ithappy/City_Characters/Prefabs/Child/Child Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Child/Female", false),
-        new BodyTypeSpec(CharacterAppearanceDatabase.ChildMaleBodyTypeId, "Child Male", "Child_Male", "Assets/ithappy/City_Characters/Prefabs/Child/Child Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Child/Male", false),
-        new BodyTypeSpec(CharacterAppearanceDatabase.TeenFemaleBodyTypeId, "Teen Female", "Teen_Female", "Assets/ithappy/City_Characters/Prefabs/Teen/Teen Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Teen/Female", false),
-        new BodyTypeSpec(CharacterAppearanceDatabase.TeenMaleBodyTypeId, "Teen Male", "Teen_Male", "Assets/ithappy/City_Characters/Prefabs/Teen/Teen Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Teen/Male", false),
-        new BodyTypeSpec(CharacterAppearanceDatabase.SeniorFemaleBodyTypeId, "Senior Female", "Senior_Female", "Assets/ithappy/City_Characters/Prefabs/Senior/Senior Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Senior/Female", true),
-        new BodyTypeSpec(CharacterAppearanceDatabase.SeniorMaleBodyTypeId, "Senior Male", "Senior_Male", "Assets/ithappy/City_Characters/Prefabs/Senior/Senior Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Senior/Male", true),
-        new BodyTypeSpec(CharacterAppearanceDatabase.PumpedMaleBodyTypeId, "Pumped Male", "Pumped_Male", "Assets/ithappy/City_Characters/Prefabs/Pumped/Pumped Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Pumped/Male", true)
+        new BodyTypeSpec(CharacterAppearanceDatabase.AdultFemaleBodyTypeId, "Adult Female", "Adult_Female", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Female", "Assets/ithappy/City_Characters/Meshes/Basic_Character_Adult.fbx", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.AdultMaleBodyTypeId, "Adult Male", "Adult_Male", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Male", "Assets/ithappy/City_Characters/Meshes/Basic_Character_Adult.fbx", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.PlusSizeFemaleBodyTypeId, "Plus-Size Female", "PlusSize_Female", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Female", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Plus-size.fbx", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.PlusSizeMaleBodyTypeId, "Plus-Size Male", "PlusSize_Male", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Male", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Plus-size.fbx", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.ChildFemaleBodyTypeId, "Child Female", "Child_Female", "Assets/ithappy/City_Characters/Prefabs/Child/Child Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Child/Female", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Child.fbx", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.ChildMaleBodyTypeId, "Child Male", "Child_Male", "Assets/ithappy/City_Characters/Prefabs/Child/Child Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Child/Male", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Child.fbx", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.TeenFemaleBodyTypeId, "Teen Female", "Teen_Female", "Assets/ithappy/City_Characters/Prefabs/Teen/Teen Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Teen/Female", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Teen.fbx", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.TeenMaleBodyTypeId, "Teen Male", "Teen_Male", "Assets/ithappy/City_Characters/Prefabs/Teen/Teen Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Teen/Male", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Teen.fbx", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.SeniorFemaleBodyTypeId, "Senior Female", "Senior_Female", "Assets/ithappy/City_Characters/Prefabs/Senior/Senior Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Senior/Female", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Senior.fbx", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.SeniorMaleBodyTypeId, "Senior Male", "Senior_Male", "Assets/ithappy/City_Characters/Prefabs/Senior/Senior Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Senior/Male", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Senior.fbx", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.PumpedMaleBodyTypeId, "Pumped Male", "Pumped_Male", "Assets/ithappy/City_Characters/Prefabs/Pumped/Pumped Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Pumped/Male", "Assets/ithappy/City_Characters/Meshes/Basic_Characters_Pumped.fbx", true)
     };
 
     private sealed class BodyTypeSpec
@@ -33,15 +34,17 @@ public static class CharacterAppearanceDatabaseBuilder
         public readonly string Prefix;
         public readonly string PrefabFolder;
         public readonly string ConfigRoot;
+        public readonly string AvatarSourcePath;
         public readonly bool DefaultEnabledForSelection;
 
-        public BodyTypeSpec(string bodyTypeId, string displayName, string prefix, string prefabFolder, string configRoot, bool defaultEnabledForSelection)
+        public BodyTypeSpec(string bodyTypeId, string displayName, string prefix, string prefabFolder, string configRoot, string avatarSourcePath, bool defaultEnabledForSelection)
         {
             BodyTypeId = bodyTypeId;
             DisplayName = displayName;
             Prefix = prefix;
             PrefabFolder = prefabFolder;
             ConfigRoot = configRoot;
+            AvatarSourcePath = avatarSourcePath;
             DefaultEnabledForSelection = defaultEnabledForSelection;
         }
 
@@ -64,6 +67,9 @@ public static class CharacterAppearanceDatabaseBuilder
         public readonly List<PartEntry> GlovesEntries = new List<PartEntry>();
         public readonly List<PartEntry> FullBodyEntries = new List<PartEntry>();
         public bool FaceIsSkinSpecific;
+        public Avatar RuntimeAvatar;
+        public string RuntimeAvatarName = string.Empty;
+        public int RuntimeAvatarCandidateCount;
 
         public BodyTypeBuild(BodyTypeSpec spec)
         {
@@ -115,6 +121,7 @@ public static class CharacterAppearanceDatabaseBuilder
         public readonly List<string> StructureNotes = new List<string>();
         public readonly List<string> FaceSkinNotes = new List<string>();
         public readonly List<string> EnabledNotes = new List<string>();
+        public readonly List<string> AvatarNotes = new List<string>();
     }
 
     [MenuItem(MenuPath)]
@@ -126,20 +133,41 @@ public static class CharacterAppearanceDatabaseBuilder
             return;
         }
 
+        BuildDatabase(database, true);
+    }
+
+    public static void BuildDefaultAppearanceDatabase()
+    {
+        CharacterAppearanceDatabase database = AssetDatabase.LoadAssetAtPath<CharacterAppearanceDatabase>(DefaultDatabasePath);
+        if (database == null)
+        {
+            Debug.LogError("[CharacterAppearanceDatabaseBuilder] Could not load CharacterAppearanceDatabase at " + DefaultDatabasePath + ".");
+            return;
+        }
+
+        BuildDatabase(database, false);
+    }
+
+    private static bool BuildDatabase(CharacterAppearanceDatabase database, bool askBeforeReplace)
+    {
         BuildReport report = new BuildReport();
         List<BodyTypeBuild> builds = AnalyzeAssetStructure(report);
         if (builds.Count == 0)
         {
-            EditorUtility.DisplayDialog("Build Appearance Database", "No supported City_Characters prefabs were found.", "OK");
+            if (!Application.isBatchMode)
+            {
+                EditorUtility.DisplayDialog("Build Appearance Database", "No supported City_Characters prefabs were found.", "OK");
+            }
+
             Debug.LogWarning("[CharacterAppearanceDatabaseBuilder] No supported prefabs found under " + AssetRoot + ".");
-            return;
+            return false;
         }
 
         SerializedObject serializedDatabase = new SerializedObject(database);
         serializedDatabase.Update();
         Dictionary<string, bool> existingEnabledStates = ReadExistingEnabledStates(serializedDatabase);
 
-        if (HasExistingDatabaseContent(serializedDatabase))
+        if (askBeforeReplace && HasExistingDatabaseContent(serializedDatabase))
         {
             bool replace = EditorUtility.DisplayDialog(
                 "Replace Character Appearance Database?",
@@ -150,7 +178,7 @@ public static class CharacterAppearanceDatabaseBuilder
             if (!replace)
             {
                 Debug.Log("[CharacterAppearanceDatabaseBuilder] Build cancelled. Database was not modified.", database);
-                return;
+                return false;
             }
         }
 
@@ -165,7 +193,12 @@ public static class CharacterAppearanceDatabaseBuilder
 
         string reportText = CreateReportText(report, database);
         Debug.Log(reportText, database);
-        EditorUtility.DisplayDialog("Build Appearance Database", "Database build finished. See the Console for the full report.", "OK");
+        if (!Application.isBatchMode)
+        {
+            EditorUtility.DisplayDialog("Build Appearance Database", "Database build finished. See the Console for the full report.", "OK");
+        }
+
+        return true;
     }
 
     private static CharacterAppearanceDatabase SelectDatabase()
@@ -229,6 +262,7 @@ public static class CharacterAppearanceDatabaseBuilder
         }
 
         BodyTypeBuild build = new BodyTypeBuild(spec);
+        ResolveRuntimeAvatar(spec, build, report);
         report.StructureNotes.Add(spec.BodyTypeId + ": prefab folder " + spec.PrefabFolder);
         report.StructureNotes.Add(spec.BodyTypeId + ": slots " + GetConfigNames(spec.SlotsFolder));
         report.StructureNotes.Add(spec.BodyTypeId + ": groups " + GetConfigNames(spec.GroupsFolder));
@@ -271,6 +305,103 @@ public static class CharacterAppearanceDatabaseBuilder
 
         AddMissingDefaultNotes(build, report);
         return build;
+    }
+
+    private static void ResolveRuntimeAvatar(BodyTypeSpec spec, BodyTypeBuild build, BuildReport report)
+    {
+        UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(spec.AvatarSourcePath);
+        List<Avatar> avatarSubAssets = new List<Avatar>();
+        List<Avatar> usableAvatars = new List<Avatar>();
+
+        for (int i = 0; i < assets.Length; i++)
+        {
+            Avatar avatar = assets[i] as Avatar;
+            if (avatar == null)
+            {
+                continue;
+            }
+
+            avatarSubAssets.Add(avatar);
+            if (avatar.isValid && avatar.isHuman)
+            {
+                usableAvatars.Add(avatar);
+            }
+        }
+
+        build.RuntimeAvatarCandidateCount = avatarSubAssets.Count;
+
+        if (usableAvatars.Count == 1)
+        {
+            build.RuntimeAvatar = usableAvatars[0];
+            build.RuntimeAvatarName = build.RuntimeAvatar.name;
+            report.AvatarNotes.Add(spec.BodyTypeId + ": " + spec.AvatarSourcePath + " -> assigned '" + build.RuntimeAvatarName + "' (Avatar subassets: " + avatarSubAssets.Count + ").");
+            return;
+        }
+
+        if (usableAvatars.Count > 1)
+        {
+            Avatar namedAvatar = TrySelectAvatarByName(usableAvatars, Path.GetFileNameWithoutExtension(spec.AvatarSourcePath));
+            if (namedAvatar != null)
+            {
+                build.RuntimeAvatar = namedAvatar;
+                build.RuntimeAvatarName = build.RuntimeAvatar.name;
+                report.AvatarNotes.Add(spec.BodyTypeId + ": " + spec.AvatarSourcePath + " -> assigned '" + build.RuntimeAvatarName + "' by name (Avatar subassets: " + avatarSubAssets.Count + ").");
+                return;
+            }
+
+            report.AvatarNotes.Add(spec.BodyTypeId + ": " + spec.AvatarSourcePath + " -> ambiguous usable Avatars " + GetAvatarNames(usableAvatars) + " (Avatar subassets: " + avatarSubAssets.Count + ").");
+            return;
+        }
+
+        report.AvatarNotes.Add(spec.BodyTypeId + ": " + spec.AvatarSourcePath + " -> failed, usable Humanoid Avatars: 0, Avatar subassets: " + avatarSubAssets.Count + ".");
+    }
+
+    private static Avatar TrySelectAvatarByName(List<Avatar> avatars, string expectedName)
+    {
+        Avatar match = null;
+        string expectedAvatarName = expectedName + "Avatar";
+
+        for (int i = 0; i < avatars.Count; i++)
+        {
+            Avatar avatar = avatars[i];
+            if (avatar == null)
+            {
+                continue;
+            }
+
+            if (!string.Equals(avatar.name, expectedName, StringComparison.Ordinal) &&
+                !string.Equals(avatar.name, expectedAvatarName, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (match != null)
+            {
+                return null;
+            }
+
+            match = avatar;
+        }
+
+        return match;
+    }
+
+    private static string GetAvatarNames(List<Avatar> avatars)
+    {
+        if (avatars.Count == 0)
+        {
+            return "<none>";
+        }
+
+        List<string> names = new List<string>();
+        for (int i = 0; i < avatars.Count; i++)
+        {
+            Avatar avatar = avatars[i];
+            names.Add(avatar == null ? "<null>" : avatar.name);
+        }
+
+        names.Sort(StringComparer.Ordinal);
+        return string.Join(", ", names.ToArray());
     }
 
     private static void AnalyzePrefabPath(BodyTypeSpec spec, BodyTypeBuild build, string prefabPath, BuildReport report, HashSet<string> knownIds)
@@ -539,6 +670,7 @@ public static class CharacterAppearanceDatabaseBuilder
         SetString(element, "bodyTypeId", build.Spec.BodyTypeId);
         SetString(element, "displayName", build.Spec.DisplayName);
         SetBool(element, "enabledForSelection", enabledForSelection);
+        SetObject(element, "runtimeAvatar", build.RuntimeAvatar);
         SetString(element, "defaultSkinId", GetDefaultSkinId(build));
         SetString(element, "defaultHairId", GetDefaultPartId(build.HairEntries, ""));
         SetString(element, "defaultFaceId", GetDefaultPartId(build.FaceEntries, "face_neutral"));
@@ -754,6 +886,7 @@ public static class CharacterAppearanceDatabaseBuilder
         builder.AppendLine("FullBody: " + report.FullBodyCount);
         AppendList(builder, "Structure", report.StructureNotes);
         AppendList(builder, "Enabled states", report.EnabledNotes);
+        AppendList(builder, "Runtime Avatars", report.AvatarNotes);
         AppendList(builder, "Face/Skin", report.FaceSkinNotes);
         AppendList(builder, "Skipped Hat-Hairstyle prefabs", report.SkippedHatHairstyles);
         AppendList(builder, "Composite FullBody config assets", report.CompositeFullBodyConfigs);

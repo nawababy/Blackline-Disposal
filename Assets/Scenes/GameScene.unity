@@ -1249,25 +1249,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 426157130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cda8817adcb2abd4082c978c179e2ba3, type: 3}
+  m_Script: {fileID: 11500000, guid: cd8e0adabfe3f734093be06963890269, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterAppearanceCreationController
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAppearanceController
   database: {fileID: 11400000, guid: 568fdd4329a69274fad9661163877e32, type: 2}
   applier: {fileID: 426157141}
-  currentAppearance:
-    appearanceVersion: 3
-    bodyTypeId: 
-    skinId: 
-    hairId: 
-    faceId: 
-    upperId: 
-    pantsId: 
-    shoesId: 
-    hatId: 
-    glassesId: 
-    glovesId: 
-    fullBodyId: 
-  applyOnEnable: 1
+  playerMovement: {fileID: 426157134}
+  runtimeAnimatorController: {fileID: 9100000, guid: fac54571ff27f2b46b28cd6d82cd3c4c, type: 2}
 --- !u!1 &426157143
 GameObject:
   m_ObjectHideFlags: 0

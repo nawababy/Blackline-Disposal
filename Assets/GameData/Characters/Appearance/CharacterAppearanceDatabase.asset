@@ -17,6 +17,7 @@ MonoBehaviour:
   - bodyTypeId: adult_female
     displayName: Adult Female
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: 509e9ce93ce95e64a9c3c3ea2bb6dc1a, type: 3}
     defaultSkinId: skin_01
     defaultHairId: adult_female_hair_01
     defaultFaceId: adult_female_face_neutral
@@ -30,6 +31,7 @@ MonoBehaviour:
   - bodyTypeId: adult_male
     displayName: Adult Male
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: 509e9ce93ce95e64a9c3c3ea2bb6dc1a, type: 3}
     defaultSkinId: skin_01
     defaultHairId: adult_male_hair_01
     defaultFaceId: adult_male_face_neutral
@@ -43,6 +45,7 @@ MonoBehaviour:
   - bodyTypeId: plussize_female
     displayName: Plus-Size Female
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: 8ef54e699c9481e4288e6dbe54c9c316, type: 3}
     defaultSkinId: skin_01
     defaultHairId: plussize_female_hair_01
     defaultFaceId: plussize_female_face_neutral
@@ -56,6 +59,7 @@ MonoBehaviour:
   - bodyTypeId: plussize_male
     displayName: Plus-Size Male
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: 8ef54e699c9481e4288e6dbe54c9c316, type: 3}
     defaultSkinId: skin_01
     defaultHairId: plussize_male_hair_01
     defaultFaceId: plussize_male_face_neutral
@@ -69,6 +73,7 @@ MonoBehaviour:
   - bodyTypeId: child_female
     displayName: Child Female
     enabledForSelection: 0
+    runtimeAvatar: {fileID: 9000000, guid: 2b2e8f07d79984a469ec72bf83ca6bc5, type: 3}
     defaultSkinId: skin_01
     defaultHairId: child_female_hair_01
     defaultFaceId: child_female_face_neutral
@@ -82,6 +87,7 @@ MonoBehaviour:
   - bodyTypeId: child_male
     displayName: Child Male
     enabledForSelection: 0
+    runtimeAvatar: {fileID: 9000000, guid: 2b2e8f07d79984a469ec72bf83ca6bc5, type: 3}
     defaultSkinId: skin_01
     defaultHairId: child_male_hair_01
     defaultFaceId: child_male_face_neutral
@@ -95,6 +101,7 @@ MonoBehaviour:
   - bodyTypeId: teen_female
     displayName: Teen Female
     enabledForSelection: 0
+    runtimeAvatar: {fileID: 9000000, guid: 08852dd2c7d51504792cf8a2dd328080, type: 3}
     defaultSkinId: skin_01
     defaultHairId: teen_female_hair_01
     defaultFaceId: teen_female_face_neutral
@@ -108,6 +115,7 @@ MonoBehaviour:
   - bodyTypeId: teen_male
     displayName: Teen Male
     enabledForSelection: 0
+    runtimeAvatar: {fileID: 9000000, guid: 08852dd2c7d51504792cf8a2dd328080, type: 3}
     defaultSkinId: skin_01
     defaultHairId: teen_male_hair_01
     defaultFaceId: teen_male_face_neutral
@@ -121,6 +129,7 @@ MonoBehaviour:
   - bodyTypeId: senior_female
     displayName: Senior Female
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: 9af8f1cc5c41e084ebb1ea74e9e09272, type: 3}
     defaultSkinId: skin_01
     defaultHairId: senior_female_hair_01
     defaultFaceId: senior_female_face_neutral
@@ -134,6 +143,7 @@ MonoBehaviour:
   - bodyTypeId: senior_male
     displayName: Senior Male
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: 9af8f1cc5c41e084ebb1ea74e9e09272, type: 3}
     defaultSkinId: skin_01
     defaultHairId: senior_male_hair_01
     defaultFaceId: senior_male_face_neutral
@@ -147,6 +157,7 @@ MonoBehaviour:
   - bodyTypeId: pumped_male
     displayName: Pumped Male
     enabledForSelection: 1
+    runtimeAvatar: {fileID: 9000000, guid: d6cd9df6a0bfe7240bd104c2ce1a86e5, type: 3}
     defaultSkinId: skin_01
     defaultHairId: pumped_male_hair_01
     defaultFaceId: pumped_male_face_neutral

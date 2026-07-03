@@ -40,6 +40,7 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
         [SerializeField] private string bodyTypeId = string.Empty;
         [SerializeField] private string displayName = string.Empty;
         [SerializeField] private bool enabledForSelection = true;
+        [SerializeField] private Avatar runtimeAvatar;
         [SerializeField] private string defaultSkinId = string.Empty;
         [SerializeField] private string defaultHairId = string.Empty;
         [SerializeField] private string defaultFaceId = string.Empty;
@@ -54,6 +55,7 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
         public string BodyTypeId { get { return CharacterAppearanceData.NormalizeId(bodyTypeId); } }
         public string DisplayName { get { return string.IsNullOrWhiteSpace(displayName) ? BodyTypeId : displayName.Trim(); } }
         public bool EnabledForSelection { get { return enabledForSelection; } }
+        public Avatar RuntimeAvatar { get { return runtimeAvatar; } }
         public string DefaultSkinId { get { return CharacterAppearanceData.NormalizeId(defaultSkinId); } }
 
         public string GetDefaultId(CharacterAppearanceCategory category)
@@ -136,6 +138,19 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
     public string GetDefaultBodyTypeId() { return CharacterAppearanceData.NormalizeId(defaultBodyTypeId); }
     public string GetDefaultSkinId(string bodyTypeId) { BodyTypeDefinition bodyType; return TryGetBodyType(bodyTypeId, out bodyType) ? bodyType.DefaultSkinId : string.Empty; }
     public string GetDefaultId(string bodyTypeId, CharacterAppearanceCategory category) { BodyTypeDefinition bodyType; return TryGetBodyType(bodyTypeId, out bodyType) ? bodyType.GetDefaultId(category) : string.Empty; }
+
+    public bool TryGetRuntimeAvatar(string bodyTypeId, out Avatar avatar)
+    {
+        avatar = null;
+        BodyTypeDefinition bodyType;
+        if (!TryGetBodyType(bodyTypeId, out bodyType) || bodyType.RuntimeAvatar == null)
+        {
+            return false;
+        }
+
+        avatar = bodyType.RuntimeAvatar;
+        return true;
+    }
 
     public void GetBodyTypes(List<string> results)
     {
@@ -593,6 +608,7 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
             if (bodyType == null) { LogError("[CharacterAppearanceDatabase] " + location + " is null.", logContext); valid = false; continue; }
             if (string.IsNullOrEmpty(bodyType.BodyTypeId)) { LogError("[CharacterAppearanceDatabase] " + location + " has an empty bodyTypeId.", logContext); valid = false; }
             else if (!bodyTypeIds.Add(bodyType.BodyTypeId)) { LogError("[CharacterAppearanceDatabase] Duplicate bodyTypeId '" + bodyType.BodyTypeId + "'.", logContext); valid = false; }
+            if (bodyType.RuntimeAvatar == null) { LogError("[CharacterAppearanceDatabase] BodyType '" + bodyType.BodyTypeId + "' has no runtimeAvatar assigned.", logContext); valid = false; }
             if (bodyType.EnabledForSelection) { enabledCount++; }
         }
         if (string.IsNullOrEmpty(GetDefaultBodyTypeId()) || !bodyTypeIds.Contains(GetDefaultBodyTypeId()))

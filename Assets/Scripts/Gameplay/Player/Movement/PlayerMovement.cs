@@ -3,6 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public sealed class PlayerMovement : MonoBehaviour
 {
+    private const float WalkAnimationState = 0f;
+    private const float RunAnimationState = 1f;
+
     // ==================================================
     // MOVEMENT SETTINGS
     // ==================================================
@@ -77,6 +80,9 @@ public sealed class PlayerMovement : MonoBehaviour
     [SerializeField]
     private string jumpParameter = "IsJump";
 
+    [SerializeField]
+    private string stateParameter = "State";
+
     // ==================================================
     // PUBLIC STATE
     // ==================================================
@@ -99,6 +105,11 @@ public sealed class PlayerMovement : MonoBehaviour
     private bool isRunning;
     private bool jumpPressed;
 
+    private int horizontalParameterHash;
+    private int verticalParameterHash;
+    private int jumpParameterHash;
+    private int stateParameterHash;
+
     // ==================================================
     // UNITY LIFECYCLE
     // ==================================================
@@ -118,6 +129,7 @@ public sealed class PlayerMovement : MonoBehaviour
             inputSettings.EnsureLoaded();
 
         ValidateSettings();
+        CacheAnimatorHashes();
 
         currentHeight = standingHeight;
         ApplyControllerHeight(currentHeight);
@@ -126,6 +138,7 @@ public sealed class PlayerMovement : MonoBehaviour
     private void OnValidate()
     {
         ValidateSettings();
+        CacheAnimatorHashes();
     }
 
     private void Update()
@@ -320,19 +333,31 @@ public sealed class PlayerMovement : MonoBehaviour
         }
 
         animator.SetFloat(
-            horizontalParameter,
+            horizontalParameterHash,
             inputAxis.x
         );
 
         animator.SetFloat(
-            verticalParameter,
+            verticalParameterHash,
             inputAxis.y
         );
 
         animator.SetBool(
-            jumpParameter,
+            jumpParameterHash,
             !characterController.isGrounded
         );
+
+        animator.SetFloat(
+            stateParameterHash,
+            IsSprintMovementActive()
+                ? RunAnimationState
+                : WalkAnimationState
+        );
+    }
+
+    private bool IsSprintMovementActive()
+    {
+        return isRunning && inputAxis.sqrMagnitude > 0.0001f;
     }
 
     // ==================================================
@@ -431,5 +456,20 @@ public sealed class PlayerMovement : MonoBehaviour
 
         if (groundedYVelocity > 0f)
             groundedYVelocity = -2f;
+    }
+
+    private void CacheAnimatorHashes()
+    {
+        horizontalParameterHash =
+            Animator.StringToHash(horizontalParameter);
+
+        verticalParameterHash =
+            Animator.StringToHash(verticalParameter);
+
+        jumpParameterHash =
+            Animator.StringToHash(jumpParameter);
+
+        stateParameterHash =
+            Animator.StringToHash(stateParameter);
     }
 }
