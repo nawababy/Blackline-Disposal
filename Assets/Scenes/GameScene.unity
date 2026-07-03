@@ -1072,13 +1072,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   walkSpeed: 4
-  sprintMultiplier: 1.5
+  sprintMultiplier: 2
   crouchSpeedMultiplier: 0.5
   jumpHeight: 2
   gravity: -9.81
   groundedYVelocity: -2
-  standingHeight: 2
-  crouchingHeight: 1
+  standingHeight: 1.6
+  crouchingHeight: 0.8
   crouchTransitionSpeed: 5
   inputSettings: {fileID: 11400000, guid: dcdda59b561cf4e48bf44cfd70f320e6, type: 2}
   canReadInput: 1
@@ -1086,6 +1086,7 @@ MonoBehaviour:
   horizontalParameter: Hor
   verticalParameter: Vert
   jumpParameter: IsJump
+  stateParameter: State
 --- !u!143 &426157135
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5329,7 +5330,7 @@ Transform:
   m_GameObject: {fileID: 1939721592}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8, z: 0.5}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []

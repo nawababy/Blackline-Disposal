@@ -239,6 +239,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         GameObject bodyInstance = Instantiate(bodyDefinition.Prefab, parent);
         bodyInstance.name = bodyDefinition.Id;
         ResetLocalTransform(bodyInstance.transform);
+        ConfigureRuntimeSkinnedMeshRenderers(bodyInstance);
 
         Transform fallbackSkeletonRoot = FindRendererSkeletonRoot(bodyInstance);
         Avatar bodyAvatar = FindExistingRuntimeAvatar(bodyInstance);
@@ -338,6 +339,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         GameObject instance = Instantiate(definition.Prefab, parent);
         instance.name = definition.Id;
         ResetLocalTransform(instance.transform);
+        ConfigureRuntimeSkinnedMeshRenderers(instance);
 
         if (!BindSkinnedMeshRenderers(instance, category, definition.Id, appearanceData.bodyTypeId, definition.Prefab, targetBones))
         {
@@ -602,6 +604,18 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         target.localPosition = Vector3.zero;
         target.localRotation = Quaternion.identity;
         target.localScale = Vector3.one;
+    }
+
+    private static void ConfigureRuntimeSkinnedMeshRenderers(GameObject instance)
+    {
+        SkinnedMeshRenderer[] renderers = instance.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
+            {
+                renderers[i].updateWhenOffscreen = true;
+            }
+        }
     }
 
     private void RemoveDisallowedComponents(GameObject instance, Animator protectedAnimator)
