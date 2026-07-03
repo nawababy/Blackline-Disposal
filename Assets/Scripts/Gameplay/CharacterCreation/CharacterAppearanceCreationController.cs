@@ -7,6 +7,8 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
     [SerializeField] private CharacterAppearanceData currentAppearance = new CharacterAppearanceData();
     [SerializeField] private bool applyOnEnable = true;
 
+    private bool isFinishing;
+
     public CharacterAppearanceData CurrentAppearance
     {
         get
@@ -196,6 +198,61 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
     public void PreviousFullBody()
     {
         ChangeOptionalPartSelection(CharacterAppearanceCategory.FullBody, -1);
+    }
+
+    public void ConfirmAppearanceAndContinue()
+    {
+        if (isFinishing)
+        {
+            return;
+        }
+
+        EnsureAppearanceData();
+        if (!CanUseDatabase())
+        {
+            return;
+        }
+
+        CharacterAppearanceData resolvedAppearance = new CharacterAppearanceData();
+        if (!database.ResolveAppearance(currentAppearance, resolvedAppearance, this))
+        {
+            Debug.LogError("[CharacterAppearanceCreationController] Cannot confirm appearance because the current selection could not be resolved.", this);
+            return;
+        }
+
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager == null)
+        {
+            Debug.LogError("[CharacterAppearanceCreationController] Cannot continue because no GameManager instance exists.", this);
+            return;
+        }
+
+        int slotIndex = gameManager.CurrentSlot;
+        if (slotIndex < 0 || slotIndex >= gameManager.SaveSlotCount)
+        {
+            Debug.LogError("[CharacterAppearanceCreationController] Cannot continue because CurrentSlot '" + slotIndex + "' is invalid.", this);
+            return;
+        }
+
+        SaveManager saveManager = SaveManager.Instance;
+        if (saveManager == null)
+        {
+            Debug.LogError("[CharacterAppearanceCreationController] Cannot save appearance because no SaveManager instance exists.", this);
+            return;
+        }
+
+        isFinishing = true;
+
+        CharacterAppearanceData appearanceToSave = resolvedAppearance.Clone();
+        if (!saveManager.SetPlayerAppearance(slotIndex, appearanceToSave))
+        {
+            Debug.LogError("[CharacterAppearanceCreationController] Could not save appearance for Slot " + (slotIndex + 1) + ". CharacterCreation remains open.", this);
+            isFinishing = false;
+            return;
+        }
+
+        currentAppearance.CopyFrom(appearanceToSave);
+        gameManager.LoadGameScene();
     }
 
     private void ChangeBodyType(int direction)

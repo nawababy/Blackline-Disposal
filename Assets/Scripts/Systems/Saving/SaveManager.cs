@@ -423,6 +423,130 @@ public sealed class SaveManager : MonoBehaviour
         return true;
     }
 
+
+    // ==================================================
+    // SET PLAYER APPEARANCE
+    // ==================================================
+
+    public bool SetPlayerAppearance(
+        int slotIndex,
+        CharacterAppearanceData appearance
+    )
+    {
+        if (!IsValidSlotIndex(slotIndex))
+        {
+            Debug.LogWarning(
+                $"Ungueltiger Speicherplatz fuer Appearance-Auswahl: " +
+                $"{slotIndex}",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (appearance == null)
+        {
+            Debug.LogWarning(
+                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
+                "gespeichert werden, weil die Daten fehlen.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        CharacterAppearanceData appearanceCopy =
+            appearance.Clone();
+
+        if (string.IsNullOrEmpty(appearanceCopy.bodyTypeId) ||
+            string.IsNullOrEmpty(appearanceCopy.skinId))
+        {
+            Debug.LogWarning(
+                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
+                "gespeichert werden, weil bodyTypeId oder skinId fehlen.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (!HasSave(slotIndex))
+        {
+            Debug.LogError(
+                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
+                "gespeichert werden, weil keine bestehende Save-Datei " +
+                "gefunden wurde. StartNewGame muss den Slot vorher erstellen.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        SaveGameData saveData =
+            ReadSaveFile(slotIndex);
+
+        if (saveData == null)
+        {
+            Debug.LogError(
+                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
+                "gespeichert werden, weil die Save-Datei nicht gelesen " +
+                "werden konnte.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        EnsureSaveDataSectionsExist(
+            saveData
+        );
+
+        if (saveData.slotIndex != slotIndex)
+        {
+            Debug.LogError(
+                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
+                "gespeichert werden, weil die Save-Datei Slot " +
+                $"{saveData.slotIndex} enthaelt.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        appearanceCopy.appearanceVersion =
+            CharacterAppearanceData.CurrentVersion;
+
+        saveData.player.appearance =
+            appearanceCopy.Clone();
+
+        saveData.saveVersion =
+            SaveGameData.CurrentSaveVersion;
+
+        saveData.UpdateLastSavedTime();
+
+        bool wasWritten =
+            WriteSaveFile(
+                slotIndex,
+                saveData
+            );
+
+        if (!wasWritten)
+            return false;
+
+        if (CurrentSave == null ||
+            CurrentSave.slotIndex == slotIndex)
+        {
+            CurrentSave = saveData;
+        }
+
+        Debug.Log(
+            $"Appearance wurde fuer Slot {slotIndex + 1} gespeichert.",
+            gameObject
+        );
+
+        return true;
+    }
+
     // ==================================================
     // SAVE GAME
     // ==================================================
@@ -472,7 +596,7 @@ public sealed class SaveManager : MonoBehaviour
             saveData
         );
 
-        saveData.saveVersion = 2;
+        saveData.saveVersion = SaveGameData.CurrentSaveVersion;
         saveData.slotIndex = slotIndex;
 
         CaptureCurrentSceneData(
@@ -1490,6 +1614,7 @@ public sealed class SaveManager : MonoBehaviour
                 temporarySaveData.player.position == null ||
                 temporarySaveData.player.rotation == null ||
                 temporarySaveData.player.hotbarSlots == null ||
+                temporarySaveData.player.appearance == null ||
                 temporarySaveData.sharedWorld.facilities == null ||
                 temporarySaveData.sharedWorld.worldTrashObjects == null)
             {
@@ -1582,6 +1707,18 @@ public sealed class SaveManager : MonoBehaviour
         {
             saveData.player.rotation =
                 new SerializableVector3();
+        }
+
+        if (saveData.player.hotbarSlots == null)
+        {
+            saveData.player.hotbarSlots =
+                new List<HotbarSlotSaveData>();
+        }
+
+        if (saveData.player.appearance == null)
+        {
+            saveData.player.appearance =
+                new CharacterAppearanceData();
         }
 
         if (saveData.sharedWorld.facilities == null)

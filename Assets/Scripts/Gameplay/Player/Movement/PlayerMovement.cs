@@ -339,6 +339,22 @@ public sealed class PlayerMovement : MonoBehaviour
     // EXTERNAL ACCESS
     // ==================================================
 
+    public void SetAnimator(Animator newAnimator)
+    {
+        if (animator == newAnimator)
+            return;
+
+        animator = newAnimator;
+
+        if (animator == null)
+        {
+            Debug.LogWarning(
+                "PlayerMovement received no Animator. Movement continues without animation.",
+                this
+            );
+        }
+    }
+
     public float GetCenterY()
     {
         if (characterController == null)

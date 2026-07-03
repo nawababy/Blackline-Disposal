@@ -5,11 +5,13 @@ using UnityEngine;
 [Serializable]
 public sealed class SaveGameData
 {
+    public const int CurrentSaveVersion = 3;
+
     // ==================================================
     // SAVE INFORMATION
     // ==================================================
 
-    public int saveVersion = 2;
+    public int saveVersion = CurrentSaveVersion;
 
     public int slotIndex = -1;
 
@@ -43,7 +45,7 @@ public sealed class SaveGameData
 
         return new SaveGameData
         {
-            saveVersion = 2,
+            saveVersion = CurrentSaveVersion,
 
             slotIndex =
                 newSlotIndex,
@@ -112,6 +114,9 @@ public sealed class PlayerSaveData
 
     public string characterId =
         string.Empty;
+
+    public CharacterAppearanceData appearance =
+        new CharacterAppearanceData();
 }
 
 // ======================================================

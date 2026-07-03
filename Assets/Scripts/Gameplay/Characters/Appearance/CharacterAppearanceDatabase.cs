@@ -439,6 +439,16 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
 
     public bool ResolveAppearance(CharacterAppearanceData source, CharacterAppearanceData resolvedAppearance, UnityEngine.Object logContext = null)
     {
+        return ResolveAppearanceInternal(source, resolvedAppearance, logContext, false);
+    }
+
+    public bool ResolveRuntimeAppearance(CharacterAppearanceData source, CharacterAppearanceData resolvedAppearance, UnityEngine.Object logContext = null)
+    {
+        return ResolveAppearanceInternal(source, resolvedAppearance, logContext, true);
+    }
+
+    private bool ResolveAppearanceInternal(CharacterAppearanceData source, CharacterAppearanceData resolvedAppearance, UnityEngine.Object logContext, bool allowDisabledBodyTypes)
+    {
         if (resolvedAppearance == null) { LogError("[CharacterAppearanceDatabase] Cannot resolve appearance because target data is null.", logContext); return false; }
 
         CharacterAppearanceData sourceSnapshot = source == null ? null : source.Clone();
@@ -454,10 +464,10 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
         }
 
         BodyTypeDefinition bodyType;
-        bool requestedBodyTypeIsValid = TryGetBodyType(requestedBodyTypeId, out bodyType) && bodyType.EnabledForSelection;
+        bool requestedBodyTypeExists = TryGetBodyType(requestedBodyTypeId, out bodyType);
+        bool requestedBodyTypeIsValid = requestedBodyTypeExists && (allowDisabledBodyTypes || bodyType.EnabledForSelection);
         if (!requestedBodyTypeIsValid)
         {
-            bool requestedBodyTypeExists = TryGetBodyType(requestedBodyTypeId, out bodyType);
             if (!TryGetFirstEnabledBodyType(out bodyType))
             {
                 LogError("[CharacterAppearanceDatabase] Cannot resolve appearance because no BodyType is enabled for selection.", logContext);
