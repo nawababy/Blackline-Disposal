@@ -16,36 +16,147 @@ MonoBehaviour:
   bodyTypeDefinitions:
   - bodyTypeId: adult_female
     displayName: Adult Female
+    enabledForSelection: 1
     defaultSkinId: skin_01
     defaultHairId: adult_female_hair_01
     defaultFaceId: adult_female_face_neutral
     defaultUpperId: adult_female_upper_01
     defaultPantsId: adult_female_pants_01
     defaultShoesId: adult_female_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
   - bodyTypeId: adult_male
     displayName: Adult Male
+    enabledForSelection: 1
     defaultSkinId: skin_01
     defaultHairId: adult_male_hair_01
     defaultFaceId: adult_male_face_neutral
     defaultUpperId: adult_male_upper_01
     defaultPantsId: adult_male_pants_01
     defaultShoesId: adult_male_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
   - bodyTypeId: plussize_female
     displayName: Plus-Size Female
+    enabledForSelection: 1
     defaultSkinId: skin_01
     defaultHairId: plussize_female_hair_01
     defaultFaceId: plussize_female_face_neutral
     defaultUpperId: plussize_female_upper_01
     defaultPantsId: plussize_female_pants_01
     defaultShoesId: plussize_female_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
   - bodyTypeId: plussize_male
     displayName: Plus-Size Male
+    enabledForSelection: 1
     defaultSkinId: skin_01
     defaultHairId: plussize_male_hair_01
     defaultFaceId: plussize_male_face_neutral
     defaultUpperId: plussize_male_upper_01
     defaultPantsId: plussize_male_pants_01
     defaultShoesId: plussize_male_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: child_female
+    displayName: Child Female
+    enabledForSelection: 0
+    defaultSkinId: skin_01
+    defaultHairId: child_female_hair_01
+    defaultFaceId: child_female_face_neutral
+    defaultUpperId: child_female_upper_01
+    defaultPantsId: child_female_pants_01
+    defaultShoesId: child_female_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: child_male
+    displayName: Child Male
+    enabledForSelection: 0
+    defaultSkinId: skin_01
+    defaultHairId: child_male_hair_01
+    defaultFaceId: child_male_face_neutral
+    defaultUpperId: child_male_upper_01
+    defaultPantsId: child_male_pants_01
+    defaultShoesId: child_male_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: teen_female
+    displayName: Teen Female
+    enabledForSelection: 0
+    defaultSkinId: skin_01
+    defaultHairId: teen_female_hair_01
+    defaultFaceId: teen_female_face_neutral
+    defaultUpperId: teen_female_upper_01
+    defaultPantsId: teen_female_pants_01
+    defaultShoesId: teen_female_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: teen_male
+    displayName: Teen Male
+    enabledForSelection: 0
+    defaultSkinId: skin_01
+    defaultHairId: teen_male_hair_01
+    defaultFaceId: teen_male_face_neutral
+    defaultUpperId: teen_male_upper_01
+    defaultPantsId: teen_male_pants_01
+    defaultShoesId: teen_male_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: senior_female
+    displayName: Senior Female
+    enabledForSelection: 1
+    defaultSkinId: skin_01
+    defaultHairId: senior_female_hair_01
+    defaultFaceId: senior_female_face_neutral
+    defaultUpperId: senior_female_upper_01
+    defaultPantsId: senior_female_pants_01
+    defaultShoesId: senior_female_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: senior_male
+    displayName: Senior Male
+    enabledForSelection: 1
+    defaultSkinId: skin_01
+    defaultHairId: senior_male_hair_01
+    defaultFaceId: senior_male_face_neutral
+    defaultUpperId: senior_male_upper_01
+    defaultPantsId: senior_male_pants_01
+    defaultShoesId: senior_male_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
+  - bodyTypeId: pumped_male
+    displayName: Pumped Male
+    enabledForSelection: 1
+    defaultSkinId: skin_01
+    defaultHairId: pumped_male_hair_01
+    defaultFaceId: pumped_male_face_neutral
+    defaultUpperId: pumped_male_upper_01
+    defaultPantsId: pumped_male_pants_01
+    defaultShoesId: pumped_male_shoes_01
+    defaultHatId: 
+    defaultGlassesId: 
+    defaultGlovesId: 
+    defaultFullBodyId: 
   bodyDefinitions:
   - id: adult_female_skin_01
     bodyTypeId: adult_female
@@ -127,6 +238,146 @@ MonoBehaviour:
     skinId: skin_04
     displayName: Plus-Size Male Skin 04
     prefab: {fileID: 686243980799999296, guid: 58580f2dd38f8224795c63eb93898b27, type: 3}
+  - id: child_female_skin_01
+    bodyTypeId: child_female
+    skinId: skin_01
+    displayName: Child Female Skin 01
+    prefab: {fileID: 740381523782075492, guid: ae563156c009e1947bb9f3b679a4f88e, type: 3}
+  - id: child_female_skin_02
+    bodyTypeId: child_female
+    skinId: skin_02
+    displayName: Child Female Skin 02
+    prefab: {fileID: 983079509983999275, guid: 4213d24ad4ebf364fac23e9a4dc5ed7f, type: 3}
+  - id: child_female_skin_03
+    bodyTypeId: child_female
+    skinId: skin_03
+    displayName: Child Female Skin 03
+    prefab: {fileID: 4259178938431309796, guid: 7ac211be7a360ec46939266cc673d0b0, type: 3}
+  - id: child_female_skin_04
+    bodyTypeId: child_female
+    skinId: skin_04
+    displayName: Child Female Skin 04
+    prefab: {fileID: 2759107654688939222, guid: a9beda575c260ac429398de70e5d0779, type: 3}
+  - id: child_male_skin_01
+    bodyTypeId: child_male
+    skinId: skin_01
+    displayName: Child Male Skin 01
+    prefab: {fileID: 1744084776072045597, guid: 4075446202ac812418ad844d9286f132, type: 3}
+  - id: child_male_skin_02
+    bodyTypeId: child_male
+    skinId: skin_02
+    displayName: Child Male Skin 02
+    prefab: {fileID: 5751853769447625810, guid: 53c91dba2b5e13b4bb9e0759c4bf6a36, type: 3}
+  - id: child_male_skin_03
+    bodyTypeId: child_male
+    skinId: skin_03
+    displayName: Child Male Skin 03
+    prefab: {fileID: 6583456699194885756, guid: a05ff5daf17c67c4fb05e515b7235dbc, type: 3}
+  - id: child_male_skin_04
+    bodyTypeId: child_male
+    skinId: skin_04
+    displayName: Child Male Skin 04
+    prefab: {fileID: 2262395103899264102, guid: 3c0c2bb240e72f64b8969f1773d80e43, type: 3}
+  - id: teen_female_skin_01
+    bodyTypeId: teen_female
+    skinId: skin_01
+    displayName: Teen Female Skin 01
+    prefab: {fileID: 5373362890700239150, guid: 9004f53dcffc03444819e94621e68cd0, type: 3}
+  - id: teen_female_skin_02
+    bodyTypeId: teen_female
+    skinId: skin_02
+    displayName: Teen Female Skin 02
+    prefab: {fileID: 1620431489563943628, guid: 61f32f16f18ad664683e468205853c56, type: 3}
+  - id: teen_female_skin_03
+    bodyTypeId: teen_female
+    skinId: skin_03
+    displayName: Teen Female Skin 03
+    prefab: {fileID: 4257904241426789603, guid: 31209db498938284dbf9c3e8f88f6beb, type: 3}
+  - id: teen_female_skin_04
+    bodyTypeId: teen_female
+    skinId: skin_04
+    displayName: Teen Female Skin 04
+    prefab: {fileID: 2762447060292251738, guid: b65547344fbe74d45be1d0db9fda4ae7, type: 3}
+  - id: teen_male_skin_01
+    bodyTypeId: teen_male
+    skinId: skin_01
+    displayName: Teen Male Skin 01
+    prefab: {fileID: 6565997819386817740, guid: 13eeeb93fafb8bd4aaf7aef66a61dc16, type: 3}
+  - id: teen_male_skin_02
+    bodyTypeId: teen_male
+    skinId: skin_02
+    displayName: Teen Male Skin 02
+    prefab: {fileID: 2474500598344782794, guid: af82deb31defa9e4a90286ca3b0dc615, type: 3}
+  - id: teen_male_skin_03
+    bodyTypeId: teen_male
+    skinId: skin_03
+    displayName: Teen Male Skin 03
+    prefab: {fileID: 3206572658913109809, guid: 69e79f22bc9aaee488544a075b43e9d2, type: 3}
+  - id: teen_male_skin_04
+    bodyTypeId: teen_male
+    skinId: skin_04
+    displayName: Teen Male Skin 04
+    prefab: {fileID: 3710691525131296539, guid: ac0238e2381929646bbb3e570dc5f052, type: 3}
+  - id: senior_female_skin_01
+    bodyTypeId: senior_female
+    skinId: skin_01
+    displayName: Senior Female Skin 01
+    prefab: {fileID: 3396791014448990898, guid: 7c03d0c53492a544f845e594664acfd4, type: 3}
+  - id: senior_female_skin_02
+    bodyTypeId: senior_female
+    skinId: skin_02
+    displayName: Senior Female Skin 02
+    prefab: {fileID: 808548398576502923, guid: 7316042973ded694aa87eaf8f3310b31, type: 3}
+  - id: senior_female_skin_03
+    bodyTypeId: senior_female
+    skinId: skin_03
+    displayName: Senior Female Skin 03
+    prefab: {fileID: 6734829177712863983, guid: 855a9a06427787842a568f42168dff35, type: 3}
+  - id: senior_female_skin_04
+    bodyTypeId: senior_female
+    skinId: skin_04
+    displayName: Senior Female Skin 04
+    prefab: {fileID: 1793017163098513652, guid: 8b41ac3cd6d835a408fda325b4820f4e, type: 3}
+  - id: senior_male_skin_01
+    bodyTypeId: senior_male
+    skinId: skin_01
+    displayName: Senior Male Skin 01
+    prefab: {fileID: 5898939442425613592, guid: 7cf88405ba547c747bb03e141020f8f0, type: 3}
+  - id: senior_male_skin_02
+    bodyTypeId: senior_male
+    skinId: skin_02
+    displayName: Senior Male Skin 02
+    prefab: {fileID: 5744370826856401153, guid: 477b9809c3b297f4589b227decab27c6, type: 3}
+  - id: senior_male_skin_03
+    bodyTypeId: senior_male
+    skinId: skin_03
+    displayName: Senior Male Skin 03
+    prefab: {fileID: 7478981832029087370, guid: 764e09a3a4143b84db2d5e4449070fac, type: 3}
+  - id: senior_male_skin_04
+    bodyTypeId: senior_male
+    skinId: skin_04
+    displayName: Senior Male Skin 04
+    prefab: {fileID: 5846987473127385681, guid: a4f4e9e05f51b50438a608a4487b46fc, type: 3}
+  - id: pumped_male_skin_01
+    bodyTypeId: pumped_male
+    skinId: skin_01
+    displayName: Pumped Male Skin 01
+    prefab: {fileID: 5559435035823695597, guid: 0a70290407f8be9439ba7cd288bd3264, type: 3}
+  - id: pumped_male_skin_02
+    bodyTypeId: pumped_male
+    skinId: skin_02
+    displayName: Pumped Male Skin 02
+    prefab: {fileID: 7586953192078530930, guid: bca29fbf541deb341a13673636d31193, type: 3}
+  - id: pumped_male_skin_03
+    bodyTypeId: pumped_male
+    skinId: skin_03
+    displayName: Pumped Male Skin 03
+    prefab: {fileID: 6896300617883546076, guid: 5e46ea58443587841b94cc6a6886b444, type: 3}
+  - id: pumped_male_skin_04
+    bodyTypeId: pumped_male
+    skinId: skin_04
+    displayName: Pumped Male Skin 04
+    prefab: {fileID: 7513549837858631320, guid: dc562c1bd1b28b84396a7e1130785323, type: 3}
   hairDefinitions:
   - id: adult_female_hair_01
     displayName: Adult Female Hair 01
@@ -332,6 +583,366 @@ MonoBehaviour:
     bodyTypeId: plussize_male
     skinId: 
     prefab: {fileID: 5643889134436454427, guid: 06d71329673d85d46ab62872cdeda00b, type: 3}
+  - id: child_female_hair_01
+    displayName: Child Female Hair 01
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3932439923859578084, guid: b1e3dfa18a6d2aa47a0b14800e0b4bec, type: 3}
+  - id: child_female_hair_02
+    displayName: Child Female Hair 02
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 683986246049122150, guid: 594abcc52c88ee949912eb2527e5759e, type: 3}
+  - id: child_female_hair_03
+    displayName: Child Female Hair 03
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 5063607112555604684, guid: 86c0db4b9a9f00f4c8a93052d550f974, type: 3}
+  - id: child_female_hair_04
+    displayName: Child Female Hair 04
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4578591583628457266, guid: 72be6c901ed1374479d4c397b1ddeccf, type: 3}
+  - id: child_female_hair_05
+    displayName: Child Female Hair 05
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4794603154639096059, guid: 4b5c72669a3e83b449eb7d9370ace195, type: 3}
+  - id: child_female_hair_06
+    displayName: Child Female Hair 06
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 7304705874227372937, guid: 2911696293f2e1946b4efc580a108caa, type: 3}
+  - id: child_female_hair_07
+    displayName: Child Female Hair 07
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 1094574943051004350, guid: 217361b85e0a859429c42432d23886a7, type: 3}
+  - id: child_female_hair_08
+    displayName: Child Female Hair 08
+    category: 1
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4310828673625133983, guid: b2e6acaa7560d90459c820fc723c2209, type: 3}
+  - id: child_male_hair_01
+    displayName: Child Male Hair 01
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 1594287734742199262, guid: 9ebc0ed86f65a144fbbc92639518772e, type: 3}
+  - id: child_male_hair_02
+    displayName: Child Male Hair 02
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 7432816104689421189, guid: 974d850cf67bbf54485a72969bd22c1f, type: 3}
+  - id: child_male_hair_03
+    displayName: Child Male Hair 03
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 8571540811290894460, guid: db31f9e16b79a3a4f84666acf4797131, type: 3}
+  - id: child_male_hair_04
+    displayName: Child Male Hair 04
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 3616228496252317726, guid: d9c2b76b51a2ed54689a1767f733298a, type: 3}
+  - id: child_male_hair_05
+    displayName: Child Male Hair 05
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 7035566529116462942, guid: 1901c9a26a3ffeb4cb1f586e4003be2b, type: 3}
+  - id: child_male_hair_06
+    displayName: Child Male Hair 06
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 6415385395899167886, guid: 3c53b1692b93a1048997b831ab95c99a, type: 3}
+  - id: child_male_hair_07
+    displayName: Child Male Hair 07
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 2394305671797667248, guid: acd99cf7c8be2ba45918cb2a8496ead5, type: 3}
+  - id: child_male_hair_08
+    displayName: Child Male Hair 08
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 4837287018116762695, guid: 78940d50a6fe8614096eba4bcc95a20d, type: 3}
+  - id: child_male_hair_09
+    displayName: Child Male Hair 09
+    category: 1
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 9008477938185122431, guid: 0e612c5827f2cc448afd1998011e4c03, type: 3}
+  - id: teen_female_hair_01
+    displayName: Teen Female Hair 01
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 3348677500910985894, guid: 12d20d67c9014e14c8ee2c27f2f10d36, type: 3}
+  - id: teen_female_hair_02
+    displayName: Teen Female Hair 02
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 6971491062198494432, guid: 9eec890b36471e34db608a42b3ea46c2, type: 3}
+  - id: teen_female_hair_03
+    displayName: Teen Female Hair 03
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5145261155992982835, guid: 9f4f644d715e5414a9ba08413cca63a5, type: 3}
+  - id: teen_female_hair_04
+    displayName: Teen Female Hair 04
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 7724407363778270391, guid: 991bf203bb3602345a4e5bd28bc40c2a, type: 3}
+  - id: teen_female_hair_05
+    displayName: Teen Female Hair 05
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 1839994042879877017, guid: c38bb6643d4b5e143a45708fbead018a, type: 3}
+  - id: teen_female_hair_06
+    displayName: Teen Female Hair 06
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 8904775656322948841, guid: f71874635b19bde4a8bbf2fa494d98fa, type: 3}
+  - id: teen_female_hair_07
+    displayName: Teen Female Hair 07
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4587322393970844776, guid: decdad42cd74a2441b2a31e1db5b5ee2, type: 3}
+  - id: teen_female_hair_08
+    displayName: Teen Female Hair 08
+    category: 1
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 3003573446178637647, guid: 211d2162be9707e4cb4bf739bc62ed8c, type: 3}
+  - id: teen_male_hair_01
+    displayName: Teen Male Hair 01
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 786325681553040719, guid: cec87e8eded7aa24cb7111fc6214e317, type: 3}
+  - id: teen_male_hair_02
+    displayName: Teen Male Hair 02
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 7481554485388651905, guid: 23ef99dde7425204da9091afce4ddd61, type: 3}
+  - id: teen_male_hair_03
+    displayName: Teen Male Hair 03
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8367704494693220642, guid: dd6c3c597672de448a6c36189a1a3960, type: 3}
+  - id: teen_male_hair_04
+    displayName: Teen Male Hair 04
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 7596061365226075360, guid: 3d8e011d5c6a4ca41b62fd8411a44e9a, type: 3}
+  - id: teen_male_hair_05
+    displayName: Teen Male Hair 05
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 72905601833207992, guid: 5991296f2d319d740b9143dd3cd22369, type: 3}
+  - id: teen_male_hair_06
+    displayName: Teen Male Hair 06
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 4493462339104391419, guid: 923bbec17fd6d1d4e9a8d01d90c14870, type: 3}
+  - id: teen_male_hair_07
+    displayName: Teen Male Hair 07
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5724835551662448834, guid: 893af23db6c5d414fbd9740b96be7fd2, type: 3}
+  - id: teen_male_hair_08
+    displayName: Teen Male Hair 08
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5399582121793395228, guid: a93b2e27b9938dc4cbc64d11448fcd11, type: 3}
+  - id: teen_male_hair_09
+    displayName: Teen Male Hair 09
+    category: 1
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 4617584461785328787, guid: 1dd7d7f6843b6614aa42e89d04862869, type: 3}
+  - id: senior_female_hair_01
+    displayName: Senior Female Hair 01
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 369018479592023145, guid: 022c5796b8a3226499d9dc6adb14ff19, type: 3}
+  - id: senior_female_hair_02
+    displayName: Senior Female Hair 02
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8994520047568747000, guid: 21ae2ea2b3a5bab46b483fe6d3218090, type: 3}
+  - id: senior_female_hair_03
+    displayName: Senior Female Hair 03
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 6437915537327620274, guid: fae4f2ec785592c48a3f0f3f92fa5e50, type: 3}
+  - id: senior_female_hair_04
+    displayName: Senior Female Hair 04
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3171385851010082821, guid: e4bd4fe588dbae14a88b86450108acd2, type: 3}
+  - id: senior_female_hair_05
+    displayName: Senior Female Hair 05
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4189957615180390075, guid: 2d3928e032a5cce45b893f7d3fb600c3, type: 3}
+  - id: senior_female_hair_06
+    displayName: Senior Female Hair 06
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 6479889925568045370, guid: 2f7d24e716383634390a01944ab447a4, type: 3}
+  - id: senior_female_hair_07
+    displayName: Senior Female Hair 07
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 2326111368795849996, guid: ca67c79861d00da47918240e6404baa7, type: 3}
+  - id: senior_female_hair_08
+    displayName: Senior Female Hair 08
+    category: 1
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5159413519422236696, guid: d8cefdb426cfb02479a60fda98176d33, type: 3}
+  - id: senior_male_hair_01
+    displayName: Senior Male Hair 01
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 1110964229606373548, guid: c5e9146608e1e39419c620ef5ccc826a, type: 3}
+  - id: senior_male_hair_02
+    displayName: Senior Male Hair 02
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7692234648303719969, guid: 80d43ad03c662664f9a384ae235e9037, type: 3}
+  - id: senior_male_hair_03
+    displayName: Senior Male Hair 03
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5390137884754417041, guid: 324e1d3c686fe434e9a442fbe861e6d2, type: 3}
+  - id: senior_male_hair_04
+    displayName: Senior Male Hair 04
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2880695026288092093, guid: 175095a57838a194f9ddb401290a41fc, type: 3}
+  - id: senior_male_hair_05
+    displayName: Senior Male Hair 05
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4165928801863331793, guid: 240da829d1274ed499e4e6bc047619f1, type: 3}
+  - id: senior_male_hair_06
+    displayName: Senior Male Hair 06
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 134684468504638789, guid: 53c887bd1f3f6944594deaa3dfa77628, type: 3}
+  - id: senior_male_hair_07
+    displayName: Senior Male Hair 07
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5826712975173267714, guid: b9449687c965cbf4bad8d87f7ee73e28, type: 3}
+  - id: senior_male_hair_08
+    displayName: Senior Male Hair 08
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4858706270932792270, guid: 2730596b0ed98a24c8647571ba2d1616, type: 3}
+  - id: senior_male_hair_09
+    displayName: Senior Male Hair 09
+    category: 1
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5299767701020225441, guid: b76c0769c0af1684684cd3e2a58b823c, type: 3}
+  - id: pumped_male_hair_01
+    displayName: Pumped Male Hair 01
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 1784183647166890159, guid: 6f5d8810e85b29f43aac3e7919b2013a, type: 3}
+  - id: pumped_male_hair_02
+    displayName: Pumped Male Hair 02
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 295762806710275948, guid: a28087692ed9c0d4b84683df17fad118, type: 3}
+  - id: pumped_male_hair_03
+    displayName: Pumped Male Hair 03
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 6003555044991404333, guid: 46679f43d173a54419c5da9ce1764fa6, type: 3}
+  - id: pumped_male_hair_04
+    displayName: Pumped Male Hair 04
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 2215716479982309087, guid: cbbea7574ddce9f4696188f7d2a97583, type: 3}
+  - id: pumped_male_hair_05
+    displayName: Pumped Male Hair 05
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 1121959617477060721, guid: e6138fa356e5acc4e94569a9e67f6222, type: 3}
+  - id: pumped_male_hair_06
+    displayName: Pumped Male Hair 06
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8099194969499390931, guid: 5d5660dd78245434da674cfbed67b5eb, type: 3}
+  - id: pumped_male_hair_07
+    displayName: Pumped Male Hair 07
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 2121988620808675000, guid: 5d3b30bc73d6d1b40b4adf37f273ee79, type: 3}
+  - id: pumped_male_hair_08
+    displayName: Pumped Male Hair 08
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 2432736636187252846, guid: 983f93a362ebb7e4f9e8597bac4a9c26, type: 3}
+  - id: pumped_male_hair_09
+    displayName: Pumped Male Hair 09
+    category: 1
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 7929921908402610386, guid: a0e848be5f6bd254fa725989395dafdf, type: 3}
   faceDefinitions:
   - id: adult_female_face_anger
     displayName: Adult Female Face Anger
@@ -573,6 +1184,426 @@ MonoBehaviour:
     bodyTypeId: plussize_male
     skinId: 
     prefab: {fileID: 4715827627640274147, guid: 3d9c3331e361bfa43944d794c165c68e, type: 3}
+  - id: child_female_face_anger
+    displayName: Child Female Face Anger
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 7645223327020409022, guid: 1bad909e223a4f149af29f94761385c8, type: 3}
+  - id: child_female_face_angry
+    displayName: Child Female Face Angry
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 6273044524752516883, guid: febb77380ad23ff44b8ac672fd23bb90, type: 3}
+  - id: child_female_face_confuse
+    displayName: Child Female Face Confuse
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 9196437242944810147, guid: 1bd0fa2931dca7e4aa1212b47794df02, type: 3}
+  - id: child_female_face_evil
+    displayName: Child Female Face Evil
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4867001283266325527, guid: f88b578cb6eb5b34287e690579fec232, type: 3}
+  - id: child_female_face_happy
+    displayName: Child Female Face Happy
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3985680560475214383, guid: 22fe7d78bbd3ce84baffc3242af5f4ac, type: 3}
+  - id: child_female_face_impatience
+    displayName: Child Female Face Impatience
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4783617449577035398, guid: 5a24afa681a1dd7499ab90a04c289a29, type: 3}
+  - id: child_female_face_neutral
+    displayName: Child Female Face Neutral
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 652677230761694970, guid: 9895b54013e827e4dadd534fabde9aa5, type: 3}
+  - id: child_female_face_sad
+    displayName: Child Female Face Sad
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3690438070734297075, guid: da26c44134df6d04b849f97ac3d4fbcd, type: 3}
+  - id: child_female_face_surprised
+    displayName: Child Female Face Surprised
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 2973839802225980554, guid: 38c2e4aea63755144b7362eb2ff4cdaf, type: 3}
+  - id: child_female_face_usual
+    displayName: Child Female Face Usual
+    category: 2
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 5674559573120879823, guid: 3ba338508013b7745bc23936b0bb0444, type: 3}
+  - id: child_male_face_anger
+    displayName: Child Male Face Anger
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 1307535572015091879, guid: a3cc69b4e75f8e8489eec3a878b55820, type: 3}
+  - id: child_male_face_angry
+    displayName: Child Male Face Angry
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 3068055336833809880, guid: f3e125b3e9913e04faa14ae1706a3763, type: 3}
+  - id: child_male_face_confuse
+    displayName: Child Male Face Confuse
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 470759141858493119, guid: 75a6278898f53184292def35e14e1fc2, type: 3}
+  - id: child_male_face_evil
+    displayName: Child Male Face Evil
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5217749756612907508, guid: 06e8c0e7e04c68d4f923edeb5d7ea265, type: 3}
+  - id: child_male_face_happy
+    displayName: Child Male Face Happy
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 4899128367190618257, guid: 05ae22379a507844280bcafbbce18f69, type: 3}
+  - id: child_male_face_impatience
+    displayName: Child Male Face Impatience
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 3682250017765192762, guid: 30c99a256c9d4934db38f9a2484d2fad, type: 3}
+  - id: child_male_face_neutral
+    displayName: Child Male Face Neutral
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5206338444347787712, guid: 3f04fdcb7fa7b9e48bea946156592670, type: 3}
+  - id: child_male_face_sad
+    displayName: Child Male Face Sad
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5035035060504747847, guid: bd0b7593b30ef7b4299325d7ab6e3032, type: 3}
+  - id: child_male_face_surprised
+    displayName: Child Male Face Surprised
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 9037949682606249635, guid: 69970037904bd304ab9d6551d8f58af4, type: 3}
+  - id: child_male_face_usual
+    displayName: Child Male Face Usual
+    category: 2
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 8385292386981684008, guid: a82ccf30f34aa7f4eb1ac09a40703efe, type: 3}
+  - id: teen_female_face_anger
+    displayName: Teen Female Face Anger
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4905248438766797670, guid: 436104f81ce8dc44782ae24c6ff4ef16, type: 3}
+  - id: teen_female_face_angry
+    displayName: Teen Female Face Angry
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5997709356745329044, guid: d11a36c274f374d4f9e29b7f47dd86b7, type: 3}
+  - id: teen_female_face_confuse
+    displayName: Teen Female Face Confuse
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 7425877491910890866, guid: 7f494218b3910d945801d767a97cd176, type: 3}
+  - id: teen_female_face_evil
+    displayName: Teen Female Face Evil
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 313811028139292348, guid: a103dbffaaea426469f5f0f9dfda8cd2, type: 3}
+  - id: teen_female_face_happy
+    displayName: Teen Female Face Happy
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 3040368484813126372, guid: 6374885e6892b654cbf85bff64ad4f6c, type: 3}
+  - id: teen_female_face_impatience
+    displayName: Teen Female Face Impatience
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4572549795244450693, guid: 30acb5da56cb25446af8bcb22d15b75b, type: 3}
+  - id: teen_female_face_neutral
+    displayName: Teen Female Face Neutral
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5592320064876305045, guid: c6ca44b0f1db59b4590b810b56a85193, type: 3}
+  - id: teen_female_face_sad
+    displayName: Teen Female Face Sad
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 2695071545814399051, guid: 5c8a8e99253dab14989d70a23f8584f4, type: 3}
+  - id: teen_female_face_surprised
+    displayName: Teen Female Face Surprised
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 3527039387909044175, guid: a4d754b133175b2459114aa709218023, type: 3}
+  - id: teen_female_face_usual
+    displayName: Teen Female Face Usual
+    category: 2
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5189045665986912865, guid: ffefa39fcec095640a06a0dd1a495f4a, type: 3}
+  - id: teen_male_face_anger
+    displayName: Teen Male Face Anger
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 588518551306919991, guid: 34f9371b306f60c419a7c748a368179d, type: 3}
+  - id: teen_male_face_angry
+    displayName: Teen Male Face Angry
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 711282813158301143, guid: e37af9d18f2c22248b5c2ece70c2129a, type: 3}
+  - id: teen_male_face_confuse
+    displayName: Teen Male Face Confuse
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5243549455994768630, guid: 4f62150a355afa74186d2128e2e6fb8c, type: 3}
+  - id: teen_male_face_evil
+    displayName: Teen Male Face Evil
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 1481857109197519785, guid: 99e3ecfdff2eb8444bd54fe69d7bb115, type: 3}
+  - id: teen_male_face_happy
+    displayName: Teen Male Face Happy
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8080775351501344597, guid: db62dcf6512e3104c983985ff3132488, type: 3}
+  - id: teen_male_face_impatience
+    displayName: Teen Male Face Impatience
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8930415186656243821, guid: 40939555499451042af7bd10a5a41ba4, type: 3}
+  - id: teen_male_face_neutral
+    displayName: Teen Male Face Neutral
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 3562862655521555348, guid: 5c200ce79f08d604bae6d25547ec686d, type: 3}
+  - id: teen_male_face_sad
+    displayName: Teen Male Face Sad
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8430849029892716073, guid: 5b93c6e278851e94f90f2f0da7445659, type: 3}
+  - id: teen_male_face_surprised
+    displayName: Teen Male Face Surprised
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 7741042600883258355, guid: 53f1b1eb992535244ab4ca0e44d802d4, type: 3}
+  - id: teen_male_face_usual
+    displayName: Teen Male Face Usual
+    category: 2
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 2598670540239020922, guid: 49d41816ed3216644b7693d96482f953, type: 3}
+  - id: senior_female_face_anger
+    displayName: Senior Female Face Anger
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 2644417779742425922, guid: 316351802c567f84a83d05a6bc7e3802, type: 3}
+  - id: senior_female_face_angry
+    displayName: Senior Female Face Angry
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5516783060121886199, guid: 85e071ba1723ffc469120058ae6b0977, type: 3}
+  - id: senior_female_face_confuse
+    displayName: Senior Female Face Confuse
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1222631295630051865, guid: 769c7b11d6353414fb01202f0b20dc3e, type: 3}
+  - id: senior_female_face_evil
+    displayName: Senior Female Face Evil
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3862979884341592255, guid: a1929357d268df74e8a3b1c3464e10ef, type: 3}
+  - id: senior_female_face_happy
+    displayName: Senior Female Face Happy
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 154936187752412081, guid: eaf5263dcd1fc904fa480be48bac641f, type: 3}
+  - id: senior_female_face_impatience
+    displayName: Senior Female Face Impatience
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3581006159293584283, guid: bd76dc1958e162c43a3a411b18416fd9, type: 3}
+  - id: senior_female_face_neutral
+    displayName: Senior Female Face Neutral
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4837803935763250037, guid: 3bbcae24210e5554c840432cd5c57295, type: 3}
+  - id: senior_female_face_sad
+    displayName: Senior Female Face Sad
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3001979432311730934, guid: 47b3195acbe666249a6094c66dfc94f6, type: 3}
+  - id: senior_female_face_surprised
+    displayName: Senior Female Face Surprised
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 6458723514333417851, guid: 55fcb409096fc3a4abe09bb551744ee1, type: 3}
+  - id: senior_female_face_usual
+    displayName: Senior Female Face Usual
+    category: 2
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8096609992953019841, guid: 32ad8255f91c0f74c82a94590c62eaf9, type: 3}
+  - id: senior_male_face_anger
+    displayName: Senior Male Face Anger
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6015404405001482818, guid: cf16188dcf5bea741b10fd16a1b011c7, type: 3}
+  - id: senior_male_face_angry
+    displayName: Senior Male Face Angry
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7853365955141529797, guid: bbeca5371ea061f429f9561cf5750e27, type: 3}
+  - id: senior_male_face_confuse
+    displayName: Senior Male Face Confuse
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7360847456364748489, guid: 6daf15e265d7dcc4ebd71e24437455b3, type: 3}
+  - id: senior_male_face_evil
+    displayName: Senior Male Face Evil
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2239003998344046539, guid: 11cd3a718cb13754283371b9b7f530d0, type: 3}
+  - id: senior_male_face_happy
+    displayName: Senior Male Face Happy
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 1623495709659463536, guid: b1974f2989d0cdf4f9f2d09ac1485785, type: 3}
+  - id: senior_male_face_impatience
+    displayName: Senior Male Face Impatience
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4257490783585809609, guid: be2e599f55870d646bfba6ade94c9c2c, type: 3}
+  - id: senior_male_face_neutral
+    displayName: Senior Male Face Neutral
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8056138842046200609, guid: 228840250ff765449a7ef44af3167787, type: 3}
+  - id: senior_male_face_sad
+    displayName: Senior Male Face Sad
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2503825455757992036, guid: 7885e9e07071c5844a230020f3644a0c, type: 3}
+  - id: senior_male_face_surprised
+    displayName: Senior Male Face Surprised
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7193156437299882613, guid: 7e6df2a2b0e43504894f914548955bd5, type: 3}
+  - id: senior_male_face_usual
+    displayName: Senior Male Face Usual
+    category: 2
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2777126312267797790, guid: 768209607d7d2514785f287a3f93a82e, type: 3}
+  - id: pumped_male_face_anger
+    displayName: Pumped Male Face Anger
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 560407402571933160, guid: 3836f3080a4156c45b03af84d1ee1602, type: 3}
+  - id: pumped_male_face_angry
+    displayName: Pumped Male Face Angry
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 705348492124938556, guid: e7e75d040f913f940be4054c7330d0cd, type: 3}
+  - id: pumped_male_face_confuse
+    displayName: Pumped Male Face Confuse
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 4108695288899357724, guid: 12efa54c8c287204d9de48b00d87c022, type: 3}
+  - id: pumped_male_face_evil
+    displayName: Pumped Male Face Evil
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 7876313897173465473, guid: 369f13d7b3b692b4eb419ba47e350331, type: 3}
+  - id: pumped_male_face_happy
+    displayName: Pumped Male Face Happy
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8646922831760205691, guid: 5c8b8a323cdc4954f95869c90a124b7c, type: 3}
+  - id: pumped_male_face_impatience
+    displayName: Pumped Male Face Impatience
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 213692043626636848, guid: 4338b81ee50c5c64b89120202a5c3463, type: 3}
+  - id: pumped_male_face_neutral
+    displayName: Pumped Male Face Neutral
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 271196428852218557, guid: 654c126b23b9fb249aeab5ebd8966d64, type: 3}
+  - id: pumped_male_face_sad
+    displayName: Pumped Male Face Sad
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 3364547588171869312, guid: 9f6fe1d682577ce49ba630b24dd1e3c5, type: 3}
+  - id: pumped_male_face_surprised
+    displayName: Pumped Male Face Surprised
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 7042664178479576961, guid: e529d226ac78f4442a25163a31156a8f, type: 3}
+  - id: pumped_male_face_usual
+    displayName: Pumped Male Face Usual
+    category: 2
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8017890115902139842, guid: 2824f147952c63e479874748bcf3c03a, type: 3}
   upperDefinitions:
   - id: adult_female_upper_01
     displayName: Adult Female Upper 01
@@ -814,6 +1845,204 @@ MonoBehaviour:
     bodyTypeId: plussize_male
     skinId: 
     prefab: {fileID: 2892397082110038449, guid: 39e14cadfc8d9fc42a92bb122473acde, type: 3}
+  - id: child_female_upper_01
+    displayName: Child Female Upper 01
+    category: 3
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 6714705552059759835, guid: 909cff32dd7b654478fe12ba3948c9f2, type: 3}
+  - id: child_female_upper_02
+    displayName: Child Female Upper 02
+    category: 3
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 1502473733739311225, guid: cb7507ebec441924dab91a1d3dd17c43, type: 3}
+  - id: child_female_upper_03
+    displayName: Child Female Upper 03
+    category: 3
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 6238531400120378737, guid: a4e56383c340a744badcb7e355b7f4c4, type: 3}
+  - id: child_female_upper_04
+    displayName: Child Female Upper 04
+    category: 3
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 121025125500113043, guid: 0ca67040de277a044909994b44c55375, type: 3}
+  - id: child_female_upper_05
+    displayName: Child Female Upper 05
+    category: 3
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3250274495305750225, guid: 42af5fa84e959df43850e7743e5120a2, type: 3}
+  - id: child_male_upper_01
+    displayName: Child Male Upper 01
+    category: 3
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 8269419025159298631, guid: 50bedf3c724e8534c9cca90e9d990e6d, type: 3}
+  - id: child_male_upper_02
+    displayName: Child Male Upper 02
+    category: 3
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 3359318688167974505, guid: 64e709aac97eb3b4f87b191754b4ce64, type: 3}
+  - id: child_male_upper_03
+    displayName: Child Male Upper 03
+    category: 3
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 2064320445343069145, guid: c4b01247c289afb488eddb6baddad663, type: 3}
+  - id: child_male_upper_04
+    displayName: Child Male Upper 04
+    category: 3
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 4718545557597119090, guid: 112488a56da417f4a8383905dbd428b9, type: 3}
+  - id: child_male_upper_05
+    displayName: Child Male Upper 05
+    category: 3
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5182650597914554606, guid: 2ca019d3f53bc434e8a2b5d39b7232ef, type: 3}
+  - id: teen_female_upper_01
+    displayName: Teen Female Upper 01
+    category: 3
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4404705676334612482, guid: 228ee9338dddde14a8b8e69b8fecc9bc, type: 3}
+  - id: teen_female_upper_02
+    displayName: Teen Female Upper 02
+    category: 3
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 477504684464406798, guid: f0e54700e7385d8448d5408319b86275, type: 3}
+  - id: teen_female_upper_03
+    displayName: Teen Female Upper 03
+    category: 3
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 9181754611007774128, guid: 85567249951291544b134987e5b5453e, type: 3}
+  - id: teen_female_upper_04
+    displayName: Teen Female Upper 04
+    category: 3
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 8447958587658439308, guid: 786ef86cfe53e3a408918f2d9ff7814c, type: 3}
+  - id: teen_female_upper_05
+    displayName: Teen Female Upper 05
+    category: 3
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 1840313868655054708, guid: 9e801d47dec9fd34ba0d44d9f2011d82, type: 3}
+  - id: teen_male_upper_01
+    displayName: Teen Male Upper 01
+    category: 3
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 3233028749773953179, guid: 432bba6a25a027f46936943330ce2bc7, type: 3}
+  - id: teen_male_upper_02
+    displayName: Teen Male Upper 02
+    category: 3
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8707175433273920832, guid: 18f1841d7e982b94591eb5468bb08ec0, type: 3}
+  - id: teen_male_upper_03
+    displayName: Teen Male Upper 03
+    category: 3
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 4039644086381773796, guid: 294b93da4e5185f4e9d42ad93e74cc4e, type: 3}
+  - id: teen_male_upper_04
+    displayName: Teen Male Upper 04
+    category: 3
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 1735736493681662573, guid: 751e25c836ab4074290bdc84e89d8355, type: 3}
+  - id: teen_male_upper_05
+    displayName: Teen Male Upper 05
+    category: 3
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5489873341752150221, guid: ff037602e19b0d742b6d0372a7b96aca, type: 3}
+  - id: senior_female_upper_01
+    displayName: Senior Female Upper 01
+    category: 3
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 207016596579599156, guid: aedc21245a26404438a625682dfa6d22, type: 3}
+  - id: senior_female_upper_02
+    displayName: Senior Female Upper 02
+    category: 3
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 7885156422720973931, guid: 880a9494995eb4042a34b2f6bf6fe637, type: 3}
+  - id: senior_female_upper_03
+    displayName: Senior Female Upper 03
+    category: 3
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3032031749699191451, guid: 32432c3f5d7ebaf41b962ccd8612f5f8, type: 3}
+  - id: senior_female_upper_04
+    displayName: Senior Female Upper 04
+    category: 3
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 7834584243797782863, guid: 9654dc9213d62634b92dba048e919ae8, type: 3}
+  - id: senior_male_upper_01
+    displayName: Senior Male Upper 01
+    category: 3
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7881206020722540236, guid: 3986e8819ffbe0d4f81ed4a8a85f109a, type: 3}
+  - id: senior_male_upper_02
+    displayName: Senior Male Upper 02
+    category: 3
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 458566354533854765, guid: 805debe32fd4d26428136cc870ef79f1, type: 3}
+  - id: senior_male_upper_03
+    displayName: Senior Male Upper 03
+    category: 3
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5462799437982360350, guid: 721f3a50f09daed41b44856e621f7e07, type: 3}
+  - id: senior_male_upper_04
+    displayName: Senior Male Upper 04
+    category: 3
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8869109134884519912, guid: 6768d0579b8378947b1834af0314d770, type: 3}
+  - id: senior_male_upper_05
+    displayName: Senior Male Upper 05
+    category: 3
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2993194774914438392, guid: 54b30d43fd8e8934ab6b744f5afd617b, type: 3}
+  - id: pumped_male_upper_01
+    displayName: Pumped Male Upper 01
+    category: 3
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 5304309717823434707, guid: 33ad346d628df64459b47f5415049373, type: 3}
+  - id: pumped_male_upper_02
+    displayName: Pumped Male Upper 02
+    category: 3
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8660213135765576546, guid: 803d869c84e7d154ea3a62fe9c58f5ec, type: 3}
+  - id: pumped_male_upper_03
+    displayName: Pumped Male Upper 03
+    category: 3
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 4295861535221070615, guid: 10b1ba871cb19784182a5bab14ccc319, type: 3}
+  - id: pumped_male_upper_04
+    displayName: Pumped Male Upper 04
+    category: 3
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 770058661060391953, guid: b1d658cc48527ed4bbc13b57d097a420, type: 3}
   pantsDefinitions:
   - id: adult_female_pants_01
     displayName: Adult Female Pants 01
@@ -1121,6 +2350,270 @@ MonoBehaviour:
     bodyTypeId: plussize_male
     skinId: 
     prefab: {fileID: 747254713664384852, guid: 165097644f578eb41adfdcf149f5b9e9, type: 3}
+  - id: child_female_pants_01
+    displayName: Child Female Pants 01
+    category: 4
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 2593091471382053580, guid: 31719d406f15f0846a81bfcf239ab0b1, type: 3}
+  - id: child_female_pants_02
+    displayName: Child Female Pants 02
+    category: 4
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3522271886996107037, guid: 54209614ac50aec44b194609ced3c905, type: 3}
+  - id: child_female_pants_03
+    displayName: Child Female Pants 03
+    category: 4
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3552310078649570086, guid: 613a1ec6c075518489bea7f949fe904d, type: 3}
+  - id: child_female_pants_04
+    displayName: Child Female Pants 04
+    category: 4
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 8832003423311037603, guid: 7272015d26a2bcf448d52ef95aa443a2, type: 3}
+  - id: child_female_pants_05
+    displayName: Child Female Pants 05
+    category: 4
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 181119337686176137, guid: 1b6de98d19aa86c479f43ad7981f6ac9, type: 3}
+  - id: child_male_pants_01
+    displayName: Child Male Pants 01
+    category: 4
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 538240690276037073, guid: 88421b26f68a59847bff4c97dbdbfe09, type: 3}
+  - id: child_male_pants_02
+    displayName: Child Male Pants 02
+    category: 4
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 4554291317935892165, guid: f202737fb6d0e7a4da5bf266f6cd79b2, type: 3}
+  - id: child_male_pants_03
+    displayName: Child Male Pants 03
+    category: 4
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 3940082943525796432, guid: 3f9c1ee2e64b53d418e4f81e8e1e01ff, type: 3}
+  - id: child_male_pants_04
+    displayName: Child Male Pants 04
+    category: 4
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 647541076639371099, guid: 5d6ff75e299e8ae448da2cd8b67060a5, type: 3}
+  - id: child_male_pants_05
+    displayName: Child Male Pants 05
+    category: 4
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5418204705304070437, guid: a967c884ec448f442bfbb26e5270a5f1, type: 3}
+  - id: teen_female_pants_01
+    displayName: Teen Female Pants 01
+    category: 4
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 2326577687701597972, guid: 833d9c27038023a4ba46a1bbbde5f0e0, type: 3}
+  - id: teen_female_pants_02
+    displayName: Teen Female Pants 02
+    category: 4
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 8780891897118345867, guid: 1c3446406f191df458331a7fb7c05c33, type: 3}
+  - id: teen_female_pants_03
+    displayName: Teen Female Pants 03
+    category: 4
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 8578044942736338145, guid: 758c78790047d60408d5f6f114afd9d2, type: 3}
+  - id: teen_female_pants_04
+    displayName: Teen Female Pants 04
+    category: 4
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5076691422107023170, guid: e63a904e1b3967b40b82f8fda637d574, type: 3}
+  - id: teen_female_pants_05
+    displayName: Teen Female Pants 05
+    category: 4
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5747744878330630709, guid: 476dc060e0e393a4eb7d4f684a6b8ce6, type: 3}
+  - id: teen_male_pants_01
+    displayName: Teen Male Pants 01
+    category: 4
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 4035482825505971967, guid: 5c312bccfa6d2ce47862bb6b158f850d, type: 3}
+  - id: teen_male_pants_02
+    displayName: Teen Male Pants 02
+    category: 4
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 6747850600613284950, guid: 3636e2fa146f646429140f4e521743bf, type: 3}
+  - id: teen_male_pants_03
+    displayName: Teen Male Pants 03
+    category: 4
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8178080921286385695, guid: 0a986e0c8e4bd364c866eff2d00c420f, type: 3}
+  - id: teen_male_pants_04
+    displayName: Teen Male Pants 04
+    category: 4
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 1762328957480437427, guid: d80d482b8f936c24cad130e156bde89a, type: 3}
+  - id: teen_male_pants_05
+    displayName: Teen Male Pants 05
+    category: 4
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 3507642451310986045, guid: 037134c43cf361a4eb395e56ed5c528d, type: 3}
+  - id: senior_female_pants_01
+    displayName: Senior Female Pants 01
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 63046260311246493, guid: 7ef508d662daa82438621595ed0f9d90, type: 3}
+  - id: senior_female_pants_02
+    displayName: Senior Female Pants 02
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4991656219756193127, guid: bc3bec035fb6dbd429f15999725ee4e5, type: 3}
+  - id: senior_female_pants_03
+    displayName: Senior Female Pants 03
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5927509464146828788, guid: 5a8d622e3a6871841ab6c61c194ea5cd, type: 3}
+  - id: senior_female_pants_04
+    displayName: Senior Female Pants 04
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8413808558004696285, guid: 927c3385fd5002b45b0bf0e48655f219, type: 3}
+  - id: senior_female_pants_05
+    displayName: Senior Female Pants 05
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5224230677641210605, guid: 9a67e92dd3ec04f4595f87e23c03e61e, type: 3}
+  - id: senior_female_pants_06
+    displayName: Senior Female Pants 06
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1483489146541878655, guid: 319f683c078018c4bb107ec528efd648, type: 3}
+  - id: senior_female_pants_07
+    displayName: Senior Female Pants 07
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1450807807717729187, guid: 0538b6794b48cfe42803989278be9c20, type: 3}
+  - id: senior_female_pants_08
+    displayName: Senior Female Pants 08
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 2760753817711778138, guid: cddfc54bde3a2aa43a5467414a7c4948, type: 3}
+  - id: senior_female_pants_09
+    displayName: Senior Female Pants 09
+    category: 4
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4915636406540153472, guid: e81ca79ca8ec35743b398e476e6d4ade, type: 3}
+  - id: senior_male_pants_01
+    displayName: Senior Male Pants 01
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4900959436456586, guid: 6eb94964e12f52348bbb384f413d4ec0, type: 3}
+  - id: senior_male_pants_02
+    displayName: Senior Male Pants 02
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 1014613865688664975, guid: ad12f6b393207b64ca94e3b05c32a346, type: 3}
+  - id: senior_male_pants_03
+    displayName: Senior Male Pants 03
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3128541443584314944, guid: 00ad5b79701a4e84e9f6770a44d33be3, type: 3}
+  - id: senior_male_pants_04
+    displayName: Senior Male Pants 04
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 1924871793172828697, guid: fe4c1866cd9b69e4aa8c8a0414643ea4, type: 3}
+  - id: senior_male_pants_05
+    displayName: Senior Male Pants 05
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3387159871108730198, guid: c36cd1fb524a7b549a06c6bfb34d20a5, type: 3}
+  - id: senior_male_pants_06
+    displayName: Senior Male Pants 06
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4983892384952482246, guid: 95ce60b790811074ba8a755bc25b4948, type: 3}
+  - id: senior_male_pants_07
+    displayName: Senior Male Pants 07
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4436333822041336795, guid: 8331e9eba406a7e41b9b32492fb7beff, type: 3}
+  - id: senior_male_pants_08
+    displayName: Senior Male Pants 08
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3972011061344552677, guid: bbc2aab1c36701244a375f8097e036fd, type: 3}
+  - id: senior_male_pants_09
+    displayName: Senior Male Pants 09
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8997037492801122712, guid: 1abea5393cf7b984196ed4a44fb91ed8, type: 3}
+  - id: senior_male_pants_10
+    displayName: Senior Male Pants 10
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8200076951005441252, guid: 7c3fb1b4ac56510459be1e16e056f345, type: 3}
+  - id: senior_male_pants_11
+    displayName: Senior Male Pants 11
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 1205050098466840035, guid: 84ea8dcefce193c4e9b6ffdccafdf784, type: 3}
+  - id: senior_male_pants_12
+    displayName: Senior Male Pants 12
+    category: 4
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3817356547332132872, guid: 3b1a298744279614588140691140b920, type: 3}
+  - id: pumped_male_pants_01
+    displayName: Pumped Male Pants 01
+    category: 4
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8217896134528350684, guid: 1a921e8eb6618ec418c6db0d5dbe7c9f, type: 3}
+  - id: pumped_male_pants_02
+    displayName: Pumped Male Pants 02
+    category: 4
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 1759980878357767104, guid: d8f47dcc09b53b841b904b2a6c82c00e, type: 3}
+  - id: pumped_male_pants_03
+    displayName: Pumped Male Pants 03
+    category: 4
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8410175957357329016, guid: fb1f0dcbbe6b2a54b8f501e77cd5478d, type: 3}
   shoesDefinitions:
   - id: adult_female_shoes_01
     displayName: Adult Female Shoes 01
@@ -1362,3 +2855,1867 @@ MonoBehaviour:
     bodyTypeId: plussize_male
     skinId: 
     prefab: {fileID: 8178166721132037268, guid: 5ada351b6c03d6f41a130753b0667afc, type: 3}
+  - id: child_female_shoes_01
+    displayName: Child Female Shoes 01
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 5056260826192756195, guid: 4ea09dc9c04e512429cb4f50e468984b, type: 3}
+  - id: child_female_shoes_02
+    displayName: Child Female Shoes 02
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 6965928599412926193, guid: 51bb1a2a20f5b6e49a4b2322798cb391, type: 3}
+  - id: child_female_shoes_03
+    displayName: Child Female Shoes 03
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4696761275336212469, guid: a927730246c0260439410b4ce85c96ff, type: 3}
+  - id: child_female_shoes_04
+    displayName: Child Female Shoes 04
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 8498811874207133629, guid: ec1a7f9297dd5b24ebbdb07062b6dd2c, type: 3}
+  - id: child_female_shoes_05
+    displayName: Child Female Shoes 05
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3883110245072392018, guid: 90089d9e39a989440a212d976ad1836d, type: 3}
+  - id: child_female_shoes_06
+    displayName: Child Female Shoes 06
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 1777515657170800971, guid: 77c8d3a859443524da8c7a9474788712, type: 3}
+  - id: child_female_shoes_07
+    displayName: Child Female Shoes 07
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4823106317821820851, guid: ad453f597cc835941b0cadab07e76538, type: 3}
+  - id: child_female_shoes_08
+    displayName: Child Female Shoes 08
+    category: 5
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 4817296615294230261, guid: 3d8435ebdea9e294fa03a7e93569dae4, type: 3}
+  - id: child_male_shoes_01
+    displayName: Child Male Shoes 01
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 2033033993184232912, guid: ca59b13fb84fbf74f888b60792ccb044, type: 3}
+  - id: child_male_shoes_02
+    displayName: Child Male Shoes 02
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 9213159305474463811, guid: b9441017dca8ffe448090d2ff17802cf, type: 3}
+  - id: child_male_shoes_03
+    displayName: Child Male Shoes 03
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 9163327691073958947, guid: 7cb8ed8143d5e124692d13fea02d0106, type: 3}
+  - id: child_male_shoes_04
+    displayName: Child Male Shoes 04
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 4763939760558357911, guid: 57cc0f745f6701f4c83dce531beeced3, type: 3}
+  - id: child_male_shoes_05
+    displayName: Child Male Shoes 05
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 449761085224639479, guid: 89876942eee7a9a42ae557a1d42bb9bb, type: 3}
+  - id: child_male_shoes_06
+    displayName: Child Male Shoes 06
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 7042646819503756468, guid: 3efcb60289ff03843814c8a184114d49, type: 3}
+  - id: child_male_shoes_07
+    displayName: Child Male Shoes 07
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 7117678889364498326, guid: 50dc23199a367a54687c91acc7a50a51, type: 3}
+  - id: child_male_shoes_08
+    displayName: Child Male Shoes 08
+    category: 5
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 2351892731846836788, guid: 1804354995ba8ff48a53e5f8b804965a, type: 3}
+  - id: teen_female_shoes_01
+    displayName: Teen Female Shoes 01
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 2685336256645382828, guid: 9578f47d8079c3c41bd8039cce179b06, type: 3}
+  - id: teen_female_shoes_02
+    displayName: Teen Female Shoes 02
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4595358860159665067, guid: 8ae357606031a6d4186c8ed6e09fec94, type: 3}
+  - id: teen_female_shoes_03
+    displayName: Teen Female Shoes 03
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 6462663207901842989, guid: 8c9c86dc4bf864245afdaf2af3203d65, type: 3}
+  - id: teen_female_shoes_04
+    displayName: Teen Female Shoes 04
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 935664175219619014, guid: 0541b2e59ba9dc5439c9321d0eb15c12, type: 3}
+  - id: teen_female_shoes_05
+    displayName: Teen Female Shoes 05
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 6626216168780829384, guid: 21f102c3a1ed5e8479c7753feed28163, type: 3}
+  - id: teen_female_shoes_06
+    displayName: Teen Female Shoes 06
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 469972618552184079, guid: 4fc8f9801bfbe6b469fe5d13896d3f90, type: 3}
+  - id: teen_female_shoes_07
+    displayName: Teen Female Shoes 07
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 3679290515842886641, guid: 3885ddc150892a0409ae1fa83476dac6, type: 3}
+  - id: teen_female_shoes_08
+    displayName: Teen Female Shoes 08
+    category: 5
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 2703116123795400941, guid: 3309fc6414466e5488b14140d18cbab3, type: 3}
+  - id: teen_male_shoes_01
+    displayName: Teen Male Shoes 01
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 4563788660001802021, guid: 3482515fc8510e24ebba3e9871f7c420, type: 3}
+  - id: teen_male_shoes_02
+    displayName: Teen Male Shoes 02
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 6570592453584520497, guid: cc3f8b2ec858c2441a16a24cd8c2ef82, type: 3}
+  - id: teen_male_shoes_03
+    displayName: Teen Male Shoes 03
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 2982276028834004531, guid: 67ccb1630df50e544bdc28c8fe1c69af, type: 3}
+  - id: teen_male_shoes_04
+    displayName: Teen Male Shoes 04
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 1524030183920411316, guid: e93d6cac12617f9488c0f16081f6b5d0, type: 3}
+  - id: teen_male_shoes_05
+    displayName: Teen Male Shoes 05
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 6513329454625316350, guid: a52b1af241d0a1f44b747619bfe799d0, type: 3}
+  - id: teen_male_shoes_06
+    displayName: Teen Male Shoes 06
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8360956702841837669, guid: 7dba671f387023f43a4c2df1bc637314, type: 3}
+  - id: teen_male_shoes_07
+    displayName: Teen Male Shoes 07
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 1980517906250797101, guid: 08a7b54f6d358094a8e997592c805fd9, type: 3}
+  - id: teen_male_shoes_08
+    displayName: Teen Male Shoes 08
+    category: 5
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5880963256157912311, guid: 07ba0bd6d31254d48bc175cf7fb474a7, type: 3}
+  - id: senior_female_shoes_01
+    displayName: Senior Female Shoes 01
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5187914299068154545, guid: 6ce304227f76b3a42b6d3fbaac9c3021, type: 3}
+  - id: senior_female_shoes_02
+    displayName: Senior Female Shoes 02
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 6006076350135900760, guid: 3b15258f10ce7434484acd7a7a94022e, type: 3}
+  - id: senior_female_shoes_03
+    displayName: Senior Female Shoes 03
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4496475985063010942, guid: 7283826d83dcd6c46b556375cecd6277, type: 3}
+  - id: senior_female_shoes_04
+    displayName: Senior Female Shoes 04
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3657798848476020409, guid: 963cce0ffa598724fb1787484e46b3c7, type: 3}
+  - id: senior_female_shoes_05
+    displayName: Senior Female Shoes 05
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1335423562801841901, guid: 50089ab2c97784343931780e5043c788, type: 3}
+  - id: senior_female_shoes_06
+    displayName: Senior Female Shoes 06
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 50604949475185199, guid: 378a45c21cebcba4486dfabeb0b148c2, type: 3}
+  - id: senior_female_shoes_07
+    displayName: Senior Female Shoes 07
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5464293016988912724, guid: beb9c7f70cf81c7468ff51d1da9e8388, type: 3}
+  - id: senior_female_shoes_08
+    displayName: Senior Female Shoes 08
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1042267054469073175, guid: 1709cb8c85d08814987b14108a374772, type: 3}
+  - id: senior_female_shoes_09
+    displayName: Senior Female Shoes 09
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 138467425888335008, guid: d157747a3a3bdfd47a2456bd6d5e91c3, type: 3}
+  - id: senior_female_shoes_10
+    displayName: Senior Female Shoes 10
+    category: 5
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 654493033782857605, guid: dfba197bf2aa16e4fae631dfe1ac2bda, type: 3}
+  - id: senior_male_shoes_01
+    displayName: Senior Male Shoes 01
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3607005514184901319, guid: 62d823a02e10f7249856cc22f62a1ece, type: 3}
+  - id: senior_male_shoes_02
+    displayName: Senior Male Shoes 02
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 292926936292156412, guid: 2083bd3bdfd34ad48ad273c487d7b4ee, type: 3}
+  - id: senior_male_shoes_03
+    displayName: Senior Male Shoes 03
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3395687413479953467, guid: c6afdd19a428c7c41b82da6fa07af456, type: 3}
+  - id: senior_male_shoes_04
+    displayName: Senior Male Shoes 04
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7472564696467724257, guid: 7a7c34cea6c33b149a43b51286c08a72, type: 3}
+  - id: senior_male_shoes_05
+    displayName: Senior Male Shoes 05
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8787335201080657323, guid: f327ac50593079b47962b54276f1ccde, type: 3}
+  - id: senior_male_shoes_06
+    displayName: Senior Male Shoes 06
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 1612483606955856773, guid: c0a355d11bef83d4097d4adac06ee8a7, type: 3}
+  - id: senior_male_shoes_07
+    displayName: Senior Male Shoes 07
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6410433087807535967, guid: bae3f65c661dbe0449e91979aa574f95, type: 3}
+  - id: senior_male_shoes_08
+    displayName: Senior Male Shoes 08
+    category: 5
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6132136372474216605, guid: ec6a611d34790a44cb2088dc8e487280, type: 3}
+  - id: pumped_male_shoes_01
+    displayName: Pumped Male Shoes 01
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 741258608222682624, guid: 60920cabecec9b2469c3ca11c29efbd2, type: 3}
+  - id: pumped_male_shoes_02
+    displayName: Pumped Male Shoes 02
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 53362263400733585, guid: 65d6a0295612a3046bd0cf78f844b23f, type: 3}
+  - id: pumped_male_shoes_03
+    displayName: Pumped Male Shoes 03
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 3743518743593302188, guid: 788b025e50e3a0d40a35142c127b9a8a, type: 3}
+  - id: pumped_male_shoes_04
+    displayName: Pumped Male Shoes 04
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 7683114540054739945, guid: a3e64b5617e24014283346b6c3d6c964, type: 3}
+  - id: pumped_male_shoes_05
+    displayName: Pumped Male Shoes 05
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 996434070257007744, guid: 6320b728718999345b7d2660035f0559, type: 3}
+  - id: pumped_male_shoes_06
+    displayName: Pumped Male Shoes 06
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 5321164720018892246, guid: a4fff2fc339d2e14db55494421155ba8, type: 3}
+  - id: pumped_male_shoes_07
+    displayName: Pumped Male Shoes 07
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 187623447754782095, guid: 9d419a1eb17e9a34396b4b84b2832879, type: 3}
+  - id: pumped_male_shoes_08
+    displayName: Pumped Male Shoes 08
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 3344262138191629771, guid: aa7938084fe1c7346b8855a6794906e0, type: 3}
+  - id: pumped_male_shoes_09
+    displayName: Pumped Male Shoes 09
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 568551433232478468, guid: a3501bcd273c6fd439478c2ba7a14365, type: 3}
+  - id: pumped_male_shoes_10
+    displayName: Pumped Male Shoes 10
+    category: 5
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 3574113931626147085, guid: 62e41872a3f0d474ea4c7800119bbc90, type: 3}
+  hatDefinitions:
+  - id: adult_female_hat_01
+    displayName: Adult Female Hat 01
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 5342815717451381221, guid: 9a5aceda78fe08b48bdabad1791d00b0, type: 3}
+  - id: adult_female_hat_02
+    displayName: Adult Female Hat 02
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4900550385710135463, guid: d0aba33fe162bf9448377403959b824f, type: 3}
+  - id: adult_female_hat_03
+    displayName: Adult Female Hat 03
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3842491246205307056, guid: 83bc48a1262a820488a475674e991962, type: 3}
+  - id: adult_female_hat_04
+    displayName: Adult Female Hat 04
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1944196672305172408, guid: a1180c0d48fe2b5459bd8d8039783d60, type: 3}
+  - id: adult_female_hat_05
+    displayName: Adult Female Hat 05
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4560329925064438383, guid: fcc38afe2d940844c85bc71c150f3cfc, type: 3}
+  - id: adult_female_hat_06
+    displayName: Adult Female Hat 06
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6835757198722836296, guid: df02f81d869886945ab769f5f65573c8, type: 3}
+  - id: adult_female_hat_07
+    displayName: Adult Female Hat 07
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4210173581028442413, guid: 7d3a159cf67a9c442ad4da7331f88c79, type: 3}
+  - id: adult_female_hat_08
+    displayName: Adult Female Hat 08
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 5706529191681175793, guid: 076fadce178f2394386dc541eafa50d1, type: 3}
+  - id: adult_female_hat_actor
+    displayName: Adult Female Hat Actor
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2537891269228608452, guid: 219243f5b11a3ce4aa8699228b01ee02, type: 3}
+  - id: adult_female_hat_actor_2
+    displayName: Adult Female Hat Actor 2
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1555248492643698105, guid: c2803318ca764cc45bc26841e95e6d09, type: 3}
+  - id: adult_female_hat_actor_3
+    displayName: Adult Female Hat Actor 3
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7835138511701738816, guid: bfb085f4d19b33049a914e4fbe120824, type: 3}
+  - id: adult_female_hat_architect
+    displayName: Adult Female Hat Architect
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7245913970056018396, guid: 54fb8084a5b48284ab4f66ae30850c95, type: 3}
+  - id: adult_female_hat_bicyclist
+    displayName: Adult Female Hat Bicyclist
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3582684651070156040, guid: 70c638e1688d6fb4a8903f268dfd4397, type: 3}
+  - id: adult_female_hat_courier
+    displayName: Adult Female Hat Courier
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 591302648241244174, guid: 85297b3848b98524099a3c5e9259659d, type: 3}
+  - id: adult_female_hat_farmer
+    displayName: Adult Female Hat Farmer
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 716644160716198909, guid: d297bc5331d41874a960090587663cb5, type: 3}
+  - id: adult_female_hat_policeman
+    displayName: Adult Female Hat Policeman
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4195155697909624073, guid: 6184876e4c0ea8d4b8d9db3d10c4bbf6, type: 3}
+  - id: adult_female_hat_stewardess
+    displayName: Adult Female Hat Stewardess
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4018380064964376836, guid: 948dfcaf3d39c4f4498fd128c7f1095f, type: 3}
+  - id: adult_female_hat_worker
+    displayName: Adult Female Hat Worker
+    category: 6
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 508355723806291951, guid: cb2bba5af392ad0439908f685c6cb30b, type: 3}
+  - id: adult_male_hat_01
+    displayName: Adult Male Hat 01
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4221873251695066815, guid: bdac505ef7b140249992e9384078e703, type: 3}
+  - id: adult_male_hat_02
+    displayName: Adult Male Hat 02
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8786957160945100330, guid: b1c3375d0e9ae054ba657684c84bdac3, type: 3}
+  - id: adult_male_hat_03
+    displayName: Adult Male Hat 03
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 197583354308322895, guid: f5cc52f61fb88724eb44e4e944ba571a, type: 3}
+  - id: adult_male_hat_04
+    displayName: Adult Male Hat 04
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3553880476334545733, guid: fd939654b21f0664293e32cc32e97f43, type: 3}
+  - id: adult_male_hat_05
+    displayName: Adult Male Hat 05
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6030016703656568070, guid: a5d63f15db82f9240a346ccab0d6e3f1, type: 3}
+  - id: adult_male_hat_06
+    displayName: Adult Male Hat 06
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7360791945284980882, guid: ec3f04ca087d19a4ba6b10759ae36aec, type: 3}
+  - id: adult_male_hat_07
+    displayName: Adult Male Hat 07
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8774905760616865413, guid: 9b07946ac4b6ea04ea53113fc8bba32f, type: 3}
+  - id: adult_male_hat_08
+    displayName: Adult Male Hat 08
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1486002912683352193, guid: 8077ea175fd03d34590e903ff22b7801, type: 3}
+  - id: adult_male_hat_09
+    displayName: Adult Male Hat 09
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1453166738224839049, guid: e40d81608b80f534894f690cc4547195, type: 3}
+  - id: adult_male_hat_10
+    displayName: Adult Male Hat 10
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 477248858541136000, guid: 4504727c85f8aed4484c93a6c8b21f2e, type: 3}
+  - id: adult_male_hat_11
+    displayName: Adult Male Hat 11
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2101063288729397658, guid: 69370bb456eb93248b321a90719bc399, type: 3}
+  - id: adult_male_hat_12
+    displayName: Adult Male Hat 12
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3144979315255566082, guid: d4fb50c367f266f4e9af8e8acf70f6f4, type: 3}
+  - id: adult_male_hat_13
+    displayName: Adult Male Hat 13
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1088597243500421938, guid: 659dadc5950968d4182c25d8db78d898, type: 3}
+  - id: adult_male_hat_architect
+    displayName: Adult Male Hat Architect
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5720166912577646626, guid: d2a31df53b69fd94f9a4c0161b25f6d7, type: 3}
+  - id: adult_male_hat_bicyclist
+    displayName: Adult Male Hat Bicyclist
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6287415623154947082, guid: 2a3403387c98afa4f9011fdea8a6dfea, type: 3}
+  - id: adult_male_hat_builder_01
+    displayName: Adult Male Hat Builder 01
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2436651106491066281, guid: 58fa893b694999c4ca4f48978ef13c46, type: 3}
+  - id: adult_male_hat_builder_02
+    displayName: Adult Male Hat Builder 02
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4950923237224635389, guid: c65bffcca33d4374f86ff5b3a985751e, type: 3}
+  - id: adult_male_hat_cook
+    displayName: Adult Male Hat Cook
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 9044230992329864808, guid: 00549dfe8294b5d45883524b92a40cfa, type: 3}
+  - id: adult_male_hat_courier
+    displayName: Adult Male Hat Courier
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 577088793593033920, guid: d534fae196b4a284bb476d6ea05e5ed8, type: 3}
+  - id: adult_male_hat_doctor
+    displayName: Adult Male Hat Doctor
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8593518537874260308, guid: 38bb75f5c0332f847bbddaf7dc90e402, type: 3}
+  - id: adult_male_hat_farmer
+    displayName: Adult Male Hat Farmer
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2987381170027071295, guid: 4198a5ab59db11e4fac6b51636529965, type: 3}
+  - id: adult_male_hat_firefighter_01
+    displayName: Adult Male Hat Firefighter 01
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 477210453511347580, guid: 14b8bbbd5349f034cbe1a12c8c815a6d, type: 3}
+  - id: adult_male_hat_firefighter_02
+    displayName: Adult Male Hat Firefighter 02
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5774891656646149038, guid: 9d232abb35411854a915037f83c897a5, type: 3}
+  - id: adult_male_hat_garbageman
+    displayName: Adult Male Hat Garbageman
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3287284590774003493, guid: f3f7c4f338fbc254fb5fa6c74b33a3dc, type: 3}
+  - id: adult_male_hat_gardener
+    displayName: Adult Male Hat Gardener
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5302865388401056015, guid: 4f7f4cc2cc4067843be8e556bbde7701, type: 3}
+  - id: adult_male_hat_policeman
+    displayName: Adult Male Hat Policeman
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7288693876600400972, guid: 2ecf9747948cf1242a6ce2f08bda7191, type: 3}
+  - id: adult_male_hat_prisoner
+    displayName: Adult Male Hat Prisoner
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 2983465680932156041, guid: 563ab0f60307efa45ab88418a2174bac, type: 3}
+  - id: adult_male_hat_repairman
+    displayName: Adult Male Hat Repairman
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4746041047564276257, guid: 409a1948454e02244ab1ba66dc0fc017, type: 3}
+  - id: adult_male_hat_saver
+    displayName: Adult Male Hat Saver
+    category: 6
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 186813426178558772, guid: f22daedbd1f808d459ee0c20a2ca3b0e, type: 3}
+  - id: plussize_female_hat_01
+    displayName: Plus-Size Female Hat 01
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1849451618497480246, guid: 413962d12522dc444abadd37fefb0fee, type: 3}
+  - id: plussize_female_hat_02
+    displayName: Plus-Size Female Hat 02
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 6515258433332403451, guid: deff54bf97af55c4d8769e781e87b1a3, type: 3}
+  - id: plussize_female_hat_03
+    displayName: Plus-Size Female Hat 03
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8517857321202872021, guid: b33c64ac71a5c0245b7e3ba18b07ad49, type: 3}
+  - id: plussize_female_hat_04
+    displayName: Plus-Size Female Hat 04
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 3029852593371114203, guid: 48d506a3965afcf4eb374fc5097eeac2, type: 3}
+  - id: plussize_female_hat_05
+    displayName: Plus-Size Female Hat 05
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 317022364959064080, guid: 2c1a2b63a4837904d9a8377f447eb14c, type: 3}
+  - id: plussize_female_hat_06
+    displayName: Plus-Size Female Hat 06
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 4970500627070194218, guid: 7ae70316056028d4fa3f034f15ebb651, type: 3}
+  - id: plussize_female_hat_07
+    displayName: Plus-Size Female Hat 07
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2561268610451795004, guid: 5c55764684107f54cab7ecb377528354, type: 3}
+  - id: plussize_female_hat_artist
+    displayName: Plus-Size Female Hat Artist
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8952101485534694942, guid: 354771a6bec790a4e8af54ac0343600e, type: 3}
+  - id: plussize_female_hat_bicyclist
+    displayName: Plus-Size Female Hat Bicyclist
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 7932527202295370677, guid: 0c60c3fc83396da4e8ad673e0b64bb78, type: 3}
+  - id: plussize_female_hat_cleaner
+    displayName: Plus-Size Female Hat Cleaner
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5494723836556559489, guid: 22b7802d09b31884bbebc2e84c13d7f4, type: 3}
+  - id: plussize_female_hat_cook
+    displayName: Plus-Size Female Hat Cook
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 7861989489862894776, guid: 19a751275224b834082a87e0afad3c31, type: 3}
+  - id: plussize_female_hat_housemaid
+    displayName: Plus-Size Female Hat Housemaid
+    category: 6
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8381057100640038152, guid: fe69f262cbbbc7743b9af96f1b2f1f87, type: 3}
+  - id: plussize_male_hat_01
+    displayName: Plus-Size Male Hat 01
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7703550104152673430, guid: 8a7b1920aa61dcf4dafce055fd37faf9, type: 3}
+  - id: plussize_male_hat_02
+    displayName: Plus-Size Male Hat 02
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 349202562093826126, guid: c00f46505b8b8cd4a9f89f260bb90847, type: 3}
+  - id: plussize_male_hat_03
+    displayName: Plus-Size Male Hat 03
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4426617393175005108, guid: 9f12b593cfc4f5146a9d936345e7de93, type: 3}
+  - id: plussize_male_hat_04
+    displayName: Plus-Size Male Hat 04
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6978612461104142273, guid: 5421ac80bb5267649a5e12ce85c85ed0, type: 3}
+  - id: plussize_male_hat_05
+    displayName: Plus-Size Male Hat 05
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5399149429701410687, guid: 77a1eedf7b913b745a1db47fd63a0054, type: 3}
+  - id: plussize_male_hat_06
+    displayName: Plus-Size Male Hat 06
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3322207533570400634, guid: 05de66de887e66d408747893b9fd6ec8, type: 3}
+  - id: plussize_male_hat_07
+    displayName: Plus-Size Male Hat 07
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8587350790147544321, guid: 04ddfe1e5d5f90e49bba9a42257611e2, type: 3}
+  - id: plussize_male_hat_08
+    displayName: Plus-Size Male Hat 08
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5873487281334717299, guid: 121abeb5b6f514e4daf78fac13c57587, type: 3}
+  - id: plussize_male_hat_architect
+    displayName: Plus-Size Male Hat Architect
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 1622360603996831397, guid: 9d3d8f86582d37e4bb81617b8088d8a6, type: 3}
+  - id: plussize_male_hat_bicyclist
+    displayName: Plus-Size Male Hat Bicyclist
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6176103261051100614, guid: 4c72988f63e4a834694650e53f304343, type: 3}
+  - id: plussize_male_hat_builder_01
+    displayName: Plus-Size Male Hat Builder 01
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 7676761371158785965, guid: 153874f961855d547905f07848f88efb, type: 3}
+  - id: plussize_male_hat_builder_02
+    displayName: Plus-Size Male Hat Builder 02
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 3147305875836568231, guid: 879c3e82869cd7c4fa029c30d83f0d11, type: 3}
+  - id: plussize_male_hat_captain
+    displayName: Plus-Size Male Hat Captain
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 4713555309745815138, guid: 725ca806c88a6834580e95db405fc57c, type: 3}
+  - id: plussize_male_hat_chef
+    displayName: Plus-Size Male Hat Chef
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 1036905754970970705, guid: 22dc8ace56eeef94b92749704553f2a7, type: 3}
+  - id: plussize_male_hat_courier
+    displayName: Plus-Size Male Hat Courier
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 8812934285153316274, guid: e8c4079e2cd5a9b4ca93c23a967e2d7b, type: 3}
+  - id: plussize_male_hat_policeman
+    displayName: Plus-Size Male Hat Policeman
+    category: 6
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 9198331056612848763, guid: 480d1c6f04b41014d80071359f5c8b30, type: 3}
+  - id: child_female_hat_01
+    displayName: Child Female Hat 01
+    category: 6
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 7386653254579695440, guid: a9526effefc090f4d868430fd96ab301, type: 3}
+  - id: child_female_hat_02
+    displayName: Child Female Hat 02
+    category: 6
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 2933302947236824130, guid: ad6aafbc1ff643d4d8cebcca0e0b4815, type: 3}
+  - id: child_female_hat_03
+    displayName: Child Female Hat 03
+    category: 6
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 7426405604160091886, guid: 0a5c6338cd4da664784fe5a6cbe0dd96, type: 3}
+  - id: child_female_hat_04
+    displayName: Child Female Hat 04
+    category: 6
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 8339053316198379732, guid: c144a84085940d2488d3ff0afa663c83, type: 3}
+  - id: child_female_hat_05
+    displayName: Child Female Hat 05
+    category: 6
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 6064240550837199290, guid: d2ba1f642f87bac44b371d8309de29bd, type: 3}
+  - id: child_female_hat_bicyclist
+    displayName: Child Female Hat Bicyclist
+    category: 6
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 5440876763406646427, guid: 44cb76c561cc52649958366a7d77f435, type: 3}
+  - id: child_male_hat_01
+    displayName: Child Male Hat 01
+    category: 6
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 6550955283671178805, guid: f95c190e83f95d043a7c65d17e16dcea, type: 3}
+  - id: child_male_hat_02
+    displayName: Child Male Hat 02
+    category: 6
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 3392084241853780554, guid: 9a76d923a68b01441ac284129dc60de8, type: 3}
+  - id: child_male_hat_03
+    displayName: Child Male Hat 03
+    category: 6
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5856322934392873591, guid: c5dde9b6b5a9c1d4182da701a9dce420, type: 3}
+  - id: child_male_hat_04
+    displayName: Child Male Hat 04
+    category: 6
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 8175709955277371293, guid: 0c48092a4b7ce264d8ebe16f470eb934, type: 3}
+  - id: child_male_hat_05
+    displayName: Child Male Hat 05
+    category: 6
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 8286437878089001636, guid: f6f5266290c97794bb7549ee6deab593, type: 3}
+  - id: child_male_hat_bicyclist
+    displayName: Child Male Hat Bicyclist
+    category: 6
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 5346772832198536391, guid: b4ff2883c5bf97e4391e11e1cf427785, type: 3}
+  - id: teen_female_hat_01
+    displayName: Teen Female Hat 01
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 8802216129598976356, guid: 8da077702240f8d489234f9699195a65, type: 3}
+  - id: teen_female_hat_02
+    displayName: Teen Female Hat 02
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 5772814675974730786, guid: 508a399b967dd0e4ab76f5df8381566e, type: 3}
+  - id: teen_female_hat_03
+    displayName: Teen Female Hat 03
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 7478734523244395212, guid: 33a08ba9f2940d844b6e7d26877f39c2, type: 3}
+  - id: teen_female_hat_04
+    displayName: Teen Female Hat 04
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 1946322549906609861, guid: 40fb4bb77cda47a4daf90b43e451e14c, type: 3}
+  - id: teen_female_hat_05
+    displayName: Teen Female Hat 05
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 7410523552787652380, guid: 1c1b7dffc7f6aaf449a9755ec6f9c58e, type: 3}
+  - id: teen_female_hat_bicyclist
+    displayName: Teen Female Hat Bicyclist
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 8643734138921203841, guid: ad0a68c895b9bfa4f88082fc2e0ce369, type: 3}
+  - id: teen_female_hat_courier
+    displayName: Teen Female Hat Courier
+    category: 6
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 7055713275843857358, guid: 928271b66c0ae1d47a3aaf9d7a3555f4, type: 3}
+  - id: teen_male_hat_01
+    displayName: Teen Male Hat 01
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 7945463398308907533, guid: a36728ff66ea7b940a3f1c3009adbd6a, type: 3}
+  - id: teen_male_hat_02
+    displayName: Teen Male Hat 02
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 4403490169223598201, guid: c3234a02b36a69749aef91bced65c09a, type: 3}
+  - id: teen_male_hat_03
+    displayName: Teen Male Hat 03
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8659578458447093505, guid: 5196a0cf4082b9f4bbc6cdba5356e6e8, type: 3}
+  - id: teen_male_hat_04
+    displayName: Teen Male Hat 04
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 8747166723725318128, guid: 5cb509001facd3e4ca3a26b07ceee2c6, type: 3}
+  - id: teen_male_hat_05
+    displayName: Teen Male Hat 05
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 2353158928654941095, guid: 5f7b3297ce9496d408ffa0b3a4b0cebf, type: 3}
+  - id: teen_male_hat_bicyclist
+    displayName: Teen Male Hat Bicyclist
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5093087792925348090, guid: 2ab953ef29a5ca54398f59abd6a6bb6d, type: 3}
+  - id: teen_male_hat_courier
+    displayName: Teen Male Hat Courier
+    category: 6
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 1042810549506202218, guid: 233dce58786ac1440903e0e6c7e2f011, type: 3}
+  - id: senior_female_hat_01
+    displayName: Senior Female Hat 01
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 544236886552656319, guid: d3f74e770d14e4947aa3349df4b0fff2, type: 3}
+  - id: senior_female_hat_02
+    displayName: Senior Female Hat 02
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3652057968194696068, guid: e055af320685b8943b13f3acbd6d55d2, type: 3}
+  - id: senior_female_hat_03
+    displayName: Senior Female Hat 03
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 6322986707619566625, guid: f25f4e930f69bb1409da5818f5acd66b, type: 3}
+  - id: senior_female_hat_04
+    displayName: Senior Female Hat 04
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 2122599907696646989, guid: 626f9300db197b14ba52c2a98fbd46de, type: 3}
+  - id: senior_female_hat_05
+    displayName: Senior Female Hat 05
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 3341615497342629847, guid: 664325834813975408a061ab45aedd12, type: 3}
+  - id: senior_female_hat_06
+    displayName: Senior Female Hat 06
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 7221203649164678253, guid: 34444bcfbf3f46046be7027e435d8d87, type: 3}
+  - id: senior_female_hat_07
+    displayName: Senior Female Hat 07
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8719137397517839396, guid: f94b12144b865274ab7f87c71e882614, type: 3}
+  - id: senior_female_hat_08
+    displayName: Senior Female Hat 08
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4954520262128847902, guid: 3a700d521820d00478019db86b66e5b3, type: 3}
+  - id: senior_female_hat_09
+    displayName: Senior Female Hat 09
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4595514363532680251, guid: c25720ef71696da47858614a94f6fbee, type: 3}
+  - id: senior_female_hat_10
+    displayName: Senior Female Hat 10
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1515781002479474537, guid: 5f25f598700c6494f902ba7c2cd5a257, type: 3}
+  - id: senior_female_hat_architect
+    displayName: Senior Female Hat Architect
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1966756083102795719, guid: 1709c05d3484c164c84f396c2c9ce37c, type: 3}
+  - id: senior_female_hat_chef
+    displayName: Senior Female Hat Chef
+    category: 6
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 2896290904257137449, guid: f61da251cae4e26419caf88886cbbcc6, type: 3}
+  - id: senior_male_hat_01
+    displayName: Senior Male Hat 01
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8277438257021295784, guid: cb25afd124318784fbe796c3f809f927, type: 3}
+  - id: senior_male_hat_02
+    displayName: Senior Male Hat 02
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7096772467348623884, guid: 3b4cfc7bfa4464449a8e0a832d30bb39, type: 3}
+  - id: senior_male_hat_03
+    displayName: Senior Male Hat 03
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2415710575334343673, guid: 554ddeb77691524438189bdb70597844, type: 3}
+  - id: senior_male_hat_04
+    displayName: Senior Male Hat 04
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6913892223155632972, guid: 270cffdf21ae70e4d9a9a8bb52e9c932, type: 3}
+  - id: senior_male_hat_05
+    displayName: Senior Male Hat 05
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5259173268114408107, guid: 2a2ae18441b4b0f43b8267f73ecad182, type: 3}
+  - id: senior_male_hat_06
+    displayName: Senior Male Hat 06
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 4238468662260473835, guid: 0cb4b330e5e8df14a917a876e8c1ffcd, type: 3}
+  - id: senior_male_hat_07
+    displayName: Senior Male Hat 07
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 3196802936141176047, guid: 97d9ce694a43b2947811a5eb5b122ccc, type: 3}
+  - id: senior_male_hat_08
+    displayName: Senior Male Hat 08
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 9099504602594952104, guid: 414848c9a14049b4c9a9188d916f7e84, type: 3}
+  - id: senior_male_hat_architect
+    displayName: Senior Male Hat Architect
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5582194658557141454, guid: e8ccbde0b3638314ea4a1ea0c39dfd0e, type: 3}
+  - id: senior_male_hat_builder
+    displayName: Senior Male Hat Builder
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 672605007105029503, guid: 2e713842b519d4d4aaf2a15df02c6b31, type: 3}
+  - id: senior_male_hat_captain
+    displayName: Senior Male Hat Captain
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 785100394565992895, guid: e8e005aa6a390cf439f96b9c999dd504, type: 3}
+  - id: senior_male_hat_cleaner
+    displayName: Senior Male Hat Cleaner
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6184718798682508014, guid: 8fe56965f699e3e468d9c531f9afe983, type: 3}
+  - id: senior_male_hat_farmer
+    displayName: Senior Male Hat Farmer
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6463807557154777336, guid: 263e7016fa7207942b70952a8a57fe92, type: 3}
+  - id: senior_male_hat_policeman
+    displayName: Senior Male Hat Policeman
+    category: 6
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6594870915224738990, guid: a66b0067b6cb47c41a6ddc50acc10304, type: 3}
+  - id: pumped_male_hat_01
+    displayName: Pumped Male Hat 01
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 9068606417695495317, guid: efb40fcb75432e24c8097080dee1a1e9, type: 3}
+  - id: pumped_male_hat_02
+    displayName: Pumped Male Hat 02
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 6739670379005088209, guid: 08d88ba22ac3125449b3ee97fe88e984, type: 3}
+  - id: pumped_male_hat_03
+    displayName: Pumped Male Hat 03
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8207588209888969241, guid: 029478488751a8744b2eada12270052b, type: 3}
+  - id: pumped_male_hat_04
+    displayName: Pumped Male Hat 04
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 6894910028542810970, guid: 7d4911e2de8ecf644b4ed901cb7d9eab, type: 3}
+  - id: pumped_male_hat_05
+    displayName: Pumped Male Hat 05
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 2624836329712263641, guid: 7538261d5e1f0e14786a1b17dfce969d, type: 3}
+  - id: pumped_male_hat_06
+    displayName: Pumped Male Hat 06
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 4906235726471579470, guid: 3409d3c43471c1e469f321a6ccfd061f, type: 3}
+  - id: pumped_male_hat_07
+    displayName: Pumped Male Hat 07
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8469292721903616981, guid: 35700343bb4b63e4fa0229ae41b35d7c, type: 3}
+  - id: pumped_male_hat_08
+    displayName: Pumped Male Hat 08
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 4243067760250147947, guid: 7e4828291d1e08440aba16e506f10544, type: 3}
+  - id: pumped_male_hat_09
+    displayName: Pumped Male Hat 09
+    category: 6
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 29515178981161708, guid: 9c5858a75b723644a9d92e0c316402db, type: 3}
+  glassesDefinitions:
+  - id: adult_female_glasses_01
+    displayName: Adult Female Glasses 01
+    category: 7
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 5564958804452162861, guid: dac2cf1f543dc7341921a5f67054c6ae, type: 3}
+  - id: adult_female_glasses_02
+    displayName: Adult Female Glasses 02
+    category: 7
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2552156711418231890, guid: d9861dd29798688488378e98bc1782fe, type: 3}
+  - id: adult_female_glasses_03
+    displayName: Adult Female Glasses 03
+    category: 7
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7906039871587047343, guid: a0ce3af1900a2b945bfae75a4dd81a63, type: 3}
+  - id: adult_male_glasses_01
+    displayName: Adult Male Glasses 01
+    category: 7
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 3319883986090177837, guid: af280faac2f6ea0488ec71696b1938dd, type: 3}
+  - id: adult_male_glasses_02
+    displayName: Adult Male Glasses 02
+    category: 7
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5041677868285065438, guid: fd2b673eecd0b1a4e88a5b5d855e4d64, type: 3}
+  - id: adult_male_glasses_03
+    displayName: Adult Male Glasses 03
+    category: 7
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4034696093040803244, guid: 7fe64e398ac4b7c4a88d654229e4014f, type: 3}
+  - id: adult_male_glasses_04
+    displayName: Adult Male Glasses 04
+    category: 7
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 4770158664750270305, guid: b5711af676b7599469c79af0a18fd1be, type: 3}
+  - id: adult_male_glasses_security
+    displayName: Adult Male Glasses Security
+    category: 7
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 8636443637270930701, guid: fe9508dc21e70d64d9b6c24d0e07f42a, type: 3}
+  - id: plussize_female_glasses_01
+    displayName: Plus-Size Female Glasses 01
+    category: 7
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1852270482327865789, guid: f217edf677c0f784fa5793bbdac4851a, type: 3}
+  - id: plussize_female_glasses_02
+    displayName: Plus-Size Female Glasses 02
+    category: 7
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1981966647101043975, guid: 2e3cb3d21590a384bbfcf729e47dc5f2, type: 3}
+  - id: plussize_male_glasses_01
+    displayName: Plus-Size Male Glasses 01
+    category: 7
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 2081781577986450103, guid: afed3e2b44425ea47a00b80d36faf762, type: 3}
+  - id: plussize_male_glasses_02
+    displayName: Plus-Size Male Glasses 02
+    category: 7
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 5070800612890056758, guid: 13bb52b8570d68a44bcb837f8b5eaa1d, type: 3}
+  - id: plussize_male_glasses_03
+    displayName: Plus-Size Male Glasses 03
+    category: 7
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6149315343810397758, guid: 77d152b44a1727047803ff92086c4cbe, type: 3}
+  - id: plussize_male_glasses_doctor
+    displayName: Plus-Size Male Glasses Doctor
+    category: 7
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 1968181034299913136, guid: e14c767b9e67add42bfbcfb92d0b86ff, type: 3}
+  - id: child_female_glasses_01
+    displayName: Child Female Glasses 01
+    category: 7
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 1317710678806317682, guid: f45c909311042e3438a417fef922fc31, type: 3}
+  - id: child_female_glasses_02
+    displayName: Child Female Glasses 02
+    category: 7
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 6084714398234320732, guid: 98be64333a71bfc49b0fed920331e490, type: 3}
+  - id: child_male_glasses_01
+    displayName: Child Male Glasses 01
+    category: 7
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 1176374641701593542, guid: 69139b3c351542545a52e47268a13235, type: 3}
+  - id: child_male_glasses_02
+    displayName: Child Male Glasses 02
+    category: 7
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 369734807408720728, guid: b4992022629f6d4469a31a68cadc55c7, type: 3}
+  - id: teen_female_glasses_01
+    displayName: Teen Female Glasses 01
+    category: 7
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 7438959450483147978, guid: f988fca197874114d8ada74589c38f53, type: 3}
+  - id: teen_female_glasses_02
+    displayName: Teen Female Glasses 02
+    category: 7
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4592261342109807802, guid: 3fb05f3dc7a008f4bab8bd296f52ef57, type: 3}
+  - id: teen_male_glasses_01
+    displayName: Teen Male Glasses 01
+    category: 7
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 418201687771049666, guid: 8fe376d41e5e412498138a66c88dea70, type: 3}
+  - id: teen_male_glasses_02
+    displayName: Teen Male Glasses 02
+    category: 7
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 7584528865164501507, guid: c6d7f1124fbbb3d4cafa682488a7326e, type: 3}
+  - id: teen_male_glasses_03
+    displayName: Teen Male Glasses 03
+    category: 7
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 5745650766734293842, guid: c6f883652651f8b4f8825ba9ef8aaeeb, type: 3}
+  - id: senior_female_glasses_01
+    displayName: Senior Female Glasses 01
+    category: 7
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8056945382607995048, guid: 9a140814579c8be4192aaf0e05ed8b23, type: 3}
+  - id: senior_female_glasses_02
+    displayName: Senior Female Glasses 02
+    category: 7
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4353661539541853032, guid: 7a54d3abf26fa924c8e80f7a5f60f0b3, type: 3}
+  - id: senior_female_glasses_03
+    displayName: Senior Female Glasses 03
+    category: 7
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1161362002433311582, guid: 602fd2e53b83d3c41bc801a6c8e526b6, type: 3}
+  - id: senior_female_glasses_doctor
+    displayName: Senior Female Glasses Doctor
+    category: 7
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 631859284791573559, guid: a29977524cb282043a40dcab60805f8e, type: 3}
+  - id: senior_female_glasses_teacher
+    displayName: Senior Female Glasses Teacher
+    category: 7
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8333000439660753472, guid: da85ffd23fb1ab444b913149181f6626, type: 3}
+  - id: senior_male_glasses_01
+    displayName: Senior Male Glasses 01
+    category: 7
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5807613214758558635, guid: 4d52da627b67438489db8352e4f6a097, type: 3}
+  - id: senior_male_glasses_02
+    displayName: Senior Male Glasses 02
+    category: 7
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6530950701409576896, guid: ea7b9038bd46717428326f56cdb7e540, type: 3}
+  - id: senior_male_glasses_03
+    displayName: Senior Male Glasses 03
+    category: 7
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6320686726191747432, guid: 6b516a849c9bc964393770ef29ff3ca7, type: 3}
+  - id: senior_male_glasses_04
+    displayName: Senior Male Glasses 04
+    category: 7
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 2376407524658758624, guid: 6c2920a38701cfc49bdd245c099b1e9d, type: 3}
+  - id: pumped_male_glasses_01
+    displayName: Pumped Male Glasses 01
+    category: 7
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8188132263819362731, guid: ff85db88ea12d074f9ceb9dde6ac26de, type: 3}
+  - id: pumped_male_glasses_02
+    displayName: Pumped Male Glasses 02
+    category: 7
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 2593197136326078195, guid: 713d374712e84b744b4719b5840c1beb, type: 3}
+  glovesDefinitions:
+  - id: adult_female_gloves_01
+    displayName: Adult Female Gloves 01
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 457303764088718259, guid: 7a4f5a66d09d1c642b222341ba13d314, type: 3}
+  - id: adult_female_gloves_02
+    displayName: Adult Female Gloves 02
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6301537530241216515, guid: 28787b8c34bea064da0a884c4defb5d3, type: 3}
+  - id: adult_female_gloves_03
+    displayName: Adult Female Gloves 03
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4293479516892753198, guid: 611ced36e302d3045857040b54eee385, type: 3}
+  - id: adult_female_gloves_04
+    displayName: Adult Female Gloves 04
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3271145199661139850, guid: a703c05f152b8b940b0578a1cca6a969, type: 3}
+  - id: adult_female_gloves_actor_2
+    displayName: Adult Female Gloves Actor 2
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2567288875160145005, guid: de50ce4f13f3c6b428f6d2057cff8391, type: 3}
+  - id: adult_female_gloves_actor_3
+    displayName: Adult Female Gloves Actor 3
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2209819770571610073, guid: f3cc2cc876390ee4aabcbb5a28f86eb1, type: 3}
+  - id: adult_female_gloves_cleaner
+    displayName: Adult Female Gloves Cleaner
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3002796324330838803, guid: e4b3fe6e314057047b3ecbcc063c7e49, type: 3}
+  - id: adult_female_gloves_emt
+    displayName: Adult Female Gloves Emt
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2001075345208972686, guid: bb1c519c697638746b6ca239a6fb8c91, type: 3}
+  - id: adult_female_gloves_farmer
+    displayName: Adult Female Gloves Farmer
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1177126696056175259, guid: bb268b48cad88bc488c42528ac29fcda, type: 3}
+  - id: adult_female_gloves_nurse
+    displayName: Adult Female Gloves Nurse
+    category: 8
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7429972824411314659, guid: 99226f9b256bfd84fa8df13e6f5f6c0d, type: 3}
+  - id: adult_male_gloves_01
+    displayName: Adult Male Gloves 01
+    category: 8
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6012791766713828419, guid: a6712f673a377b04e8a7c2c30e04d06c, type: 3}
+  - id: adult_male_gloves_02
+    displayName: Adult Male Gloves 02
+    category: 8
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5859892722629411585, guid: 2b536534e7d96464b93f94a2685db9f6, type: 3}
+  - id: adult_male_gloves_emt
+    displayName: Adult Male Gloves Emt
+    category: 8
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5561490860230057334, guid: 97bba2b08b734614fa93f634b6da3e69, type: 3}
+  - id: adult_male_gloves_firefighter
+    displayName: Adult Male Gloves Firefighter
+    category: 8
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 7503911852722056930, guid: 42882b80ff053b14b993d0161fa240c7, type: 3}
+  - id: adult_male_gloves_garbageman
+    displayName: Adult Male Gloves Garbageman
+    category: 8
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 730366188018467862, guid: 1207aa1624bc15a4b9bf2d7ad913730c, type: 3}
+  - id: adult_male_gloves_waiter
+    displayName: Adult Male Gloves Waiter
+    category: 8
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5359141451384814853, guid: 324a4d6863494264686373102a9f037a, type: 3}
+  - id: plussize_female_gloves_01
+    displayName: Plus-Size Female Gloves 01
+    category: 8
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2276747693558153389, guid: 0f803ea959cb90b43b064e36f6053ac8, type: 3}
+  - id: plussize_female_gloves_02
+    displayName: Plus-Size Female Gloves 02
+    category: 8
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 2186997808190408442, guid: 72ec72c835ee4e14781021a6ba6465f8, type: 3}
+  - id: plussize_female_gloves_03
+    displayName: Plus-Size Female Gloves 03
+    category: 8
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5495836616666281757, guid: 4f10d6a1ef90d704b95ac65f6979072b, type: 3}
+  - id: plussize_female_gloves_cleaner
+    displayName: Plus-Size Female Gloves Cleaner
+    category: 8
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 1081182775791982653, guid: c2f0645a189840840ad5aa5c8183a5d2, type: 3}
+  - id: plussize_male_gloves_01
+    displayName: Plus-Size Male Gloves 01
+    category: 8
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6627344023226928688, guid: 26042a4d45b3ce44f8f3b935dcbb780e, type: 3}
+  - id: plussize_male_gloves_02
+    displayName: Plus-Size Male Gloves 02
+    category: 8
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 6959736014182250895, guid: d6268fb80d846d54b8dab89123951a38, type: 3}
+  - id: child_female_gloves_01
+    displayName: Child Female Gloves 01
+    category: 8
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 362756912362589384, guid: 2ce274f2db19b27418e793c7081c70b5, type: 3}
+  - id: child_female_gloves_02
+    displayName: Child Female Gloves 02
+    category: 8
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 2070987016502775629, guid: 5c6db8e274851974599abb059966d53d, type: 3}
+  - id: child_female_gloves_bicyclist
+    displayName: Child Female Gloves Bicyclist
+    category: 8
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 1255219758727962787, guid: fc88b73b06bafda4e80d9a487378e3d0, type: 3}
+  - id: child_male_gloves_01
+    displayName: Child Male Gloves 01
+    category: 8
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 967022999045154257, guid: 7cd436132c63334468f7410a854503cb, type: 3}
+  - id: child_male_gloves_02
+    displayName: Child Male Gloves 02
+    category: 8
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 2322337439385693798, guid: 0aa0dd1a9052a3042bae0579d1632456, type: 3}
+  - id: child_male_gloves_bicyclist
+    displayName: Child Male Gloves Bicyclist
+    category: 8
+    bodyTypeId: child_male
+    skinId: 
+    prefab: {fileID: 8224608528385565804, guid: bf983809b0b8b3345803e77a87da8ff9, type: 3}
+  - id: teen_female_gloves_01
+    displayName: Teen Female Gloves 01
+    category: 8
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 6888467470511674018, guid: 76d4b910b58696f4499c7cc735c48846, type: 3}
+  - id: teen_female_gloves_02
+    displayName: Teen Female Gloves 02
+    category: 8
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 1747379328351305806, guid: 78d54cb645e660d4d9b0647d124a06b3, type: 3}
+  - id: teen_female_gloves_bicyclist
+    displayName: Teen Female Gloves Bicyclist
+    category: 8
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 3318959254510352298, guid: f06d1388bfdd39544a1e58b3d409120e, type: 3}
+  - id: teen_male_gloves_01
+    displayName: Teen Male Gloves 01
+    category: 8
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 3624871828736355928, guid: 07c8bbdbb51159241a75efcb2023b057, type: 3}
+  - id: teen_male_gloves_02
+    displayName: Teen Male Gloves 02
+    category: 8
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 813170555767635479, guid: f74ce853e66309445a395afd98bce62d, type: 3}
+  - id: teen_male_gloves_bicyclist
+    displayName: Teen Male Gloves Bicyclist
+    category: 8
+    bodyTypeId: teen_male
+    skinId: 
+    prefab: {fileID: 2310261586822850282, guid: 04a482abef2a9c645be5fb110379684c, type: 3}
+  - id: senior_female_gloves_01
+    displayName: Senior Female Gloves 01
+    category: 8
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 5595260216479597855, guid: c0dc06c458001af41a358863b446deea, type: 3}
+  - id: senior_female_gloves_02
+    displayName: Senior Female Gloves 02
+    category: 8
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 8404654224107617392, guid: 136acbc390d6c504385869bd10c255b2, type: 3}
+  - id: senior_male_gloves_01
+    displayName: Senior Male Gloves 01
+    category: 8
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 8590808092347365826, guid: 3dec61fc88b8444479edf66e70290404, type: 3}
+  - id: senior_male_gloves_02
+    displayName: Senior Male Gloves 02
+    category: 8
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5468322358818087899, guid: 29cce09445ca8eb4997a8e88a6624dd1, type: 3}
+  - id: senior_male_gloves_cleaner
+    displayName: Senior Male Gloves Cleaner
+    category: 8
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 6670130015906377664, guid: cacf70ffe95c1ee4c8cfe1f159cdb53c, type: 3}
+  - id: pumped_male_gloves_01
+    displayName: Pumped Male Gloves 01
+    category: 8
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 2430924064919159253, guid: 43da89a63924b0740933a953619f7764, type: 3}
+  - id: pumped_male_gloves_02
+    displayName: Pumped Male Gloves 02
+    category: 8
+    bodyTypeId: pumped_male
+    skinId: 
+    prefab: {fileID: 8218450121465661755, guid: 5ff71f88bc0166a4bbd981faef5b39a4, type: 3}
+  fullBodyDefinitions:
+  - id: adult_female_fullbody_actor_2_costume
+    displayName: Adult Female Fullbody Actor 2 Costume
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 7857183502567428377, guid: b06123002dd1b7b4eaf753a6add5124d, type: 3}
+  - id: adult_female_fullbody_actor_3_costume
+    displayName: Adult Female Fullbody Actor 3 Costume
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 116081502677557143, guid: 16d2cfe96f4d0024ca1cc7f942f68d2a, type: 3}
+  - id: adult_female_fullbody_bicyclist_overall
+    displayName: Adult Female Fullbody Bicyclist Overall
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4522952317806915056, guid: a36172807ef57954682910ec477ff25f, type: 3}
+  - id: adult_female_fullbody_businesswoman_overall
+    displayName: Adult Female Fullbody Businesswoman Overall
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2037881632207646839, guid: 49a96157fc5c04944b97804593aef212, type: 3}
+  - id: adult_female_fullbody_dress_01
+    displayName: Adult Female Fullbody Dress 01
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1336084814235775509, guid: af70c1a64c4449449ab41090e34c4b39, type: 3}
+  - id: adult_female_fullbody_dress_02
+    displayName: Adult Female Fullbody Dress 02
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1430735778731719606, guid: be62e6908fae1bd488004c7704377b2a, type: 3}
+  - id: adult_female_fullbody_dress_03
+    displayName: Adult Female Fullbody Dress 03
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8744437481253622464, guid: ea58554429f1997469d67797f1686934, type: 3}
+  - id: adult_female_fullbody_dress_04
+    displayName: Adult Female Fullbody Dress 04
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 947797901103847263, guid: c88ece4dd2943274fa3ecd1d29630285, type: 3}
+  - id: adult_female_fullbody_dress_05
+    displayName: Adult Female Fullbody Dress 05
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6959057931549062167, guid: 433681cf7365d1e4d92163b07782e2ab, type: 3}
+  - id: adult_female_fullbody_emt_suit
+    displayName: Adult Female Fullbody Emt Suit
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 1349434505410980436, guid: cdcc3d9810ae7ac489310cb9f8d13916, type: 3}
+  - id: adult_female_fullbody_farmer_overall
+    displayName: Adult Female Fullbody Farmer Overall
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 2540309783870629542, guid: 04354bcb8de825e449eb656a8822a1f9, type: 3}
+  - id: adult_female_fullbody_overall_01
+    displayName: Adult Female Fullbody Overall 01
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 6103382400817581158, guid: 3d38f6969b902dc44adee7b8d8d5d96a, type: 3}
+  - id: adult_female_fullbody_patient_overall
+    displayName: Adult Female Fullbody Patient Overall
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3318666599808719508, guid: 23119fc8b4154c141ae9ef9a33ff324b, type: 3}
+  - id: adult_female_fullbody_prisoner_overall
+    displayName: Adult Female Fullbody Prisoner Overall
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 3591588037349125715, guid: 0d64702483a189741a53a08d9c2174ec, type: 3}
+  - id: adult_female_fullbody_swimsuit_01
+    displayName: Adult Female Fullbody Swimsuit 01
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8129928755414965956, guid: 6335472bdf53da84aa0df5a88e48d595, type: 3}
+  - id: adult_female_fullbody_swimsuit_02
+    displayName: Adult Female Fullbody Swimsuit 02
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 8672858942058587545, guid: 8dd343448c7c47f42a3d9acab3c59016, type: 3}
+  - id: adult_female_fullbody_swimsuit_03
+    displayName: Adult Female Fullbody Swimsuit 03
+    category: 9
+    bodyTypeId: adult_female
+    skinId: 
+    prefab: {fileID: 4120647277372268393, guid: 5948846588871b041bb5eef1c6e8fffe, type: 3}
+  - id: adult_male_fullbody_bicyclist_overall
+    displayName: Adult Male Fullbody Bicyclist Overall
+    category: 9
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1266960823329719483, guid: caa3673c271f04142936be73b7a0c433, type: 3}
+  - id: adult_male_fullbody_emt_suit
+    displayName: Adult Male Fullbody Emt Suit
+    category: 9
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 1047939846256949040, guid: cc14327e19039634c8fa92a9fc84bca6, type: 3}
+  - id: adult_male_fullbody_farmer_overall
+    displayName: Adult Male Fullbody Farmer Overall
+    category: 9
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 5576176340545283551, guid: d8eb0253cd20ddd45b7395ba0ee0bd75, type: 3}
+  - id: adult_male_fullbody_gardener_overall
+    displayName: Adult Male Fullbody Gardener Overall
+    category: 9
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 6875025039648819820, guid: 6672f99c49b56254d839a917eeecfbe8, type: 3}
+  - id: adult_male_fullbody_patient_overall
+    displayName: Adult Male Fullbody Patient Overall
+    category: 9
+    bodyTypeId: adult_male
+    skinId: 
+    prefab: {fileID: 790545575584489221, guid: d18be7265c4f4c1418161ea8f2f851dc, type: 3}
+  - id: plussize_female_fullbody_bicyclist_overall
+    displayName: Plus-Size Female Fullbody Bicyclist Overall
+    category: 9
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 8943772648372359738, guid: d7ceb4ce3d2501444b65aac5214a097a, type: 3}
+  - id: plussize_female_fullbody_dress_01
+    displayName: Plus-Size Female Fullbody Dress 01
+    category: 9
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 6972119789467051048, guid: af0cf9247d0358347b2d5e668cc02fcf, type: 3}
+  - id: plussize_female_fullbody_dress_02
+    displayName: Plus-Size Female Fullbody Dress 02
+    category: 9
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5572545967317248990, guid: af4b52ed934848c489210d06a56849ea, type: 3}
+  - id: plussize_female_fullbody_swimsuit_01
+    displayName: Plus-Size Female Fullbody Swimsuit 01
+    category: 9
+    bodyTypeId: plussize_female
+    skinId: 
+    prefab: {fileID: 5370201361900197538, guid: 4b75b4f257ffa1c4d88e774dadcbc37d, type: 3}
+  - id: plussize_male_fullbody_bicyclist_overall
+    displayName: Plus-Size Male Fullbody Bicyclist Overall
+    category: 9
+    bodyTypeId: plussize_male
+    skinId: 
+    prefab: {fileID: 2897577531491464171, guid: 0da5178de6a2779469597f4eea4eeae7, type: 3}
+  - id: child_female_fullbody_swimsuit_01
+    displayName: Child Female Fullbody Swimsuit 01
+    category: 9
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 3326703281380162512, guid: 741bca7e0dac0984383e102fc520f82a, type: 3}
+  - id: child_female_fullbody_swimsuit_overall
+    displayName: Child Female Fullbody Swimsuit Overall
+    category: 9
+    bodyTypeId: child_female
+    skinId: 
+    prefab: {fileID: 9199206113222124001, guid: 9ae1482e57dc5a845beebd905cf2df86, type: 3}
+  - id: teen_female_fullbody_courier_overall
+    displayName: Teen Female Fullbody Courier Overall
+    category: 9
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 6650703009812396219, guid: b93b0357a19e57841b34f02d2f940416, type: 3}
+  - id: teen_female_fullbody_dress_01
+    displayName: Teen Female Fullbody Dress 01
+    category: 9
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 2668599061014822028, guid: 45406d3360f05d345ac56bc9e91f8b86, type: 3}
+  - id: teen_female_fullbody_swimsuit_01
+    displayName: Teen Female Fullbody Swimsuit 01
+    category: 9
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 6993410374265607548, guid: 4147db74347b7824bb51b8820d164ad7, type: 3}
+  - id: teen_female_fullbody_swimsuit_02
+    displayName: Teen Female Fullbody Swimsuit 02
+    category: 9
+    bodyTypeId: teen_female
+    skinId: 
+    prefab: {fileID: 4838009676740129954, guid: aa38dd90fc17c854aa37f6167e1a269b, type: 3}
+  - id: senior_female_fullbody_dress_01
+    displayName: Senior Female Fullbody Dress 01
+    category: 9
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 805238900431245737, guid: 7ab8cbecbf0789a4e9110fa66e1a04c2, type: 3}
+  - id: senior_female_fullbody_overall_01
+    displayName: Senior Female Fullbody Overall 01
+    category: 9
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 4935701776317844906, guid: 083459b12189fae41b046f556c2807ef, type: 3}
+  - id: senior_female_fullbody_swimsuit_01
+    displayName: Senior Female Fullbody Swimsuit 01
+    category: 9
+    bodyTypeId: senior_female
+    skinId: 
+    prefab: {fileID: 1121598563445918930, guid: 56c2a52ce9717d84b996392e44db5b3b, type: 3}
+  - id: senior_male_fullbody_builder_overall
+    displayName: Senior Male Fullbody Builder Overall
+    category: 9
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 5495974509852069139, guid: f5e569b62ba60b642bf6aa21f8893fcf, type: 3}
+  - id: senior_male_fullbody_cleaner_overall
+    displayName: Senior Male Fullbody Cleaner Overall
+    category: 9
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 880743911359051379, guid: 1d0762a1815259740b1494bd7a6715c7, type: 3}
+  - id: senior_male_fullbody_farmer_overall
+    displayName: Senior Male Fullbody Farmer Overall
+    category: 9
+    bodyTypeId: senior_male
+    skinId: 
+    prefab: {fileID: 7791817185434292716, guid: b3c5034d78344d345bf27df6c5c6283b, type: 3}

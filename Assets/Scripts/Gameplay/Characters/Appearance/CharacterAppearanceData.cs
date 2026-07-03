@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 [Serializable]
 public sealed class CharacterAppearanceData
 {
-    public const int CurrentVersion = 2;
+    public const int CurrentVersion = 3;
 
     public int appearanceVersion = CurrentVersion;
     [FormerlySerializedAs("bodyId")] public string bodyTypeId = string.Empty;
@@ -14,6 +14,10 @@ public sealed class CharacterAppearanceData
     public string upperId = string.Empty;
     public string pantsId = string.Empty;
     public string shoesId = string.Empty;
+    public string hatId = string.Empty;
+    public string glassesId = string.Empty;
+    public string glovesId = string.Empty;
+    public string fullBodyId = string.Empty;
 
     public CharacterAppearanceData()
     {
@@ -41,6 +45,10 @@ public sealed class CharacterAppearanceData
             upperId = string.Empty;
             pantsId = string.Empty;
             shoesId = string.Empty;
+            hatId = string.Empty;
+            glassesId = string.Empty;
+            glovesId = string.Empty;
+            fullBodyId = string.Empty;
             return;
         }
 
@@ -52,6 +60,10 @@ public sealed class CharacterAppearanceData
         upperId = NormalizeId(source.upperId);
         pantsId = NormalizeId(source.pantsId);
         shoesId = NormalizeId(source.shoesId);
+        hatId = NormalizeId(source.hatId);
+        glassesId = NormalizeId(source.glassesId);
+        glovesId = NormalizeId(source.glovesId);
+        fullBodyId = NormalizeId(source.fullBodyId);
     }
 
     public string GetId(CharacterAppearanceCategory category)
@@ -70,6 +82,14 @@ public sealed class CharacterAppearanceData
                 return pantsId;
             case CharacterAppearanceCategory.Shoes:
                 return shoesId;
+            case CharacterAppearanceCategory.Hat:
+                return hatId;
+            case CharacterAppearanceCategory.Glasses:
+                return glassesId;
+            case CharacterAppearanceCategory.Gloves:
+                return glovesId;
+            case CharacterAppearanceCategory.FullBody:
+                return fullBodyId;
             default:
                 return string.Empty;
         }
@@ -98,6 +118,18 @@ public sealed class CharacterAppearanceData
                 break;
             case CharacterAppearanceCategory.Shoes:
                 shoesId = normalizedId;
+                break;
+            case CharacterAppearanceCategory.Hat:
+                hatId = normalizedId;
+                break;
+            case CharacterAppearanceCategory.Glasses:
+                glassesId = normalizedId;
+                break;
+            case CharacterAppearanceCategory.Gloves:
+                glovesId = normalizedId;
+                break;
+            case CharacterAppearanceCategory.FullBody:
+                fullBodyId = normalizedId;
                 break;
         }
     }

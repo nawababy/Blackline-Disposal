@@ -13,10 +13,17 @@ public static class CharacterAppearanceDatabaseBuilder
 
     private static readonly BodyTypeSpec[] BodyTypes =
     {
-        new BodyTypeSpec("adult_female", "Adult Female", "Adult_Female", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Female/Slots/Face.asset", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Female/Groups/Face.asset"),
-        new BodyTypeSpec("adult_male", "Adult Male", "Adult_Male", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Male/Slots/Face.asset", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Male/Groups/Face.asset"),
-        new BodyTypeSpec("plussize_female", "Plus-Size Female", "PlusSize_Female", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Female/Slots/Face.asset", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Female/Groups/Face.asset"),
-        new BodyTypeSpec("plussize_male", "Plus-Size Male", "PlusSize_Male", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Male/Slots/Face.asset", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Male/Groups/Face.asset")
+        new BodyTypeSpec(CharacterAppearanceDatabase.AdultFemaleBodyTypeId, "Adult Female", "Adult_Female", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Female", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.AdultMaleBodyTypeId, "Adult Male", "Adult_Male", "Assets/ithappy/City_Characters/Prefabs/Adult/Adult Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Adult/Male", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.PlusSizeFemaleBodyTypeId, "Plus-Size Female", "PlusSize_Female", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Female", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.PlusSizeMaleBodyTypeId, "Plus-Size Male", "PlusSize_Male", "Assets/ithappy/City_Characters/Prefabs/Plus-Size/Plus-Size Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/PlusSize/Male", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.ChildFemaleBodyTypeId, "Child Female", "Child_Female", "Assets/ithappy/City_Characters/Prefabs/Child/Child Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Child/Female", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.ChildMaleBodyTypeId, "Child Male", "Child_Male", "Assets/ithappy/City_Characters/Prefabs/Child/Child Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Child/Male", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.TeenFemaleBodyTypeId, "Teen Female", "Teen_Female", "Assets/ithappy/City_Characters/Prefabs/Teen/Teen Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Teen/Female", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.TeenMaleBodyTypeId, "Teen Male", "Teen_Male", "Assets/ithappy/City_Characters/Prefabs/Teen/Teen Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Teen/Male", false),
+        new BodyTypeSpec(CharacterAppearanceDatabase.SeniorFemaleBodyTypeId, "Senior Female", "Senior_Female", "Assets/ithappy/City_Characters/Prefabs/Senior/Senior Female", "Assets/ithappy/City_Characters/Configs/BodyTypes/Senior/Female", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.SeniorMaleBodyTypeId, "Senior Male", "Senior_Male", "Assets/ithappy/City_Characters/Prefabs/Senior/Senior Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Senior/Male", true),
+        new BodyTypeSpec(CharacterAppearanceDatabase.PumpedMaleBodyTypeId, "Pumped Male", "Pumped_Male", "Assets/ithappy/City_Characters/Prefabs/Pumped/Pumped Male", "Assets/ithappy/City_Characters/Configs/BodyTypes/Pumped/Male", true)
     };
 
     private sealed class BodyTypeSpec
@@ -25,18 +32,22 @@ public static class CharacterAppearanceDatabaseBuilder
         public readonly string DisplayName;
         public readonly string Prefix;
         public readonly string PrefabFolder;
-        public readonly string FaceSlotConfigPath;
-        public readonly string FaceGroupConfigPath;
+        public readonly string ConfigRoot;
+        public readonly bool DefaultEnabledForSelection;
 
-        public BodyTypeSpec(string bodyTypeId, string displayName, string prefix, string prefabFolder, string faceSlotConfigPath, string faceGroupConfigPath)
+        public BodyTypeSpec(string bodyTypeId, string displayName, string prefix, string prefabFolder, string configRoot, bool defaultEnabledForSelection)
         {
             BodyTypeId = bodyTypeId;
             DisplayName = displayName;
             Prefix = prefix;
             PrefabFolder = prefabFolder;
-            FaceSlotConfigPath = faceSlotConfigPath;
-            FaceGroupConfigPath = faceGroupConfigPath;
+            ConfigRoot = configRoot;
+            DefaultEnabledForSelection = defaultEnabledForSelection;
         }
+
+        public string SlotsFolder { get { return ConfigRoot + "/Slots"; } }
+        public string GroupsFolder { get { return ConfigRoot + "/Groups"; } }
+        public string FullBodyConfigFolder { get { return ConfigRoot + "/FullBody"; } }
     }
 
     private sealed class BodyTypeBuild
@@ -48,6 +59,10 @@ public static class CharacterAppearanceDatabaseBuilder
         public readonly List<PartEntry> UpperEntries = new List<PartEntry>();
         public readonly List<PartEntry> PantsEntries = new List<PartEntry>();
         public readonly List<PartEntry> ShoesEntries = new List<PartEntry>();
+        public readonly List<PartEntry> HatEntries = new List<PartEntry>();
+        public readonly List<PartEntry> GlassesEntries = new List<PartEntry>();
+        public readonly List<PartEntry> GlovesEntries = new List<PartEntry>();
+        public readonly List<PartEntry> FullBodyEntries = new List<PartEntry>();
         public bool FaceIsSkinSpecific;
 
         public BodyTypeBuild(BodyTypeSpec spec)
@@ -87,12 +102,19 @@ public static class CharacterAppearanceDatabaseBuilder
         public int UpperCount;
         public int PantsCount;
         public int ShoesCount;
+        public int HatCount;
+        public int GlassesCount;
+        public int GlovesCount;
+        public int FullBodyCount;
         public readonly List<string> SkippedPrefabs = new List<string>();
         public readonly List<string> AmbiguousPrefabs = new List<string>();
+        public readonly List<string> SkippedHatHairstyles = new List<string>();
+        public readonly List<string> CompositeFullBodyConfigs = new List<string>();
         public readonly List<string> DuplicateIds = new List<string>();
         public readonly List<string> MissingDefaults = new List<string>();
         public readonly List<string> StructureNotes = new List<string>();
         public readonly List<string> FaceSkinNotes = new List<string>();
+        public readonly List<string> EnabledNotes = new List<string>();
     }
 
     [MenuItem(MenuPath)]
@@ -113,11 +135,15 @@ public static class CharacterAppearanceDatabaseBuilder
             return;
         }
 
-        if (HasExistingDatabaseContent(database))
+        SerializedObject serializedDatabase = new SerializedObject(database);
+        serializedDatabase.Update();
+        Dictionary<string, bool> existingEnabledStates = ReadExistingEnabledStates(serializedDatabase);
+
+        if (HasExistingDatabaseContent(serializedDatabase))
         {
             bool replace = EditorUtility.DisplayDialog(
                 "Replace Character Appearance Database?",
-                "This will replace the generated BodyType, Body/Skin, Hair, Face, Upper, Pants and Shoes lists on the selected CharacterAppearanceDatabase. Existing manual entries in these lists will be overwritten.",
+                "This will replace the generated BodyType, Body/Skin, Hair, Face, Upper, Pants, Shoes, Hat, Glasses, Gloves and FullBody lists on the selected CharacterAppearanceDatabase. Existing manual entries in these lists will be overwritten. Existing enabledForSelection values are preserved per bodyTypeId.",
                 "Replace",
                 "Cancel");
 
@@ -129,9 +155,8 @@ public static class CharacterAppearanceDatabaseBuilder
         }
 
         Undo.RecordObject(database, "Build Character Appearance Database");
-        SerializedObject serializedDatabase = new SerializedObject(database);
         serializedDatabase.Update();
-        WriteDatabase(serializedDatabase, builds, report);
+        WriteDatabase(serializedDatabase, builds, report, existingEnabledStates);
         serializedDatabase.ApplyModifiedProperties();
 
         EditorUtility.SetDirty(database);
@@ -185,6 +210,10 @@ public static class CharacterAppearanceDatabaseBuilder
                 report.UpperCount += build.UpperEntries.Count;
                 report.PantsCount += build.PantsEntries.Count;
                 report.ShoesCount += build.ShoesEntries.Count;
+                report.HatCount += build.HatEntries.Count;
+                report.GlassesCount += build.GlassesEntries.Count;
+                report.GlovesCount += build.GlovesEntries.Count;
+                report.FullBodyCount += build.FullBodyEntries.Count;
             }
         }
 
@@ -201,8 +230,10 @@ public static class CharacterAppearanceDatabaseBuilder
 
         BodyTypeBuild build = new BodyTypeBuild(spec);
         report.StructureNotes.Add(spec.BodyTypeId + ": prefab folder " + spec.PrefabFolder);
-        report.StructureNotes.Add(spec.BodyTypeId + ": face slot config " + GetConfigStatus(spec.FaceSlotConfigPath));
-        report.StructureNotes.Add(spec.BodyTypeId + ": face group config " + GetConfigStatus(spec.FaceGroupConfigPath));
+        report.StructureNotes.Add(spec.BodyTypeId + ": slots " + GetConfigNames(spec.SlotsFolder));
+        report.StructureNotes.Add(spec.BodyTypeId + ": groups " + GetConfigNames(spec.GroupsFolder));
+        report.StructureNotes.Add(spec.BodyTypeId + ": composite full-body configs " + GetConfigNames(spec.FullBodyConfigFolder));
+        AddCompositeFullBodyConfigs(spec, report);
 
         string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { spec.PrefabFolder });
         List<string> prefabPaths = new List<string>();
@@ -227,6 +258,10 @@ public static class CharacterAppearanceDatabaseBuilder
         SortPartEntries(build.UpperEntries);
         SortPartEntries(build.PantsEntries);
         SortPartEntries(build.ShoesEntries);
+        SortPartEntries(build.HatEntries);
+        SortPartEntries(build.GlassesEntries);
+        SortPartEntries(build.GlovesEntries);
+        SortPartEntries(build.FullBodyEntries);
 
         build.FaceIsSkinSpecific = DetectFaceSkinDependency(build, report);
         if (build.FaceIsSkinSpecific)
@@ -251,6 +286,13 @@ public static class CharacterAppearanceDatabaseBuilder
         if (!prefabName.StartsWith(spec.Prefix + "_", StringComparison.Ordinal))
         {
             report.AmbiguousPrefabs.Add(prefabPath + " does not match expected prefix " + spec.Prefix + ".");
+            return;
+        }
+
+        string sourceSuffix = prefabName.Substring(spec.Prefix.Length + 1);
+        if (Regex.IsMatch(sourceSuffix, "^Hat_Hairstyle_"))
+        {
+            report.SkippedHatHairstyles.Add(prefabPath);
             return;
         }
 
@@ -311,6 +353,40 @@ public static class CharacterAppearanceDatabaseBuilder
             return;
         }
 
+        if (IsHatSource(sourceSuffix))
+        {
+            string idSuffix = CreateAdditiveIdSuffix(sourceSuffix, "Hat", "hat");
+            AddPartEntry(build.HatEntries, CreatePartEntry(spec, CharacterAppearanceCategory.Hat, idSuffix, ToDisplayText(idSuffix), prefab, prefabPath, prefabName), report, knownIds);
+            return;
+        }
+
+        if (IsAdditiveSource(sourceSuffix, "Glasses"))
+        {
+            string idSuffix = CreateAdditiveIdSuffix(sourceSuffix, "Glasses", "glasses");
+            AddPartEntry(build.GlassesEntries, CreatePartEntry(spec, CharacterAppearanceCategory.Glasses, idSuffix, ToDisplayText(idSuffix), prefab, prefabPath, prefabName), report, knownIds);
+            return;
+        }
+
+        if (IsAdditiveSource(sourceSuffix, "Gloves"))
+        {
+            string idSuffix = CreateAdditiveIdSuffix(sourceSuffix, "Gloves", "gloves");
+            AddPartEntry(build.GlovesEntries, CreatePartEntry(spec, CharacterAppearanceCategory.Gloves, idSuffix, ToDisplayText(idSuffix), prefab, prefabPath, prefabName), report, knownIds);
+            return;
+        }
+
+        if (IsSafeSingleFullBodySource(sourceSuffix))
+        {
+            string idSuffix = "fullbody_" + Slugify(sourceSuffix);
+            AddPartEntry(build.FullBodyEntries, CreatePartEntry(spec, CharacterAppearanceCategory.FullBody, idSuffix, ToDisplayText(idSuffix), prefab, prefabPath, prefabName), report, knownIds);
+            return;
+        }
+
+        if (IsAmbiguousClothingSource(sourceSuffix))
+        {
+            report.AmbiguousPrefabs.Add(prefabPath);
+            return;
+        }
+
         report.SkippedPrefabs.Add(prefabPath);
     }
 
@@ -353,8 +429,8 @@ public static class CharacterAppearanceDatabaseBuilder
 
     private static bool DetectFaceSkinDependency(BodyTypeBuild build, BuildReport report)
     {
-        bool hasFaceSlotConfig = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(build.Spec.FaceSlotConfigPath) != null;
-        bool hasFaceGroupConfig = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(build.Spec.FaceGroupConfigPath) != null;
+        bool hasFaceSlotConfig = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(build.Spec.SlotsFolder + "/Face.asset") != null;
+        bool hasFaceGroupConfig = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(build.Spec.GroupsFolder + "/Face.asset") != null;
         bool numberedLikeSkin = build.FaceEntries.Count == build.BodyEntries.Count && build.FaceEntries.Count > 0;
 
         if (numberedLikeSkin)
@@ -404,7 +480,7 @@ public static class CharacterAppearanceDatabaseBuilder
         }
     }
 
-    private static void WriteDatabase(SerializedObject serializedDatabase, List<BodyTypeBuild> builds, BuildReport report)
+    private static void WriteDatabase(SerializedObject serializedDatabase, List<BodyTypeBuild> builds, BuildReport report, Dictionary<string, bool> existingEnabledStates)
     {
         SerializedProperty defaultBodyTypeId = RequireProperty(serializedDatabase, "defaultBodyTypeId");
         SerializedProperty bodyTypeDefinitions = RequireProperty(serializedDatabase, "bodyTypeDefinitions");
@@ -414,6 +490,10 @@ public static class CharacterAppearanceDatabaseBuilder
         SerializedProperty upperDefinitions = RequireProperty(serializedDatabase, "upperDefinitions");
         SerializedProperty pantsDefinitions = RequireProperty(serializedDatabase, "pantsDefinitions");
         SerializedProperty shoesDefinitions = RequireProperty(serializedDatabase, "shoesDefinitions");
+        SerializedProperty hatDefinitions = RequireProperty(serializedDatabase, "hatDefinitions");
+        SerializedProperty glassesDefinitions = RequireProperty(serializedDatabase, "glassesDefinitions");
+        SerializedProperty glovesDefinitions = RequireProperty(serializedDatabase, "glovesDefinitions");
+        SerializedProperty fullBodyDefinitions = RequireProperty(serializedDatabase, "fullBodyDefinitions");
 
         defaultBodyTypeId.stringValue = CharacterAppearanceDatabase.AdultFemaleBodyTypeId;
         ClearArray(bodyTypeDefinitions);
@@ -423,31 +503,52 @@ public static class CharacterAppearanceDatabaseBuilder
         ClearArray(upperDefinitions);
         ClearArray(pantsDefinitions);
         ClearArray(shoesDefinitions);
+        ClearArray(hatDefinitions);
+        ClearArray(glassesDefinitions);
+        ClearArray(glovesDefinitions);
+        ClearArray(fullBodyDefinitions);
 
         for (int i = 0; i < builds.Count; i++)
         {
             BodyTypeBuild build = builds[i];
-            WriteBodyType(bodyTypeDefinitions, build);
+            WriteBodyType(bodyTypeDefinitions, build, report, existingEnabledStates);
             WriteBodyDefinitions(bodyDefinitions, build.BodyEntries);
             WritePartDefinitions(hairDefinitions, build.HairEntries);
             WritePartDefinitions(faceDefinitions, build.FaceEntries);
             WritePartDefinitions(upperDefinitions, build.UpperEntries);
             WritePartDefinitions(pantsDefinitions, build.PantsEntries);
             WritePartDefinitions(shoesDefinitions, build.ShoesEntries);
+            WritePartDefinitions(hatDefinitions, build.HatEntries);
+            WritePartDefinitions(glassesDefinitions, build.GlassesEntries);
+            WritePartDefinitions(glovesDefinitions, build.GlovesEntries);
+            WritePartDefinitions(fullBodyDefinitions, build.FullBodyEntries);
         }
     }
 
-    private static void WriteBodyType(SerializedProperty array, BodyTypeBuild build)
+    private static void WriteBodyType(SerializedProperty array, BodyTypeBuild build, BuildReport report, Dictionary<string, bool> existingEnabledStates)
     {
+        bool enabledForSelection;
+        if (!existingEnabledStates.TryGetValue(build.Spec.BodyTypeId, out enabledForSelection))
+        {
+            enabledForSelection = build.Spec.DefaultEnabledForSelection;
+        }
+
+        report.EnabledNotes.Add(build.Spec.BodyTypeId + ": enabledForSelection=" + enabledForSelection);
+
         SerializedProperty element = AddElement(array);
         SetString(element, "bodyTypeId", build.Spec.BodyTypeId);
         SetString(element, "displayName", build.Spec.DisplayName);
+        SetBool(element, "enabledForSelection", enabledForSelection);
         SetString(element, "defaultSkinId", GetDefaultSkinId(build));
         SetString(element, "defaultHairId", GetDefaultPartId(build.HairEntries, ""));
         SetString(element, "defaultFaceId", GetDefaultPartId(build.FaceEntries, "face_neutral"));
         SetString(element, "defaultUpperId", GetDefaultPartId(build.UpperEntries, ""));
         SetString(element, "defaultPantsId", GetDefaultPartId(build.PantsEntries, ""));
         SetString(element, "defaultShoesId", GetDefaultPartId(build.ShoesEntries, ""));
+        SetString(element, "defaultHatId", string.Empty);
+        SetString(element, "defaultGlassesId", string.Empty);
+        SetString(element, "defaultGlovesId", string.Empty);
+        SetString(element, "defaultFullBodyId", string.Empty);
     }
 
     private static void WriteBodyDefinitions(SerializedProperty array, List<BodyEntry> entries)
@@ -479,16 +580,44 @@ public static class CharacterAppearanceDatabaseBuilder
         }
     }
 
-    private static bool HasExistingDatabaseContent(CharacterAppearanceDatabase database)
+    private static Dictionary<string, bool> ReadExistingEnabledStates(SerializedObject serializedObject)
     {
-        SerializedObject serializedDatabase = new SerializedObject(database);
+        Dictionary<string, bool> results = new Dictionary<string, bool>(StringComparer.Ordinal);
+        SerializedProperty bodyTypes = serializedObject.FindProperty("bodyTypeDefinitions");
+        if (bodyTypes == null || !bodyTypes.isArray)
+        {
+            return results;
+        }
+
+        for (int i = 0; i < bodyTypes.arraySize; i++)
+        {
+            SerializedProperty element = bodyTypes.GetArrayElementAtIndex(i);
+            SerializedProperty bodyTypeId = element.FindPropertyRelative("bodyTypeId");
+            SerializedProperty enabledForSelection = element.FindPropertyRelative("enabledForSelection");
+            if (bodyTypeId == null || string.IsNullOrEmpty(bodyTypeId.stringValue) || enabledForSelection == null)
+            {
+                continue;
+            }
+
+            results[CharacterAppearanceData.NormalizeId(bodyTypeId.stringValue)] = enabledForSelection.boolValue;
+        }
+
+        return results;
+    }
+
+    private static bool HasExistingDatabaseContent(SerializedObject serializedDatabase)
+    {
         return HasArrayContent(serializedDatabase, "bodyTypeDefinitions")
             || HasArrayContent(serializedDatabase, "bodyDefinitions")
             || HasArrayContent(serializedDatabase, "hairDefinitions")
             || HasArrayContent(serializedDatabase, "faceDefinitions")
             || HasArrayContent(serializedDatabase, "upperDefinitions")
             || HasArrayContent(serializedDatabase, "pantsDefinitions")
-            || HasArrayContent(serializedDatabase, "shoesDefinitions");
+            || HasArrayContent(serializedDatabase, "shoesDefinitions")
+            || HasArrayContent(serializedDatabase, "hatDefinitions")
+            || HasArrayContent(serializedDatabase, "glassesDefinitions")
+            || HasArrayContent(serializedDatabase, "glovesDefinitions")
+            || HasArrayContent(serializedDatabase, "fullBodyDefinitions");
     }
 
     private static bool HasArrayContent(SerializedObject serializedObject, string propertyName)
@@ -529,6 +658,17 @@ public static class CharacterAppearanceDatabaseBuilder
         }
 
         child.stringValue = value ?? string.Empty;
+    }
+
+    private static void SetBool(SerializedProperty parent, string childName, bool value)
+    {
+        SerializedProperty child = parent.FindPropertyRelative(childName);
+        if (child == null)
+        {
+            throw new InvalidOperationException("Missing serialized child field '" + childName + "'.");
+        }
+
+        child.boolValue = value;
     }
 
     private static void SetEnum(SerializedProperty parent, string childName, CharacterAppearanceCategory value)
@@ -608,10 +748,17 @@ public static class CharacterAppearanceDatabaseBuilder
         builder.AppendLine("Upper: " + report.UpperCount);
         builder.AppendLine("Pants: " + report.PantsCount);
         builder.AppendLine("Shoes: " + report.ShoesCount);
+        builder.AppendLine("Hat: " + report.HatCount);
+        builder.AppendLine("Glasses: " + report.GlassesCount);
+        builder.AppendLine("Gloves: " + report.GlovesCount);
+        builder.AppendLine("FullBody: " + report.FullBodyCount);
         AppendList(builder, "Structure", report.StructureNotes);
+        AppendList(builder, "Enabled states", report.EnabledNotes);
         AppendList(builder, "Face/Skin", report.FaceSkinNotes);
-        AppendList(builder, "Skipped prefabs", report.SkippedPrefabs);
+        AppendList(builder, "Skipped Hat-Hairstyle prefabs", report.SkippedHatHairstyles);
+        AppendList(builder, "Composite FullBody config assets", report.CompositeFullBodyConfigs);
         AppendList(builder, "Ambiguous prefabs", report.AmbiguousPrefabs);
+        AppendList(builder, "Skipped prefabs", report.SkippedPrefabs);
         AppendList(builder, "Duplicate IDs", report.DuplicateIds);
         AppendList(builder, "Missing defaults", report.MissingDefaults);
         return builder.ToString();
@@ -626,10 +773,102 @@ public static class CharacterAppearanceDatabaseBuilder
         }
     }
 
-    private static string GetConfigStatus(string assetPath)
+    private static string GetConfigNames(string folder)
     {
-        UnityEngine.Object config = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
-        return config == null ? "missing " + assetPath : "found " + assetPath;
+        if (!AssetDatabase.IsValidFolder(folder))
+        {
+            return "missing " + folder;
+        }
+
+        string[] guids = AssetDatabase.FindAssets("t:Object", new[] { folder });
+        List<string> names = new List<string>();
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+            if (!path.EndsWith(".asset", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            names.Add(Path.GetFileNameWithoutExtension(path));
+        }
+
+        names.Sort(StringComparer.Ordinal);
+        return names.Count == 0 ? "none in " + folder : string.Join(", ", names.ToArray());
+    }
+
+    private static void AddCompositeFullBodyConfigs(BodyTypeSpec spec, BuildReport report)
+    {
+        if (!AssetDatabase.IsValidFolder(spec.FullBodyConfigFolder))
+        {
+            return;
+        }
+
+        string[] guids = AssetDatabase.FindAssets("t:Object", new[] { spec.FullBodyConfigFolder });
+        List<string> paths = new List<string>();
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+            if (path.EndsWith(".asset", StringComparison.OrdinalIgnoreCase))
+            {
+                paths.Add(path);
+            }
+        }
+
+        paths.Sort(StringComparer.Ordinal);
+        for (int i = 0; i < paths.Count; i++)
+        {
+            report.CompositeFullBodyConfigs.Add(spec.BodyTypeId + ": " + paths[i]);
+        }
+    }
+
+    private static bool IsHatSource(string sourceSuffix)
+    {
+        return IsAdditiveSource(sourceSuffix, "Hat")
+            && !sourceSuffix.StartsWith("Hat_Hairstyle_", StringComparison.Ordinal)
+            && !sourceSuffix.Contains("HatBeard")
+            && !sourceSuffix.Contains("HatMustache");
+    }
+
+    private static bool IsAdditiveSource(string sourceSuffix, string categoryName)
+    {
+        return Regex.IsMatch(sourceSuffix, "^" + Regex.Escape(categoryName) + "_[0-9]+$")
+            || Regex.IsMatch(sourceSuffix, "^.+_" + Regex.Escape(categoryName) + "(_[0-9]+)?$");
+    }
+
+    private static bool IsSafeSingleFullBodySource(string sourceSuffix)
+    {
+        return Regex.IsMatch(sourceSuffix, "^(Dress|Overall|Swimsuit)_[0-9]+$")
+            || Regex.IsMatch(sourceSuffix, "^.+_(Overall|Suit|Costume|Swimsuit)$")
+            || Regex.IsMatch(sourceSuffix, "^FullBody(_[0-9]+)?$");
+    }
+
+    private static bool IsAmbiguousClothingSource(string sourceSuffix)
+    {
+        return Regex.IsMatch(sourceSuffix, "(Outwear|Jacket|Apron|Shorts|Skirt|Protection|Vest|Backpack|Beard|Mustache|Accessories|Bracelet|Necklace|Mask|Belt)");
+    }
+
+    private static string CreateAdditiveIdSuffix(string sourceSuffix, string categoryName, string idPrefix)
+    {
+        Match genericMatch = Regex.Match(sourceSuffix, "^" + Regex.Escape(categoryName) + "_([0-9]+)$");
+        if (genericMatch.Success)
+        {
+            return idPrefix + "_" + NormalizeNumber(genericMatch.Groups[1].Value);
+        }
+
+        Match namedMatch = Regex.Match(sourceSuffix, "^(.+)_" + Regex.Escape(categoryName) + "(_([0-9]+))?$");
+        if (namedMatch.Success)
+        {
+            string suffix = idPrefix + "_" + Slugify(namedMatch.Groups[1].Value);
+            if (namedMatch.Groups[3].Success)
+            {
+                suffix += "_" + NormalizeNumber(namedMatch.Groups[3].Value);
+            }
+
+            return suffix;
+        }
+
+        return idPrefix + "_" + Slugify(sourceSuffix);
     }
 
     private static string NormalizeNumber(string value)

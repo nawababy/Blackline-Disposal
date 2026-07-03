@@ -57,8 +57,20 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
             InstantiateBodyDefinition(bodyDefinition, newAppearanceRoot.transform);
             InstantiatePartDefinition(CharacterAppearanceCategory.Hair, resolvedAppearance.hairId, resolvedAppearance, newAppearanceRoot.transform);
             InstantiatePartDefinition(CharacterAppearanceCategory.Face, resolvedAppearance.faceId, resolvedAppearance, newAppearanceRoot.transform);
-            InstantiatePartDefinition(CharacterAppearanceCategory.Upper, resolvedAppearance.upperId, resolvedAppearance, newAppearanceRoot.transform);
-            InstantiatePartDefinition(CharacterAppearanceCategory.Pants, resolvedAppearance.pantsId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiateOptionalPartDefinition(CharacterAppearanceCategory.Hat, resolvedAppearance.hatId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiateOptionalPartDefinition(CharacterAppearanceCategory.Glasses, resolvedAppearance.glassesId, resolvedAppearance, newAppearanceRoot.transform);
+            InstantiateOptionalPartDefinition(CharacterAppearanceCategory.Gloves, resolvedAppearance.glovesId, resolvedAppearance, newAppearanceRoot.transform);
+
+            if (!string.IsNullOrEmpty(resolvedAppearance.fullBodyId))
+            {
+                InstantiateOptionalPartDefinition(CharacterAppearanceCategory.FullBody, resolvedAppearance.fullBodyId, resolvedAppearance, newAppearanceRoot.transform);
+            }
+            else
+            {
+                InstantiatePartDefinition(CharacterAppearanceCategory.Upper, resolvedAppearance.upperId, resolvedAppearance, newAppearanceRoot.transform);
+                InstantiatePartDefinition(CharacterAppearanceCategory.Pants, resolvedAppearance.pantsId, resolvedAppearance, newAppearanceRoot.transform);
+            }
+
             InstantiatePartDefinition(CharacterAppearanceCategory.Shoes, resolvedAppearance.shoesId, resolvedAppearance, newAppearanceRoot.transform);
         }
         catch (Exception exception)
@@ -109,6 +121,16 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         instance.name = definition.Id;
         ResetLocalTransform(instance.transform);
         RemoveDisallowedComponents(instance);
+    }
+
+    private void InstantiateOptionalPartDefinition(CharacterAppearanceCategory category, string id, CharacterAppearanceData appearanceData, Transform parent)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return;
+        }
+
+        InstantiatePartDefinition(category, id, appearanceData, parent);
     }
 
     private static void ResetLocalTransform(Transform target)

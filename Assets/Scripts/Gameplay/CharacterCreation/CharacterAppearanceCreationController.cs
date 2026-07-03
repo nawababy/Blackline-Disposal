@@ -158,6 +158,46 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
         ChangePartSelection(CharacterAppearanceCategory.Shoes, -1);
     }
 
+    public void NextHat()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.Hat, 1);
+    }
+
+    public void PreviousHat()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.Hat, -1);
+    }
+
+    public void NextGlasses()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.Glasses, 1);
+    }
+
+    public void PreviousGlasses()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.Glasses, -1);
+    }
+
+    public void NextGloves()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.Gloves, 1);
+    }
+
+    public void PreviousGloves()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.Gloves, -1);
+    }
+
+    public void NextFullBody()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.FullBody, 1);
+    }
+
+    public void PreviousFullBody()
+    {
+        ChangeOptionalPartSelection(CharacterAppearanceCategory.FullBody, -1);
+    }
+
     private void ChangeBodyType(int direction)
     {
         EnsureAppearanceData();
@@ -171,7 +211,7 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
         CharacterAppearanceDatabase.BodyTypeDefinition nextBodyType;
         if (!database.TryGetNextBodyType(currentAppearance.bodyTypeId, direction, out nextBodyType))
         {
-            Debug.LogWarning("[CharacterAppearanceCreationController] No body types are configured.", this);
+            Debug.LogWarning("[CharacterAppearanceCreationController] No enabled body types are configured.", this);
             return;
         }
 
@@ -220,9 +260,78 @@ public sealed class CharacterAppearanceCreationController : MonoBehaviour
             return;
         }
 
+        if (category == CharacterAppearanceCategory.Upper && !string.IsNullOrEmpty(currentAppearance.fullBodyId))
+        {
+            currentAppearance.fullBodyId = string.Empty;
+            currentAppearance.upperId = nextDefinition.Id;
+            SetDefaultPart(CharacterAppearanceCategory.Pants);
+            ResolveCurrentAppearance();
+            ApplyCurrentAppearance();
+            return;
+        }
+
+        if (category == CharacterAppearanceCategory.Pants && !string.IsNullOrEmpty(currentAppearance.fullBodyId))
+        {
+            currentAppearance.fullBodyId = string.Empty;
+            currentAppearance.pantsId = nextDefinition.Id;
+            SetDefaultPart(CharacterAppearanceCategory.Upper);
+            ResolveCurrentAppearance();
+            ApplyCurrentAppearance();
+            return;
+        }
+
         currentAppearance.SetId(category, nextDefinition.Id);
         ResolveCurrentAppearance();
         ApplyCurrentAppearance();
+    }
+
+    private void ChangeOptionalPartSelection(CharacterAppearanceCategory category, int direction)
+    {
+        EnsureAppearanceData();
+        if (!CanUseDatabase())
+        {
+            return;
+        }
+
+        ResolveCurrentAppearance();
+
+        string selectedId;
+        if (!database.TryGetNextOptionalSelectionId(category, currentAppearance.bodyTypeId, currentAppearance.skinId, currentAppearance.GetId(category), direction, out selectedId))
+        {
+            Debug.LogWarning("[CharacterAppearanceCreationController] Could not change optional category " + category + " for BodyType '" + currentAppearance.bodyTypeId + "'.", this);
+            return;
+        }
+
+        currentAppearance.SetId(category, selectedId);
+
+        if (category == CharacterAppearanceCategory.FullBody)
+        {
+            if (string.IsNullOrEmpty(selectedId))
+            {
+                SetDefaultPart(CharacterAppearanceCategory.Upper);
+                SetDefaultPart(CharacterAppearanceCategory.Pants);
+            }
+            else
+            {
+                currentAppearance.upperId = string.Empty;
+                currentAppearance.pantsId = string.Empty;
+            }
+        }
+
+        ResolveCurrentAppearance();
+        ApplyCurrentAppearance();
+    }
+
+    private void SetDefaultPart(CharacterAppearanceCategory category)
+    {
+        CharacterAppearanceDatabase.AppearanceDefinition defaultDefinition;
+        if (database != null && database.TryGetDefaultDefinition(currentAppearance.bodyTypeId, currentAppearance.skinId, category, out defaultDefinition))
+        {
+            currentAppearance.SetId(category, defaultDefinition.Id);
+            return;
+        }
+
+        currentAppearance.SetId(category, string.Empty);
     }
 
     private void ResolveCurrentAppearance()
