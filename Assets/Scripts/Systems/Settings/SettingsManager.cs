@@ -156,6 +156,11 @@ public sealed class SettingsManager : MonoBehaviour
     private bool missingMasterParameterWarningShown;
     private bool missingMusicParameterWarningShown;
 
+    private const float SaveDebounceDelay = 0.75f;
+
+    private bool settingsDirty;
+    private Coroutine saveDebounceCoroutine;
+
     // ==================================================
     // UNITY LIFECYCLE
     // ==================================================
@@ -191,6 +196,8 @@ public sealed class SettingsManager : MonoBehaviour
         if (Instance != this)
             return;
 
+        FlushPendingSettings();
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         Instance = null;
@@ -198,13 +205,13 @@ public sealed class SettingsManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveSettings();
+        FlushPendingSettings();
     }
 
     private void OnApplicationPause(bool paused)
     {
         if (paused)
-            SaveSettings();
+            FlushPendingSettings();
     }
 
     private void OnSceneLoaded(
@@ -212,6 +219,8 @@ public sealed class SettingsManager : MonoBehaviour
         LoadSceneMode loadMode
     )
     {
+        FlushPendingSettings();
+
         StartCoroutine(
             ReapplyAfterSceneLoad()
         );
@@ -326,6 +335,33 @@ public sealed class SettingsManager : MonoBehaviour
 
     public void SaveSettings()
     {
+        WriteSettingsToPlayerPrefs();
+
+        settingsDirty = true;
+
+        RestartSaveDebounce();
+    }
+
+    public void FlushPendingSettings()
+    {
+        if (saveDebounceCoroutine != null)
+        {
+            StopCoroutine(saveDebounceCoroutine);
+            saveDebounceCoroutine = null;
+        }
+
+        if (!settingsDirty)
+            return;
+
+        WriteSettingsToPlayerPrefs();
+
+        PlayerPrefs.Save();
+
+        settingsDirty = false;
+    }
+
+    private void WriteSettingsToPlayerPrefs()
+    {
         PlayerPrefs.SetFloat(
             SensitivityKey,
             Sensitivity
@@ -375,8 +411,30 @@ public sealed class SettingsManager : MonoBehaviour
             FpsLimitKey,
             FpsLimit
         );
+    }
 
-        PlayerPrefs.Save();
+    private void RestartSaveDebounce()
+    {
+        if (saveDebounceCoroutine != null)
+        {
+            StopCoroutine(saveDebounceCoroutine);
+        }
+
+        saveDebounceCoroutine =
+            StartCoroutine(
+                FlushPendingSettingsAfterDelay()
+            );
+    }
+
+    private IEnumerator FlushPendingSettingsAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(
+            SaveDebounceDelay
+        );
+
+        saveDebounceCoroutine = null;
+
+        FlushPendingSettings();
     }
 
     // ==================================================

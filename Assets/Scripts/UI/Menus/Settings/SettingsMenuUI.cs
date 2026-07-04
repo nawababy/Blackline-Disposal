@@ -104,6 +104,11 @@ public sealed class SettingsMenuUI : MonoBehaviour
 
     private void OnDisable()
     {
+        if (Manager != null)
+        {
+            Manager.FlushPendingSettings();
+        }
+
         RemoveListeners();
     }
 
