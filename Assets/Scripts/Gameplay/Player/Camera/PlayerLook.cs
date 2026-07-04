@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public sealed class PlayerLook : MonoBehaviour
 {
@@ -18,14 +19,18 @@ public sealed class PlayerLook : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private PlayerMovement movementScript;
 
+    [FormerlySerializedAs("cameraSmoothSpeed")]
     [SerializeField, Min(0f)]
-    private float cameraSmoothSpeed = 10f;
+    private float cameraHeightTransitionSpeed = 10f;
 
-    [Tooltip(
-        "Zusätzliche Höhe über der Mitte des CharacterControllers."
-    )]
-    [SerializeField]
-    private float eyeHeight = 0.6f;
+    [SerializeField, Min(0f)]
+    private float standingCameraHeight = 1.6f;
+
+    [SerializeField, Min(0f)]
+    private float crouchingCameraHeight = 1f;
+
+    [SerializeField, HideInInspector]
+    private float eyeHeight;
 
     [Header("Control")]
     [SerializeField] private bool canLook = true;
@@ -121,7 +126,7 @@ public sealed class PlayerLook : MonoBehaviour
         if (playerCamera == null)
         {
             cameraBaseLocalPosition = Vector3.zero;
-            currentCameraHeight = eyeHeight;
+            currentCameraHeight = standingCameraHeight;
             return;
         }
 
@@ -258,7 +263,7 @@ public sealed class PlayerLook : MonoBehaviour
         currentCameraHeight = Mathf.Lerp(
             currentCameraHeight,
             targetHeight,
-            Time.deltaTime * cameraSmoothSpeed
+            Time.deltaTime * cameraHeightTransitionSpeed
         );
 
         SetCameraHeight(currentCameraHeight);
@@ -267,10 +272,11 @@ public sealed class PlayerLook : MonoBehaviour
     private float GetTargetCameraHeight()
     {
         if (movementScript == null)
-            return eyeHeight;
+            return standingCameraHeight;
 
-        return movementScript.GetCenterY() +
-               eyeHeight;
+        return movementScript.IsCrouching
+            ? crouchingCameraHeight
+            : standingCameraHeight;
     }
 
     private void SetCameraHeight(float height)

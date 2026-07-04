@@ -1080,6 +1080,11 @@ MonoBehaviour:
   standingHeight: 1.6
   crouchingHeight: 0.8
   crouchTransitionSpeed: 5
+  standUpBlockerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  standUpPadding: 0.02
+  standUpRetryInterval: 0.1
   inputSettings: {fileID: 11400000, guid: dcdda59b561cf4e48bf44cfd70f320e6, type: 2}
   canReadInput: 1
   animator: {fileID: 0}
@@ -1087,6 +1092,7 @@ MonoBehaviour:
   verticalParameter: Vert
   jumpParameter: IsJump
   stateParameter: State
+  crouchParameter: IsCrouching
 --- !u!143 &426157135
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1146,7 +1152,9 @@ MonoBehaviour:
   maxPitch: 85
   playerCamera: {fileID: 1939721596}
   movementScript: {fileID: 426157134}
-  cameraSmoothSpeed: 10
+  cameraHeightTransitionSpeed: 10
+  standingCameraHeight: 1.6
+  crouchingCameraHeight: 1
   eyeHeight: 0.8
   canLook: 1
 --- !u!114 &426157138
@@ -1256,7 +1264,7 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: 568fdd4329a69274fad9661163877e32, type: 2}
   applier: {fileID: 426157141}
   playerMovement: {fileID: 426157134}
-  runtimeAnimatorController: {fileID: 9100000, guid: fac54571ff27f2b46b28cd6d82cd3c4c, type: 2}
+  runtimeAnimatorController: {fileID: 9100000, guid: 57d635b0fbb693d4ab92f07dbfeb3db2, type: 2}
 --- !u!1 &426157143
 GameObject:
   m_ObjectHideFlags: 0

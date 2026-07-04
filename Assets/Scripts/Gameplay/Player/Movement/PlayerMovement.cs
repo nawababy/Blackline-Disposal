@@ -48,6 +48,15 @@ public sealed class PlayerMovement : MonoBehaviour
     [SerializeField, Min(0f)]
     private float crouchTransitionSpeed = 10f;
 
+    [SerializeField]
+    private LayerMask standUpBlockerMask = ~0;
+
+    [SerializeField, Min(0f)]
+    private float standUpPadding = 0.02f;
+
+    [SerializeField, Min(0f)]
+    private float standUpRetryInterval = 0.1f;
+
     // ==================================================
     // INPUT
     // ==================================================
@@ -83,6 +92,9 @@ public sealed class PlayerMovement : MonoBehaviour
     [SerializeField]
     private string stateParameter = "State";
 
+    [SerializeField]
+    private string crouchParameter = "IsCrouching";
+
     // ==================================================
     // PUBLIC STATE
     // ==================================================
@@ -101,14 +113,21 @@ public sealed class PlayerMovement : MonoBehaviour
     private Vector2 inputAxis;
 
     private float currentHeight;
+    private float nextStandUpCheckTime;
 
     private bool isRunning;
     private bool jumpPressed;
+    private bool wantsToCrouch;
+    private bool standUpBufferWarningLogged;
 
     private int horizontalParameterHash;
     private int verticalParameterHash;
     private int jumpParameterHash;
     private int stateParameterHash;
+    private int crouchParameterHash;
+
+    private readonly Collider[] standUpResults =
+        new Collider[16];
 
     // ==================================================
     // UNITY LIFECYCLE
@@ -132,6 +151,7 @@ public sealed class PlayerMovement : MonoBehaviour
         CacheAnimatorHashes();
 
         currentHeight = standingHeight;
+        wantsToCrouch = IsCrouching;
         ApplyControllerHeight(currentHeight);
     }
 
@@ -215,7 +235,7 @@ public sealed class PlayerMovement : MonoBehaviour
 
         float finalSpeed = walkSpeed;
 
-        if (isRunning)
+        if (isRunning && !IsCrouching)
             finalSpeed *= sprintMultiplier;
 
         if (IsCrouching)
@@ -273,17 +293,28 @@ public sealed class PlayerMovement : MonoBehaviour
                 if (Input.GetKeyDown(
                         inputSettings.crouchKey))
                 {
-                    IsCrouching =
-                        !IsCrouching;
+                    wantsToCrouch =
+                        !wantsToCrouch;
                 }
             }
             else
             {
-                IsCrouching =
+                wantsToCrouch =
                     Input.GetKey(
                         inputSettings.crouchKey
                     );
             }
+        }
+
+        if (wantsToCrouch)
+        {
+            IsCrouching = true;
+        }
+        else if (IsCrouching &&
+                 ShouldRetryStandUp() &&
+                 CanStandUp())
+        {
+            IsCrouching = false;
         }
 
         float targetHeight =
@@ -320,6 +351,151 @@ public sealed class PlayerMovement : MonoBehaviour
             Vector3.up * (height * 0.5f);
     }
 
+    private bool ShouldRetryStandUp()
+    {
+        if (standUpRetryInterval <= 0f)
+            return true;
+
+        if (Time.time < nextStandUpCheckTime)
+            return false;
+
+        nextStandUpCheckTime =
+            Time.time + standUpRetryInterval;
+
+        return true;
+    }
+
+    private bool CanStandUp()
+    {
+        if (characterController == null)
+            return true;
+
+        if (standingHeight <= currentHeight + standUpPadding)
+            return true;
+
+        float radius = GetScaledControllerRadius();
+        float verticalScale = Mathf.Abs(transform.lossyScale.y);
+
+        float scaledCurrentHeight =
+            Mathf.Max(currentHeight * verticalScale, radius * 2f);
+
+        float scaledStandingHeight =
+            Mathf.Max(standingHeight * verticalScale, radius * 2f);
+
+        Vector3 currentCenter =
+            GetWorldControllerCenter(currentHeight);
+
+        Vector3 standingCenter =
+            GetWorldControllerCenter(standingHeight);
+
+        Vector3 up = transform.up;
+
+        float currentHalfLine =
+            Mathf.Max(0f, (scaledCurrentHeight * 0.5f) - radius);
+
+        float standingHalfLine =
+            Mathf.Max(0f, (scaledStandingHeight * 0.5f) - radius);
+
+        Vector3 currentTop =
+            currentCenter + up * currentHalfLine;
+
+        Vector3 standingTop =
+            standingCenter + up * standingHalfLine;
+
+        float capsuleRadius =
+            Mathf.Max(0.001f, radius - standUpPadding);
+
+        Vector3 bottom =
+            currentTop + up * capsuleRadius;
+
+        Vector3 top =
+            standingTop - up * capsuleRadius;
+
+        if (Vector3.Dot(top - bottom, up) < 0f)
+            top = bottom;
+
+        int hitCount =
+            Physics.OverlapCapsuleNonAlloc(
+                bottom,
+                top,
+                capsuleRadius,
+                standUpResults,
+                standUpBlockerMask,
+                QueryTriggerInteraction.Ignore
+            );
+
+        if (hitCount >= standUpResults.Length)
+        {
+            if (!standUpBufferWarningLogged)
+            {
+                Debug.LogWarning(
+                    "PlayerMovement stand-up check reached the collider buffer limit. Staying crouched.",
+                    this
+                );
+
+                standUpBufferWarningLogged = true;
+            }
+
+            ClearStandUpResults(hitCount);
+            return false;
+        }
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider hit = standUpResults[i];
+            if (hit == null ||
+                hit == characterController ||
+                hit.transform == transform ||
+                hit.transform.IsChildOf(transform))
+            {
+                continue;
+            }
+
+            ClearStandUpResults(hitCount);
+            return false;
+        }
+
+        standUpBufferWarningLogged = false;
+        ClearStandUpResults(hitCount);
+        return true;
+    }
+
+    private Vector3 GetWorldControllerCenter(float height)
+    {
+        Vector3 localCenter =
+            characterController != null
+                ? characterController.center
+                : Vector3.up * (currentHeight * 0.5f);
+
+        localCenter.y +=
+            (height - currentHeight) * 0.5f;
+
+        return transform.TransformPoint(localCenter);
+    }
+
+    private float GetScaledControllerRadius()
+    {
+        float horizontalScale =
+            Mathf.Max(
+                Mathf.Abs(transform.lossyScale.x),
+                Mathf.Abs(transform.lossyScale.z)
+            );
+
+        return Mathf.Max(
+            0.001f,
+            characterController.radius * horizontalScale
+        );
+    }
+
+    private void ClearStandUpResults(int hitCount)
+    {
+        int clearCount =
+            Mathf.Min(hitCount, standUpResults.Length);
+
+        for (int i = 0; i < clearCount; i++)
+            standUpResults[i] = null;
+    }
+
     // ==================================================
     // ANIMATION
     // ==================================================
@@ -353,11 +529,18 @@ public sealed class PlayerMovement : MonoBehaviour
                 ? RunAnimationState
                 : WalkAnimationState
         );
+
+        animator.SetBool(
+            crouchParameterHash,
+            IsCrouching
+        );
     }
 
     private bool IsSprintMovementActive()
     {
-        return isRunning && inputAxis.sqrMagnitude > 0.0001f;
+        return !IsCrouching &&
+               isRunning &&
+               inputAxis.sqrMagnitude > 0.0001f;
     }
 
     // ==================================================
@@ -451,6 +634,12 @@ public sealed class PlayerMovement : MonoBehaviour
                 crouchTransitionSpeed
             );
 
+        standUpPadding =
+            Mathf.Max(0f, standUpPadding);
+
+        standUpRetryInterval =
+            Mathf.Max(0f, standUpRetryInterval);
+
         if (gravity > -0.01f)
             gravity = -9.81f;
 
@@ -471,5 +660,8 @@ public sealed class PlayerMovement : MonoBehaviour
 
         stateParameterHash =
             Animator.StringToHash(stateParameter);
+
+        crouchParameterHash =
+            Animator.StringToHash(crouchParameter);
     }
 }
