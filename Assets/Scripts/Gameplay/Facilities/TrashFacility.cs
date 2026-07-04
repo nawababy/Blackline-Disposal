@@ -6,6 +6,14 @@ using UnityEngine;
 public sealed class TrashFacility : MonoBehaviour
 {
     // ==================================================
+    // SAVE ID
+    // ==================================================
+
+    [Header("Save ID")]
+    [SerializeField]
+    private string facilityId = string.Empty;
+
+    // ==================================================
     // ACCEPTED TRASH
     // ==================================================
 
@@ -46,6 +54,17 @@ public sealed class TrashFacility : MonoBehaviour
 
     private bool isProcessing;
     private float processingTimeRemaining;
+    private float processingBaseValue;
+    private float processingPayoutValue;
+    private Coroutine processingRoutine;
+
+    public string FacilityId =>
+        string.IsNullOrWhiteSpace(facilityId)
+            ? string.Empty
+            : facilityId.Trim();
+
+    public bool HasValidFacilityId =>
+        !string.IsNullOrWhiteSpace(FacilityId);
 
     public bool IsProcessing => isProcessing;
 
@@ -94,6 +113,22 @@ public sealed class TrashFacility : MonoBehaviour
     {
         CreateDefaultLevelsIfNeeded();
         ValidateCurrentLevel();
+        ValidateFacilityId();
+    }
+
+    private void OnEnable()
+    {
+        ResumeProcessingIfNeeded();
+    }
+
+    private void OnDisable()
+    {
+        StopProcessingRoutine();
+    }
+
+    private void OnDestroy()
+    {
+        StopProcessingRoutine();
     }
 
     private void OnValidate()
@@ -148,8 +183,17 @@ public sealed class TrashFacility : MonoBehaviour
             return false;
         }
 
-        float valueToProcess =
+        float safeMultiplier =
+            Mathf.Max(0f, level.valueMultiplier);
+
+        processingBaseValue =
             Mathf.Max(0f, trash.BaseValue);
+
+        processingPayoutValue =
+            processingBaseValue * safeMultiplier;
+
+        processingTimeRemaining =
+            Mathf.Max(0.1f, level.processTime);
 
         /*
          * Sofort sperren, damit auch bei mehreren
@@ -160,13 +204,7 @@ public sealed class TrashFacility : MonoBehaviour
 
         Destroy(trash.gameObject);
 
-        StartCoroutine(
-            ProcessTrash(
-                valueToProcess,
-                level.processTime,
-                level.valueMultiplier
-            )
-        );
+        StartProcessingRoutine();
 
         return true;
     }
@@ -183,21 +221,8 @@ public sealed class TrashFacility : MonoBehaviour
     // PROCESSING
     // ==================================================
 
-    private IEnumerator ProcessTrash(
-        float baseValue,
-        float processTime,
-        float valueMultiplier
-    )
+    private IEnumerator ProcessTrash()
     {
-        float safeProcessTime =
-            Mathf.Max(0.1f, processTime);
-
-        float safeMultiplier =
-            Mathf.Max(0f, valueMultiplier);
-
-        processingTimeRemaining =
-            safeProcessTime;
-
         while (processingTimeRemaining > 0f)
         {
             processingTimeRemaining =
@@ -210,12 +235,60 @@ public sealed class TrashFacility : MonoBehaviour
             yield return null;
         }
 
-        float payout =
-            baseValue * safeMultiplier;
+        CompleteProcessing();
+    }
+
+    private IEnumerator CompleteProcessingNextFrame()
+    {
+        yield return null;
+
+        CompleteProcessing();
+    }
+
+    private void StartProcessingRoutine()
+    {
+        StopProcessingRoutine();
+
+        processingRoutine =
+            StartCoroutine(ProcessTrash());
+    }
+
+    private void ResumeProcessingIfNeeded()
+    {
+        if (!isProcessing ||
+            processingRoutine != null)
+        {
+            return;
+        }
+
+        processingRoutine =
+            processingTimeRemaining > 0f
+                ? StartCoroutine(ProcessTrash())
+                : StartCoroutine(CompleteProcessingNextFrame());
+    }
+
+    private void StopProcessingRoutine()
+    {
+        if (processingRoutine == null)
+            return;
+
+        StopCoroutine(processingRoutine);
+        processingRoutine = null;
+    }
+
+    private void CompleteProcessing()
+    {
+        float payoutToApply =
+            Mathf.Max(0f, processingPayoutValue);
+
+        SetIdleProcessingState();
+
+        if (payoutToApply <= 0f)
+            return;
 
         if (playerInventory != null)
         {
-            playerInventory.AddCash(payout);
+            playerInventory.AddCash(payoutToApply);
         }
         else
         {
@@ -225,9 +298,139 @@ public sealed class TrashFacility : MonoBehaviour
                 gameObject
             );
         }
+    }
+
+    private void SetIdleProcessingState()
+    {
+        processingRoutine = null;
 
         processingTimeRemaining = 0f;
+        processingBaseValue = 0f;
+        processingPayoutValue = 0f;
         isProcessing = false;
+    }
+
+    // ==================================================
+    // SAVE DATA
+    // ==================================================
+
+    public FacilitySaveData CreateSaveData()
+    {
+        return new FacilitySaveData
+        {
+            facilityId = FacilityId,
+            levelIndex = currentLevelIndex,
+            isProcessing = isProcessing,
+            processingTimeRemaining = isProcessing
+                ? Mathf.Max(0f, processingTimeRemaining)
+                : 0f,
+            processingBaseValue = isProcessing
+                ? Mathf.Max(0f, processingBaseValue)
+                : 0f,
+            processingPayoutValue = isProcessing
+                ? Mathf.Max(0f, processingPayoutValue)
+                : 0f
+        };
+    }
+
+    public void ApplySaveData(
+        FacilitySaveData saveData
+    )
+    {
+        if (saveData == null)
+            return;
+
+        StopProcessingRoutine();
+        ValidateCurrentLevel();
+
+        if (!string.Equals(
+                FacilityId,
+                string.IsNullOrWhiteSpace(saveData.facilityId)
+                    ? string.Empty
+                    : saveData.facilityId.Trim(),
+                StringComparison.Ordinal))
+        {
+            Debug.LogWarning(
+                "Facility-Speicherdaten passen nicht zur Facility-ID. " +
+                $"Scene-ID: '{FacilityId}', Save-ID: '{saveData.facilityId}'.",
+                gameObject
+            );
+
+            return;
+        }
+
+        int loadedLevelIndex =
+            saveData.levelIndex;
+
+        currentLevelIndex =
+            ClampLevelIndex(loadedLevelIndex);
+
+        if (loadedLevelIndex != currentLevelIndex)
+        {
+            Debug.LogWarning(
+                $"Facility '{FacilityId}' enthält ein ungültiges Level " +
+                $"{loadedLevelIndex}. Verwendet wird Level {currentLevelIndex}.",
+                gameObject
+            );
+        }
+
+        if (!saveData.isProcessing)
+        {
+            SetIdleProcessingState();
+            return;
+        }
+
+        float loadedBaseValue =
+            Mathf.Max(0f, saveData.processingBaseValue);
+
+        float loadedPayoutValue =
+            Mathf.Max(0f, saveData.processingPayoutValue);
+
+        if (loadedBaseValue <= 0f ||
+            loadedPayoutValue <= 0f)
+        {
+            Debug.LogWarning(
+                $"Facility '{FacilityId}' enthält unvollständige " +
+                "Verarbeitungsdaten und wird als idle geladen.",
+                gameObject
+            );
+
+            SetIdleProcessingState();
+            return;
+        }
+
+        processingBaseValue =
+            loadedBaseValue;
+
+        processingPayoutValue =
+            loadedPayoutValue;
+
+        processingTimeRemaining =
+            Mathf.Max(
+                0f,
+                saveData.processingTimeRemaining
+            );
+
+        isProcessing = true;
+
+        ResumeProcessingIfNeeded();
+    }
+
+    private int ClampLevelIndex(
+        int levelIndex
+    )
+    {
+        if (levels == null ||
+            levels.Length == 0)
+        {
+            return 0;
+        }
+
+        return Mathf.Clamp(
+            levelIndex,
+            0,
+            levels.Length - 1
+        );
     }
 
     // ==================================================
@@ -322,19 +525,21 @@ public sealed class TrashFacility : MonoBehaviour
 
     private void ValidateCurrentLevel()
     {
-        if (levels == null ||
-            levels.Length == 0)
-        {
-            currentLevelIndex = 0;
-            return;
-        }
-
         currentLevelIndex =
-            Mathf.Clamp(
-                currentLevelIndex,
-                0,
-                levels.Length - 1
-            );
+            ClampLevelIndex(currentLevelIndex);
+    }
+
+    private void ValidateFacilityId()
+    {
+        if (HasValidFacilityId)
+            return;
+
+        Debug.LogWarning(
+            "TrashFacility besitzt keine gültige facilityId. " +
+            "Diese Facility wird nicht gespeichert oder geladen, " +
+            "bis im Inspector eine stabile ID gesetzt ist.",
+            gameObject
+        );
     }
 
     private void CreateDefaultLevelsIfNeeded()

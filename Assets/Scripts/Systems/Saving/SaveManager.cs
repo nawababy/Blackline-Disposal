@@ -667,6 +667,10 @@ public sealed class SaveManager : MonoBehaviour
             saveData
         );
 
+        CaptureFacilityData(
+            saveData
+        );
+
         CaptureWorldTrashData(
             saveData
         );
@@ -796,6 +800,71 @@ public sealed class SaveManager : MonoBehaviour
             bankAccount.GetBalanceForSave();
     }
 
+    // ==================================================
+    // CAPTURE FACILITIES
+    // ==================================================
+
+    private void CaptureFacilityData(
+        SaveGameData saveData
+    )
+    {
+        TrashFacility[] sceneFacilities =
+            FindObjectsByType<TrashFacility>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        if (sceneFacilities == null ||
+            sceneFacilities.Length == 0)
+        {
+            return;
+        }
+
+        if (!TryCollectSceneFacilitiesById(
+                sceneFacilities,
+                "Speichern",
+                out Dictionary<string, TrashFacility> facilitiesById))
+        {
+            Debug.LogError(
+                "Facility-Snapshot wurde nicht gespeichert, " +
+                "weil mindestens eine Facility keine eindeutige facilityId besitzt.",
+                gameObject
+            );
+
+            return;
+        }
+
+        if (facilitiesById.Count == 0)
+            return;
+
+        List<FacilitySaveData> capturedFacilities =
+            new List<FacilitySaveData>();
+
+        foreach (KeyValuePair<string, TrashFacility> entry in
+                 facilitiesById)
+        {
+            if (entry.Value == null)
+                continue;
+
+            capturedFacilities.Add(
+                entry.Value.CreateSaveData()
+            );
+        }
+
+        capturedFacilities.Sort(
+            (left, right) => string.Compare(
+                left != null ? left.facilityId : string.Empty,
+                right != null ? right.facilityId : string.Empty,
+                StringComparison.Ordinal
+            )
+        );
+
+        saveData.sharedWorld.facilities =
+            capturedFacilities;
+
+        saveData.sharedWorld.facilitiesSnapshotInitialized =
+            true;
+    }
     // ==================================================
     // CAPTURE WORLD TRASH
     // ==================================================
@@ -1028,6 +1097,10 @@ public sealed class SaveManager : MonoBehaviour
             saveData
         );
 
+        ApplyFacilityData(
+            saveData
+        );
+
         ApplyWorldTrashData(
             saveData
         );
@@ -1246,6 +1319,179 @@ public sealed class SaveManager : MonoBehaviour
         );
     }
 
+    // ==================================================
+    // APPLY FACILITIES
+    // ==================================================
+
+    private void ApplyFacilityData(
+        SaveGameData saveData
+    )
+    {
+        if (!saveData.sharedWorld.facilitiesSnapshotInitialized)
+            return;
+
+        List<FacilitySaveData> savedFacilities =
+            saveData.sharedWorld.facilities;
+
+        if (savedFacilities == null)
+            return;
+
+        TrashFacility[] sceneFacilities =
+            FindObjectsByType<TrashFacility>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        if (!TryCollectSceneFacilitiesById(
+                sceneFacilities,
+                "Laden",
+                out Dictionary<string, TrashFacility> facilitiesById))
+        {
+            Debug.LogError(
+                "Facility-Snapshot wurde nicht angewendet, " +
+                "weil mindestens eine Scene-Facility keine eindeutige facilityId besitzt.",
+                gameObject
+            );
+
+            return;
+        }
+
+        Dictionary<string, FacilitySaveData> recordsById =
+            new Dictionary<string, FacilitySaveData>(
+                StringComparer.Ordinal
+            );
+
+        foreach (FacilitySaveData savedFacility in
+                 savedFacilities)
+        {
+            if (savedFacility == null)
+                continue;
+
+            string facilityId =
+                string.IsNullOrWhiteSpace(savedFacility.facilityId)
+                    ? string.Empty
+                    : savedFacility.facilityId.Trim();
+
+            if (string.IsNullOrWhiteSpace(facilityId))
+            {
+                Debug.LogWarning(
+                    $"Spielstand {saveData.slotIndex + 1} enthält " +
+                    "einen Facility-Eintrag ohne facilityId.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            if (recordsById.ContainsKey(facilityId))
+            {
+                Debug.LogWarning(
+                    $"Spielstand {saveData.slotIndex + 1} enthält " +
+                    $"die Facility-ID '{facilityId}' mehrfach. " +
+                    "Der erste Eintrag bleibt erhalten.",
+                    gameObject
+                );
+
+                continue;
+            }
+
+            recordsById.Add(
+                facilityId,
+                savedFacility
+            );
+        }
+
+        foreach (KeyValuePair<string, FacilitySaveData> entry in
+                 recordsById)
+        {
+            if (facilitiesById.ContainsKey(entry.Key))
+                continue;
+
+            Debug.LogWarning(
+                $"Spielstand {saveData.slotIndex + 1} enthält " +
+                $"Facility-ID '{entry.Key}', aber in der aktuellen Szene " +
+                "wurde keine passende TrashFacility gefunden.",
+                gameObject
+            );
+        }
+
+        foreach (KeyValuePair<string, TrashFacility> entry in
+                 facilitiesById)
+        {
+            if (entry.Value == null)
+                continue;
+
+            if (!recordsById.TryGetValue(
+                    entry.Key,
+                    out FacilitySaveData savedFacility))
+            {
+                continue;
+            }
+
+            entry.Value.ApplySaveData(
+                savedFacility
+            );
+        }
+    }
+
+    private bool TryCollectSceneFacilitiesById(
+        TrashFacility[] sceneFacilities,
+        string operationName,
+        out Dictionary<string, TrashFacility> facilitiesById
+    )
+    {
+        facilitiesById =
+            new Dictionary<string, TrashFacility>(
+                StringComparer.Ordinal
+            );
+
+        bool allFacilitiesValid =
+            true;
+
+        if (sceneFacilities == null)
+            return true;
+
+        foreach (TrashFacility facility in
+                 sceneFacilities)
+        {
+            if (facility == null)
+                continue;
+
+            string facilityId =
+                facility.FacilityId;
+
+            if (string.IsNullOrWhiteSpace(facilityId))
+            {
+                Debug.LogError(
+                    $"Facility-{operationName} abgebrochen: " +
+                    "Eine TrashFacility besitzt keine gültige facilityId.",
+                    facility
+                );
+
+                allFacilitiesValid = false;
+                continue;
+            }
+
+            if (facilitiesById.ContainsKey(facilityId))
+            {
+                Debug.LogError(
+                    $"Facility-{operationName} abgebrochen: " +
+                    $"Die facilityId '{facilityId}' kommt mehrfach vor.",
+                    facility
+                );
+
+                allFacilitiesValid = false;
+                continue;
+            }
+
+            facilitiesById.Add(
+                facilityId,
+                facility
+            );
+        }
+
+        return allFacilitiesValid;
+    }
     // ==================================================
     // APPLY WORLD TRASH
     // ==================================================

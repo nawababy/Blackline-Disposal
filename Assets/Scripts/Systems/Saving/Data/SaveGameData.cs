@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public sealed class SaveGameData
 {
-    public const int CurrentSaveVersion = 3;
+    public const int CurrentSaveVersion = 4;
 
     // ==================================================
     // SAVE INFORMATION
@@ -166,6 +166,8 @@ public sealed class SharedWorldSaveData
     // FACILITIES
     // ==================================================
 
+    public bool facilitiesSnapshotInitialized;
+
     public List<FacilitySaveData> facilities =
         new List<FacilitySaveData>();
 }
@@ -187,6 +189,8 @@ public sealed class FacilitySaveData
     public float processingTimeRemaining;
 
     public float processingBaseValue;
+
+    public float processingPayoutValue;
 }
 
 // ======================================================

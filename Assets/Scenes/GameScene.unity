@@ -4220,6 +4220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ed5fedcd9b0bb047bd7842944f9314b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashFacility
+  facilityId: game_scene.trash_facility_02
   acceptedTrash: 00000000
   levels:
   - levelName: 2
@@ -5381,6 +5382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ed5fedcd9b0bb047bd7842944f9314b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashFacility
+  facilityId: game_scene.trash_facility_01
   acceptedTrash: 00000000
   levels:
   - levelName: 2
