@@ -56,7 +56,6 @@ public sealed class WorldTrashSaveObject : MonoBehaviour
     {
         CacheReferences();
         ValidateWorldObjectId();
-        CheckForDuplicateWorldObjectId();
     }
 
     private void OnValidate()
@@ -103,43 +102,6 @@ public sealed class WorldTrashSaveObject : MonoBehaviour
             "'Generate New World Object ID'.",
             gameObject
         );
-    }
-
-    private void CheckForDuplicateWorldObjectId()
-    {
-        if (!HasValidWorldObjectId)
-            return;
-
-        WorldTrashSaveObject[] allWorldTrash =
-            FindObjectsByType<WorldTrashSaveObject>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
-
-        foreach (WorldTrashSaveObject other in allWorldTrash)
-        {
-            if (other == null || other == this)
-                continue;
-
-            if (!string.Equals(
-                    other.worldObjectId,
-                    worldObjectId,
-                    StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            Debug.LogError(
-                $"Doppelte World Object ID gefunden:\n" +
-                $"{worldObjectId}\n\n" +
-                $"Objekt 1: {name}\n" +
-                $"Objekt 2: {other.name}\n\n" +
-                "Erzeuge bei einem der beiden Objekte eine neue ID.",
-                gameObject
-            );
-
-            return;
-        }
     }
 
     public WorldTrashSaveData CreateSaveData(bool exists)

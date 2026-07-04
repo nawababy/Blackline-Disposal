@@ -254,41 +254,50 @@ public sealed class SaveManager : MonoBehaviour
 
     private void CacheSceneWorldTrashDefaults()
     {
-        sceneWorldTrashDefaults.Clear();
-
         WorldTrashSaveObject[] worldTrashObjects =
             FindObjectsByType<WorldTrashSaveObject>(
                 FindObjectsInactive.Include,
                 FindObjectsSortMode.None
             );
 
-        foreach (WorldTrashSaveObject worldTrash in
-                 worldTrashObjects)
+        if (!TryBuildWorldTrashLookup(
+                worldTrashObjects,
+                "Cache",
+                out Dictionary<string, WorldTrashSaveObject>
+                    worldTrashById))
         {
-            if (worldTrash == null ||
-                !worldTrash.HasValidWorldObjectId)
-            {
-                continue;
-            }
+            Debug.LogError(
+                "WorldTrash-Default-Cache wurde abgebrochen, " +
+                "weil mindestens eine World Object ID fehlt " +
+                "oder doppelt vergeben ist.",
+                gameObject
+            );
 
-            string worldObjectId =
-                worldTrash.WorldObjectId;
+            return;
+        }
 
-            if (sceneWorldTrashDefaults.ContainsKey(
-                    worldObjectId))
-            {
-                Debug.LogError(
-                    $"Doppelte World Object ID gefunden: " +
-                    $"{worldObjectId}",
-                    worldTrash
-                );
+        Dictionary<string, WorldTrashSaveData> defaults =
+            new Dictionary<string, WorldTrashSaveData>(
+                StringComparer.Ordinal
+            );
 
-                continue;
-            }
+        foreach (KeyValuePair<string, WorldTrashSaveObject> entry in
+                 worldTrashById)
+        {
+            defaults.Add(
+                entry.Key,
+                entry.Value.CreateSaveData(true)
+            );
+        }
 
+        sceneWorldTrashDefaults.Clear();
+
+        foreach (KeyValuePair<string, WorldTrashSaveData> entry in
+                 defaults)
+        {
             sceneWorldTrashDefaults.Add(
-                worldObjectId,
-                worldTrash.CreateSaveData(true)
+                entry.Key,
+                entry.Value
             );
         }
 
@@ -824,9 +833,11 @@ public sealed class SaveManager : MonoBehaviour
         saveData.saveVersion = SaveGameData.CurrentSaveVersion;
         saveData.slotIndex = slotIndex;
 
-        CaptureCurrentSceneData(
-            saveData
-        );
+        if (!CaptureCurrentSceneData(
+                saveData))
+        {
+            return false;
+        }
 
         saveData.UpdateLastSavedTime();
 
@@ -874,12 +885,12 @@ public sealed class SaveManager : MonoBehaviour
     // CAPTURE CURRENT SCENE
     // ==================================================
 
-    private void CaptureCurrentSceneData(
+    private bool CaptureCurrentSceneData(
         SaveGameData saveData
     )
     {
         if (saveData == null)
-            return;
+            return false;
 
         EnsureSaveDataSectionsExist(
             saveData
@@ -914,7 +925,7 @@ public sealed class SaveManager : MonoBehaviour
             saveData
         );
 
-        CaptureWorldTrashData(
+        return CaptureWorldTrashData(
             saveData
         );
     }
@@ -1112,18 +1123,34 @@ public sealed class SaveManager : MonoBehaviour
     // CAPTURE WORLD TRASH
     // ==================================================
 
-    private void CaptureWorldTrashData(
+    private bool CaptureWorldTrashData(
         SaveGameData saveData
     )
     {
-        if (saveData.sharedWorld.worldTrashObjects == null)
-        {
-            saveData.sharedWorld.worldTrashObjects =
-                new List<WorldTrashSaveData>();
-        }
-
         string activeSceneName =
             SceneManager.GetActiveScene().name;
+
+        WorldTrashSaveObject[] currentWorldTrash =
+            FindObjectsByType<WorldTrashSaveObject>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        if (!TryBuildWorldTrashLookup(
+                currentWorldTrash,
+                "Capture",
+                out Dictionary<string, WorldTrashSaveObject>
+                    worldTrashById))
+        {
+            Debug.LogError(
+                "WorldTrash-Snapshot wurde nicht gespeichert, " +
+                "weil mindestens eine World Object ID fehlt " +
+                "oder doppelt vergeben ist.",
+                gameObject
+            );
+
+            return false;
+        }
 
         Dictionary<string, WorldTrashSaveData> savedRecords =
             new Dictionary<string, WorldTrashSaveData>(
@@ -1134,18 +1161,21 @@ public sealed class SaveManager : MonoBehaviour
          * Bereits vorhandene Records übernehmen.
          * Das ist später auch bei mehreren Szenen wichtig.
          */
-        foreach (WorldTrashSaveData existingRecord in
-                 saveData.sharedWorld.worldTrashObjects)
+        if (saveData.sharedWorld.worldTrashObjects != null)
         {
-            if (existingRecord == null ||
-                string.IsNullOrWhiteSpace(
-                    existingRecord.worldObjectId))
+            foreach (WorldTrashSaveData existingRecord in
+                     saveData.sharedWorld.worldTrashObjects)
             {
-                continue;
-            }
+                if (existingRecord == null ||
+                    string.IsNullOrWhiteSpace(
+                        existingRecord.worldObjectId))
+                {
+                    continue;
+                }
 
-            savedRecords[existingRecord.worldObjectId] =
-                existingRecord;
+                savedRecords[existingRecord.worldObjectId] =
+                    existingRecord;
+            }
         }
 
         HashSet<string> currentWorldObjectIds =
@@ -1153,24 +1183,15 @@ public sealed class SaveManager : MonoBehaviour
                 StringComparer.Ordinal
             );
 
-        WorldTrashSaveObject[] currentWorldTrash =
-            FindObjectsByType<WorldTrashSaveObject>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
-
         /*
          * Alle Müllobjekte speichern,
          * die aktuell noch existieren.
          */
-        foreach (WorldTrashSaveObject worldTrash in
-                 currentWorldTrash)
+        foreach (KeyValuePair<string, WorldTrashSaveObject> entry in
+                 worldTrashById)
         {
-            if (worldTrash == null ||
-                !worldTrash.HasValidWorldObjectId)
-            {
-                continue;
-            }
+            WorldTrashSaveObject worldTrash =
+                entry.Value;
 
             /*
              * Deaktivierte Müllobjekte gelten als entfernt.
@@ -1179,7 +1200,7 @@ public sealed class SaveManager : MonoBehaviour
                 continue;
 
             string worldObjectId =
-                worldTrash.WorldObjectId;
+                entry.Key;
 
             currentWorldObjectIds.Add(
                 worldObjectId
@@ -1253,6 +1274,8 @@ public sealed class SaveManager : MonoBehaviour
 
         saveData.sharedWorld
             .worldTrashSnapshotInitialized = true;
+
+        return true;
     }
 
     // ==================================================
@@ -1792,6 +1815,28 @@ public sealed class SaveManager : MonoBehaviour
         string activeSceneName =
             SceneManager.GetActiveScene().name;
 
+        WorldTrashSaveObject[] currentWorldTrash =
+            FindObjectsByType<WorldTrashSaveObject>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        if (!TryBuildWorldTrashLookup(
+                currentWorldTrash,
+                "Apply",
+                out Dictionary<string, WorldTrashSaveObject>
+                    worldTrashById))
+        {
+            Debug.LogError(
+                "WorldTrash-Daten wurden nicht angewendet, " +
+                "weil mindestens eine World Object ID fehlt " +
+                "oder doppelt vergeben ist.",
+                gameObject
+            );
+
+            return;
+        }
+
         Dictionary<string, WorldTrashSaveData> records =
             new Dictionary<string, WorldTrashSaveData>(
                 StringComparer.Ordinal
@@ -1821,23 +1866,14 @@ public sealed class SaveManager : MonoBehaviour
                 record;
         }
 
-        WorldTrashSaveObject[] currentWorldTrash =
-            FindObjectsByType<WorldTrashSaveObject>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
-
-        foreach (WorldTrashSaveObject worldTrash in
-                 currentWorldTrash)
+        foreach (KeyValuePair<string, WorldTrashSaveObject> entry in
+                 worldTrashById)
         {
-            if (worldTrash == null ||
-                !worldTrash.HasValidWorldObjectId)
-            {
-                continue;
-            }
+            WorldTrashSaveObject worldTrash =
+                entry.Value;
 
             if (!records.TryGetValue(
-                    worldTrash.WorldObjectId,
+                    entry.Key,
                     out WorldTrashSaveData record))
             {
                 /*
@@ -1860,6 +1896,113 @@ public sealed class SaveManager : MonoBehaviour
                 );
             }
         }
+    }
+
+    private bool TryBuildWorldTrashLookup(
+        WorldTrashSaveObject[] worldObjects,
+        string operationName,
+        out Dictionary<string, WorldTrashSaveObject> lookup
+    )
+    {
+        lookup =
+            new Dictionary<string, WorldTrashSaveObject>(
+                StringComparer.Ordinal
+            );
+
+        bool hasInvalidIds = false;
+
+        if (worldObjects == null)
+            return true;
+
+        HashSet<string> reportedDuplicateIds =
+            new HashSet<string>(
+                StringComparer.Ordinal
+            );
+
+        foreach (WorldTrashSaveObject worldObject in
+                 worldObjects)
+        {
+            if (worldObject == null)
+                continue;
+
+            string worldObjectId =
+                worldObject.WorldObjectId;
+
+            if (worldObjectId == null)
+            {
+                Debug.LogError(
+                    $"WorldTrash-ID fehlt während '{operationName}'.\n" +
+                    $"Objekt: {worldObject.name}\n" +
+                    "Jedes WorldTrashSaveObject braucht eine " +
+                    "stabile, eindeutige World Object ID.",
+                    worldObject
+                );
+
+                hasInvalidIds = true;
+                continue;
+            }
+
+            if (worldObjectId.Length == 0)
+            {
+                Debug.LogError(
+                    $"WorldTrash-ID ist leer während '{operationName}'.\n" +
+                    $"Objekt: {worldObject.name}\n" +
+                    "Jedes WorldTrashSaveObject braucht eine " +
+                    "stabile, eindeutige World Object ID.",
+                    worldObject
+                );
+
+                hasInvalidIds = true;
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(worldObjectId))
+            {
+                Debug.LogError(
+                    $"WorldTrash-ID besteht nur aus Whitespace " +
+                    $"während '{operationName}'.\n" +
+                    $"Objekt: {worldObject.name}\n" +
+                    "Jedes WorldTrashSaveObject braucht eine " +
+                    "stabile, eindeutige World Object ID.",
+                    worldObject
+                );
+
+                hasInvalidIds = true;
+                continue;
+            }
+
+            if (lookup.TryGetValue(
+                    worldObjectId,
+                    out WorldTrashSaveObject existingWorldObject))
+            {
+                if (reportedDuplicateIds.Add(worldObjectId))
+                {
+                    Debug.LogError(
+                        $"Doppelte WorldTrash-ID während '{operationName}'.\n" +
+                        $"worldObjectId: {worldObjectId}\n" +
+                        $"Objekt 1: {existingWorldObject.name}\n" +
+                        $"Objekt 2: {worldObject.name}\n" +
+                        "WorldTrash-IDs müssen in der gespeicherten " +
+                        "Welt global eindeutig sein.",
+                        worldObject
+                    );
+                }
+
+                hasInvalidIds = true;
+                continue;
+            }
+
+            lookup.Add(
+                worldObjectId,
+                worldObject
+            );
+        }
+
+        if (!hasInvalidIds)
+            return true;
+
+        lookup.Clear();
+        return false;
     }
 
     // ==================================================
