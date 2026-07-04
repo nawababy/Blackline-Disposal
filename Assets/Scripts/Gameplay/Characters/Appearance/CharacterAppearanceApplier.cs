@@ -7,6 +7,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
     [SerializeField] private CharacterAppearanceDatabase database;
     [SerializeField] private Transform visualRoot;
     [SerializeField] private string managedRootName = "AppliedAppearance";
+    [SerializeField] private RuntimeAnimatorController previewAnimatorController;
 
     private GameObject currentAppearanceRoot;
 
@@ -184,7 +185,11 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
             }
             else
             {
-                ApplyPreviewParts(bodyDefinition, resolvedAppearance, newAppearanceRoot.transform);
+                if (!ApplyPreviewParts(bodyDefinition, resolvedAppearance, newAppearanceRoot.transform, out runtimeAnimator))
+                {
+                    DestroyGameObject(newAppearanceRoot);
+                    return false;
+                }
             }
         }
         catch (Exception exception)
@@ -200,30 +205,70 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         return true;
     }
 
-    private void ApplyPreviewParts(
+    private bool ApplyPreviewParts(
         CharacterAppearanceDatabase.BodyDefinition bodyDefinition,
         CharacterAppearanceData resolvedAppearance,
-        Transform parent
+        Transform parent,
+        out Animator previewAnimator
     )
     {
-        InstantiatePreviewBodyDefinition(bodyDefinition, parent);
-        InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Hair, resolvedAppearance.hairId, resolvedAppearance, parent);
-        InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Face, resolvedAppearance.faceId, resolvedAppearance, parent);
-        InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.Hat, resolvedAppearance.hatId, resolvedAppearance, parent);
-        InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.Glasses, resolvedAppearance.glassesId, resolvedAppearance, parent);
-        InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.Gloves, resolvedAppearance.glovesId, resolvedAppearance, parent);
+        previewAnimator = null;
+
+        if (previewAnimatorController == null)
+        {
+            Debug.LogError("[CharacterAppearanceApplier] Cannot animate preview BodyType '" + resolvedAppearance.bodyTypeId + "' because no previewAnimatorController is assigned.", this);
+            return false;
+        }
+
+        GameObject bodyInstance = InstantiatePreviewBodyDefinition(bodyDefinition, parent);
+        ConfigureSkinnedMeshRendererCulling(bodyInstance);
+        Transform fallbackSkeletonRoot = FindRendererSkeletonRoot(bodyInstance);
+        Avatar bodyAvatar = FindExistingRuntimeAvatar(bodyInstance);
+        previewAnimator = PreparePreviewBodyAnimator(bodyInstance, resolvedAppearance.bodyTypeId, bodyAvatar);
+        if (previewAnimator == null)
+        {
+            return false;
+        }
+
+        Transform targetSkeletonRoot = FindSkeletonRoot(bodyInstance, previewAnimator, fallbackSkeletonRoot);
+        if (targetSkeletonRoot == null)
+        {
+            Debug.LogError("[CharacterAppearanceApplier] Preview body prefab '" + bodyDefinition.Prefab.name + "' for BodyType '" + resolvedAppearance.bodyTypeId + "' has no usable skeleton root.", this);
+            return false;
+        }
+
+        BoneLookup targetBones = new BoneLookup(targetSkeletonRoot);
+
+        if (!InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Hair, resolvedAppearance.hairId, resolvedAppearance, targetBones, parent, false) ||
+            !InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Face, resolvedAppearance.faceId, resolvedAppearance, targetBones, parent, false))
+        {
+            return false;
+        }
+
+        InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.Hat, resolvedAppearance.hatId, resolvedAppearance, targetBones, parent);
+        InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.Glasses, resolvedAppearance.glassesId, resolvedAppearance, targetBones, parent);
+        InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.Gloves, resolvedAppearance.glovesId, resolvedAppearance, targetBones, parent);
 
         if (!string.IsNullOrEmpty(resolvedAppearance.fullBodyId))
         {
-            InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.FullBody, resolvedAppearance.fullBodyId, resolvedAppearance, parent);
+            InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory.FullBody, resolvedAppearance.fullBodyId, resolvedAppearance, targetBones, parent);
         }
         else
         {
-            InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Upper, resolvedAppearance.upperId, resolvedAppearance, parent);
-            InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Pants, resolvedAppearance.pantsId, resolvedAppearance, parent);
+            if (!InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Upper, resolvedAppearance.upperId, resolvedAppearance, targetBones, parent, false) ||
+                !InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Pants, resolvedAppearance.pantsId, resolvedAppearance, targetBones, parent, false))
+            {
+                return false;
+            }
         }
 
-        InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Shoes, resolvedAppearance.shoesId, resolvedAppearance, parent);
+        if (!InstantiatePreviewPartDefinition(CharacterAppearanceCategory.Shoes, resolvedAppearance.shoesId, resolvedAppearance, targetBones, parent, false))
+        {
+            return false;
+        }
+
+        FinalizeAnimatorPose(previewAnimator);
+        return true;
     }
 
     private bool ApplyRuntimeParts(
@@ -239,7 +284,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         GameObject bodyInstance = Instantiate(bodyDefinition.Prefab, parent);
         bodyInstance.name = bodyDefinition.Id;
         ResetLocalTransform(bodyInstance.transform);
-        ConfigureRuntimeSkinnedMeshRenderers(bodyInstance);
+        ConfigureSkinnedMeshRendererCulling(bodyInstance);
 
         Transform fallbackSkeletonRoot = FindRendererSkeletonRoot(bodyInstance);
         Avatar bodyAvatar = FindExistingRuntimeAvatar(bodyInstance);
@@ -278,7 +323,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         return runtimeAnimator != null;
     }
 
-    private void InstantiatePreviewBodyDefinition(CharacterAppearanceDatabase.BodyDefinition definition, Transform parent)
+    private GameObject InstantiatePreviewBodyDefinition(CharacterAppearanceDatabase.BodyDefinition definition, Transform parent)
     {
         if (definition == null || definition.Prefab == null)
         {
@@ -288,31 +333,66 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         GameObject instance = Instantiate(definition.Prefab, parent);
         instance.name = definition.Id;
         ResetLocalTransform(instance.transform);
-        RemoveDisallowedComponents(instance, null);
+        return instance;
     }
 
-    private void InstantiatePreviewPartDefinition(CharacterAppearanceCategory category, string id, CharacterAppearanceData appearanceData, Transform parent)
+    private bool InstantiatePreviewPartDefinition(
+        CharacterAppearanceCategory category,
+        string id,
+        CharacterAppearanceData appearanceData,
+        BoneLookup targetBones,
+        Transform parent,
+        bool optional
+    )
     {
+        if (string.IsNullOrEmpty(id))
+        {
+            return optional;
+        }
+
         CharacterAppearanceDatabase.AppearanceDefinition definition;
         if (!database.TryGetDefinition(category, appearanceData.bodyTypeId, appearanceData.skinId, id, out definition))
         {
+            if (optional)
+            {
+                Debug.LogWarning("[CharacterAppearanceApplier] Optional preview part '" + id + "' for BodyType '" + appearanceData.bodyTypeId + "' category " + category + " could not be resolved.", this);
+                return true;
+            }
+
             throw new InvalidOperationException("Could not resolve definition '" + id + "' for BodyType '" + appearanceData.bodyTypeId + "' category " + category + ".");
         }
 
         GameObject instance = Instantiate(definition.Prefab, parent);
         instance.name = definition.Id;
         ResetLocalTransform(instance.transform);
+        ConfigureSkinnedMeshRendererCulling(instance);
+
+        if (!BindSkinnedMeshRenderers(instance, category, definition.Id, appearanceData.bodyTypeId, definition.Prefab, targetBones, "Preview"))
+        {
+            string severity = optional ? "optional" : "required";
+            Debug.LogWarning("[CharacterAppearanceApplier] Skipped " + severity + " preview part '" + definition.Id + "' for BodyType '" + appearanceData.bodyTypeId + "' category " + category + ".", this);
+            DestroyGameObject(instance);
+            return optional;
+        }
+
         RemoveDisallowedComponents(instance, null);
+        return true;
     }
 
-    private void InstantiateOptionalPreviewPartDefinition(CharacterAppearanceCategory category, string id, CharacterAppearanceData appearanceData, Transform parent)
+    private void InstantiateOptionalPreviewPartDefinition(
+        CharacterAppearanceCategory category,
+        string id,
+        CharacterAppearanceData appearanceData,
+        BoneLookup targetBones,
+        Transform parent
+    )
     {
         if (string.IsNullOrEmpty(id))
         {
             return;
         }
 
-        InstantiatePreviewPartDefinition(category, id, appearanceData, parent);
+        InstantiatePreviewPartDefinition(category, id, appearanceData, targetBones, parent, true);
     }
 
     private void InstantiateRuntimePartDefinition(
@@ -339,9 +419,9 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         GameObject instance = Instantiate(definition.Prefab, parent);
         instance.name = definition.Id;
         ResetLocalTransform(instance.transform);
-        ConfigureRuntimeSkinnedMeshRenderers(instance);
+        ConfigureSkinnedMeshRendererCulling(instance);
 
-        if (!BindSkinnedMeshRenderers(instance, category, definition.Id, appearanceData.bodyTypeId, definition.Prefab, targetBones))
+        if (!BindSkinnedMeshRenderers(instance, category, definition.Id, appearanceData.bodyTypeId, definition.Prefab, targetBones, "Runtime"))
         {
             string severity = optional ? "optional" : "required";
             Debug.LogWarning("[CharacterAppearanceApplier] Skipped " + severity + " runtime part '" + definition.Id + "' for BodyType '" + appearanceData.bodyTypeId + "' category " + category + ".", this);
@@ -350,6 +430,27 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         }
 
         RemoveDisallowedComponents(instance, null);
+    }
+
+    private Animator PreparePreviewBodyAnimator(GameObject bodyInstance, string bodyTypeId, Avatar bodyAvatar)
+    {
+        Animator[] animators = bodyInstance.GetComponentsInChildren<Animator>(true);
+        Animator previewAnimator = SelectRuntimeAnimator(bodyInstance, animators);
+
+        Avatar previewAvatar;
+        if (!TryResolvePreviewAvatar(bodyTypeId, bodyAvatar, out previewAvatar))
+        {
+            return null;
+        }
+
+        RemoveDisallowedComponents(bodyInstance, previewAnimator);
+
+        previewAnimator.avatar = previewAvatar;
+        previewAnimator.runtimeAnimatorController = previewAnimatorController;
+        previewAnimator.applyRootMotion = false;
+        previewAnimator.enabled = true;
+        previewAnimator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+        return previewAnimator;
     }
 
     private Animator PrepareRuntimeBodyAnimator(GameObject bodyInstance, string bodyTypeId, Avatar bodyAvatar, RuntimeAnimatorController runtimeAnimatorController)
@@ -429,6 +530,27 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         return false;
     }
 
+    private bool TryResolvePreviewAvatar(string bodyTypeId, Avatar bodyAvatar, out Avatar previewAvatar)
+    {
+        previewAvatar = null;
+
+        if (IsUsableHumanoidAvatar(bodyAvatar))
+        {
+            previewAvatar = bodyAvatar;
+            return true;
+        }
+
+        Avatar databaseAvatar;
+        if (database.TryGetRuntimeAvatar(bodyTypeId, out databaseAvatar) && IsUsableHumanoidAvatar(databaseAvatar))
+        {
+            previewAvatar = databaseAvatar;
+            return true;
+        }
+
+        Debug.LogError("[CharacterAppearanceApplier] Cannot animate preview BodyType '" + bodyTypeId + "' because no valid Humanoid runtimeAvatar is assigned. Expected source: " + GetExpectedRuntimeAvatarSourcePath(bodyTypeId) + ".", this);
+        return false;
+    }
+
     private static bool IsUsableHumanoidAvatar(Avatar avatar)
     {
         return avatar != null && avatar.isValid && avatar.isHuman;
@@ -500,19 +622,20 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         string id,
         string bodyTypeId,
         GameObject sourcePrefab,
-        BoneLookup targetBones
+        BoneLookup targetBones,
+        string modeLabel
     )
     {
         SkinnedMeshRenderer[] renderers = instance.GetComponentsInChildren<SkinnedMeshRenderer>(true);
         if (renderers.Length == 0)
         {
-            Debug.LogWarning("[CharacterAppearanceApplier] Runtime part '" + id + "' for BodyType '" + bodyTypeId + "' category " + category + " has no SkinnedMeshRenderer. Prefab: " + GetPrefabName(sourcePrefab), this);
+            Debug.LogWarning("[CharacterAppearanceApplier] " + modeLabel + " part '" + id + "' for BodyType '" + bodyTypeId + "' category " + category + " has no SkinnedMeshRenderer. Prefab: " + GetPrefabName(sourcePrefab), this);
             return false;
         }
 
         for (int i = 0; i < renderers.Length; i++)
         {
-            if (!TryBindRenderer(renderers[i], category, id, bodyTypeId, sourcePrefab, targetBones))
+            if (!TryBindRenderer(renderers[i], category, id, bodyTypeId, sourcePrefab, targetBones, modeLabel))
             {
                 return false;
             }
@@ -527,7 +650,8 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         string id,
         string bodyTypeId,
         GameObject sourcePrefab,
-        BoneLookup targetBones
+        BoneLookup targetBones,
+        string modeLabel
     )
     {
         if (renderer == null)
@@ -538,14 +662,14 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         Transform sourceRoot = renderer.rootBone;
         if (sourceRoot == null)
         {
-            Debug.LogWarning("[CharacterAppearanceApplier] Renderer '" + renderer.name + "' in '" + id + "' has no rootBone. BodyType: " + bodyTypeId + ", category: " + category + ", prefab: " + GetPrefabName(sourcePrefab), this);
+            Debug.LogWarning("[CharacterAppearanceApplier] " + modeLabel + " renderer '" + renderer.name + "' in '" + id + "' has no rootBone. BodyType: " + bodyTypeId + ", category: " + category + ", prefab: " + GetPrefabName(sourcePrefab), this);
             return false;
         }
 
         Transform[] sourceBones = renderer.bones;
         if (sourceBones == null || sourceBones.Length == 0)
         {
-            Debug.LogWarning("[CharacterAppearanceApplier] Renderer '" + renderer.name + "' in '" + id + "' has no bones. BodyType: " + bodyTypeId + ", category: " + category + ", prefab: " + GetPrefabName(sourcePrefab), this);
+            Debug.LogWarning("[CharacterAppearanceApplier] " + modeLabel + " renderer '" + renderer.name + "' in '" + id + "' has no bones. BodyType: " + bodyTypeId + ", category: " + category + ", prefab: " + GetPrefabName(sourcePrefab), this);
             return false;
         }
 
@@ -557,7 +681,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
             if (!targetBones.TryGetBone(sourceRoot, sourceBone, out targetBone))
             {
                 string boneName = sourceBone == null ? "<null>" : sourceBone.name;
-                Debug.LogWarning("[CharacterAppearanceApplier] Missing target bone '" + boneName + "' while binding '" + id + "'. BodyType: " + bodyTypeId + ", category: " + category + ", prefab: " + GetPrefabName(sourcePrefab), this);
+                Debug.LogWarning("[CharacterAppearanceApplier] Missing target bone '" + boneName + "' while binding " + modeLabel + " part '" + id + "'. BodyType: " + bodyTypeId + ", category: " + category + ", prefab: " + GetPrefabName(sourcePrefab), this);
                 return false;
             }
 
@@ -573,6 +697,17 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         renderer.rootBone = targetRootBone;
         renderer.bones = reboundBones;
         return true;
+    }
+
+    private static void FinalizeAnimatorPose(Animator animator)
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        animator.Rebind();
+        animator.Update(0f);
     }
 
     private static string GetRelativePath(Transform root, Transform bone)
@@ -606,7 +741,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
         target.localScale = Vector3.one;
     }
 
-    private static void ConfigureRuntimeSkinnedMeshRenderers(GameObject instance)
+    private static void ConfigureSkinnedMeshRendererCulling(GameObject instance)
     {
         SkinnedMeshRenderer[] renderers = instance.GetComponentsInChildren<SkinnedMeshRenderer>(true);
         for (int i = 0; i < renderers.Length; i++)
