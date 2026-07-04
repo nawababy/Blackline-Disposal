@@ -1149,7 +1149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLook
   fallbackSensitivity: 2
   fallbackFieldOfView: 60
-  maxPitch: 85
+  maxPitch: 75
   playerCamera: {fileID: 1939721596}
   movementScript: {fileID: 426157134}
   cameraHeightTransitionSpeed: 10

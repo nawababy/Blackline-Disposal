@@ -110,6 +110,8 @@ public sealed class HotbarUI : MonoBehaviour
     private bool bankSubscribed;
     private bool saveManagerSubscribed;
 
+    private PlayerInventory subscribedInventory;
+
     private Coroutine referenceRoutine;
     private Coroutine cashPopupRoutine;
     private Coroutine bankPopupRoutine;
@@ -371,17 +373,30 @@ public sealed class HotbarUI : MonoBehaviour
 
     private void SubscribeToInventory()
     {
-        if (inventory == null ||
-            inventorySubscribed)
+        if (inventory == null)
         {
             return;
         }
 
-        inventory.CashChanged +=
+        if (inventorySubscribed &&
+            subscribedInventory == inventory)
+        {
+            return;
+        }
+
+        UnsubscribeFromInventory();
+
+        subscribedInventory =
+            inventory;
+
+        subscribedInventory.CashChanged +=
             UpdateCash;
 
-        inventory.SelectedSlotChanged +=
+        subscribedInventory.SelectedSlotChanged +=
             UpdateSelectedSlot;
+
+        subscribedInventory.HotbarItemChanged +=
+            HandleHotbarItemChanged;
 
         inventorySubscribed = true;
     }
@@ -402,15 +417,7 @@ public sealed class HotbarUI : MonoBehaviour
 
     private void UnsubscribeFromData()
     {
-        if (inventory != null &&
-            inventorySubscribed)
-        {
-            inventory.CashChanged -=
-                UpdateCash;
-
-            inventory.SelectedSlotChanged -=
-                UpdateSelectedSlot;
-        }
+        UnsubscribeFromInventory();
 
         if (sharedBankAccount != null &&
             bankSubscribed)
@@ -419,8 +426,26 @@ public sealed class HotbarUI : MonoBehaviour
                 UpdateBank;
         }
 
-        inventorySubscribed = false;
         bankSubscribed = false;
+    }
+
+    private void UnsubscribeFromInventory()
+    {
+        if (subscribedInventory != null &&
+            inventorySubscribed)
+        {
+            subscribedInventory.CashChanged -=
+                UpdateCash;
+
+            subscribedInventory.SelectedSlotChanged -=
+                UpdateSelectedSlot;
+
+            subscribedInventory.HotbarItemChanged -=
+                HandleHotbarItemChanged;
+        }
+
+        subscribedInventory = null;
+        inventorySubscribed = false;
     }
 
     // ==================================================
@@ -541,31 +566,58 @@ public sealed class HotbarUI : MonoBehaviour
              i < itemIcons.Length;
              i++)
         {
-            Image iconImage =
-                itemIcons[i];
-
-            if (iconImage == null)
-                continue;
-
-            HotbarItem item =
-                inventory != null &&
-                i < inventory.SlotCount
-                    ? inventory.GetItem(i)
-                    : null;
-
-            bool hasValidIcon =
-                item != null &&
-                item.IsValid &&
-                item.Icon != null;
-
-            iconImage.sprite =
-                hasValidIcon
-                    ? item.Icon
-                    : null;
-
-            iconImage.enabled =
-                hasValidIcon;
+            RefreshItemIcon(i);
         }
+    }
+
+    private void HandleHotbarItemChanged(
+        int slotIndex,
+        HotbarItem item
+    )
+    {
+        RefreshItemIcon(slotIndex);
+    }
+
+    private void RefreshItemIcon(
+        int slotIndex
+    )
+    {
+        if (itemIcons == null ||
+            slotIndex < 0 ||
+            slotIndex >= itemIcons.Length)
+        {
+            return;
+        }
+
+        Image iconImage =
+            itemIcons[slotIndex];
+
+        if (iconImage == null)
+            return;
+
+        PlayerInventory sourceInventory =
+            subscribedInventory != null
+                ? subscribedInventory
+                : inventory;
+
+        HotbarItem item =
+            sourceInventory != null &&
+            slotIndex < sourceInventory.SlotCount
+                ? sourceInventory.GetItem(slotIndex)
+                : null;
+
+        bool hasValidIcon =
+            item != null &&
+            item.IsValid &&
+            item.Icon != null;
+
+        iconImage.sprite =
+            hasValidIcon
+                ? item.Icon
+                : null;
+
+        iconImage.enabled =
+            hasValidIcon;
     }
 
     // ==================================================
