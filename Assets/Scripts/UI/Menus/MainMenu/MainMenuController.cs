@@ -158,12 +158,8 @@ public sealed class MainMenuController : MonoBehaviour
                 continue;
             }
 
-            bool hasSave =
-                GameManager.Instance != null &&
-                GameManager.Instance.HasSaveForSlot(i);
-
             slotNameText.text =
-                hasSave
+                GameManager.Instance != null
                     ? GameManager.Instance.GetSaveNameForSlot(i)
                     : emptySlotText;
         }

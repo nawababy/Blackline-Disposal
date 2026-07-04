@@ -88,11 +88,11 @@ public sealed class SaveSlotDeleteButtonUI : MonoBehaviour
         if (deleteButton == null)
             return;
 
-        bool hasSave =
+        bool canDelete =
             GameManager.Instance != null &&
-            GameManager.Instance.HasSaveForSlot(slotIndex);
+            GameManager.Instance.CanDeleteSaveForSlot(slotIndex);
 
-        deleteButton.gameObject.SetActive(hasSave);
+        deleteButton.gameObject.SetActive(canDelete);
     }
 
     private void OnDeleteButtonClicked()
@@ -100,7 +100,7 @@ public sealed class SaveSlotDeleteButtonUI : MonoBehaviour
         if (GameManager.Instance == null)
             return;
 
-        if (!GameManager.Instance.HasSaveForSlot(slotIndex))
+        if (!GameManager.Instance.CanDeleteSaveForSlot(slotIndex))
         {
             RefreshDeleteButton();
             return;

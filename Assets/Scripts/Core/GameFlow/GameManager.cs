@@ -205,17 +205,20 @@ public sealed class GameManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return;
 
-        SetCurrentSlot(slotIndex);
-
         if (SaveManager.Instance != null)
         {
-            SaveManager.Instance.CreateNewSave(
-                slotIndex,
-                $"Save {slotIndex + 1}",
-                overwriteExisting: true
-            );
+            bool saveCreated =
+                SaveManager.Instance.CreateNewSave(
+                    slotIndex,
+                    $"Save {slotIndex + 1}",
+                    overwriteExisting: true
+                );
+
+            if (!saveCreated)
+                return;
         }
 
+        SetCurrentSlot(slotIndex);
         LoadCharacterCreation();
     }
 
@@ -224,11 +227,31 @@ public sealed class GameManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return;
 
-        SetCurrentSlot(slotIndex);
+        SaveSlotStatus jsonStatus =
+            GetJsonSaveSlotStatus(slotIndex);
 
-        if (HasJsonSave(slotIndex))
+        if (jsonStatus.CanLoad)
         {
+            SetCurrentSlot(slotIndex);
             LoadGameScene();
+            return;
+        }
+
+        if (jsonStatus.State == SaveSlotState.Corrupted)
+        {
+            if (CurrentSlot == slotIndex)
+            {
+                CurrentSlot = -1;
+                PlayerPrefs.DeleteKey(CurrentSlotKey);
+                PlayerPrefs.Save();
+            }
+
+            Debug.LogWarning(
+                $"Speicherplatz {slotIndex + 1} ist beschaedigt " +
+                "und kann nicht fortgesetzt werden.",
+                gameObject
+            );
+
             return;
         }
 
@@ -238,6 +261,7 @@ public sealed class GameManager : MonoBehaviour
          */
         if (HasLegacySave(slotIndex))
         {
+            SetCurrentSlot(slotIndex);
             MigrateLegacySave(slotIndex);
             LoadGameScene();
             return;
@@ -255,9 +279,25 @@ public sealed class GameManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return false;
 
-        return
-            HasJsonSave(slotIndex) ||
-            HasLegacySave(slotIndex);
+        SaveSlotStatus jsonStatus =
+            GetJsonSaveSlotStatus(slotIndex);
+
+        return jsonStatus.CanDelete ||
+               HasLegacySave(slotIndex);
+    }
+
+    public bool CanDeleteSaveForSlot(
+        int slotIndex
+    )
+    {
+        if (!IsValidSlotIndex(slotIndex))
+            return false;
+
+        SaveSlotStatus jsonStatus =
+            GetJsonSaveSlotStatus(slotIndex);
+
+        return jsonStatus.CanDelete ||
+               HasLegacySave(slotIndex);
     }
 
     public string GetSaveNameForSlot(
@@ -267,12 +307,33 @@ public sealed class GameManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return "Empty";
 
-        if (HasJsonSave(slotIndex) &&
-            SaveManager.Instance != null)
+        SaveSlotStatus jsonStatus =
+            GetJsonSaveSlotStatus(slotIndex);
+
+        if (jsonStatus.State == SaveSlotState.Valid)
         {
-            return SaveManager.Instance
-                .GetSaveName(slotIndex);
+            return string.IsNullOrWhiteSpace(jsonStatus.DisplayName)
+                ? $"Save {slotIndex + 1}"
+                : jsonStatus.DisplayName;
         }
+
+        if (jsonStatus.State == SaveSlotState.Recoverable)
+        {
+            string displayName =
+                string.IsNullOrWhiteSpace(jsonStatus.DisplayName)
+                    ? "Recovery available"
+                    : jsonStatus.DisplayName;
+
+            return string.Equals(
+                    displayName,
+                    "Recovery available",
+                    StringComparison.Ordinal)
+                ? displayName
+                : displayName + " (Recovery available)";
+        }
+
+        if (jsonStatus.State == SaveSlotState.Corrupted)
+            return "Corrupted Save";
 
         if (HasLegacySave(slotIndex))
         {
@@ -285,13 +346,22 @@ public sealed class GameManager : MonoBehaviour
         return "Empty";
     }
 
-    private bool HasJsonSave(int slotIndex)
+    private SaveSlotStatus GetJsonSaveSlotStatus(
+        int slotIndex
+    )
     {
-        return
-            SaveManager.Instance != null &&
-            SaveManager.Instance.HasSave(
-                slotIndex
+        if (SaveManager.Instance == null)
+        {
+            return new SaveSlotStatus(
+                SaveSlotState.Empty,
+                "Empty",
+                string.Empty
             );
+        }
+
+        return SaveManager.Instance.GetSaveSlotStatus(
+            slotIndex
+        );
     }
 
     private bool HasLegacySave(int slotIndex)
@@ -359,6 +429,13 @@ public sealed class GameManager : MonoBehaviour
     {
         if (!IsValidSlotIndex(slotIndex))
             return;
+
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.ClearRecoveryLoadAuthorizationIfSlotChanges(
+                slotIndex
+            );
+        }
 
         CurrentSlot = slotIndex;
 

@@ -1,9 +1,43 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+public enum SaveSlotState
+{
+    Empty,
+    Valid,
+    Recoverable,
+    Corrupted
+}
+
+public readonly struct SaveSlotStatus
+{
+    public SaveSlotStatus(
+        SaveSlotState state,
+        string displayName,
+        string sourcePath
+    )
+    {
+        State = state;
+        DisplayName = displayName ?? string.Empty;
+        SourcePath = sourcePath ?? string.Empty;
+        CanLoad =
+            state == SaveSlotState.Valid ||
+            state == SaveSlotState.Recoverable;
+        CanDelete =
+            state != SaveSlotState.Empty;
+    }
+
+    public SaveSlotState State { get; }
+    public string DisplayName { get; }
+    public string SourcePath { get; }
+    public bool CanLoad { get; }
+    public bool CanDelete { get; }
+}
 
 [DisallowMultipleComponent]
 public sealed class SaveManager : MonoBehaviour
@@ -44,6 +78,38 @@ public sealed class SaveManager : MonoBehaviour
             Application.persistentDataPath,
             saveFolderName
         );
+
+    private enum SaveCandidateKind
+    {
+        Main,
+        Backup,
+        Temporary,
+        WriteTemporary
+    }
+
+    private readonly struct SaveCandidate
+    {
+        public SaveCandidate(
+            SaveCandidateKind kind,
+            string path,
+            SaveGameData data,
+            DateTime savedAtUtc
+        )
+        {
+            Kind = kind;
+            Path = path ?? string.Empty;
+            Data = data;
+            SavedAtUtc = savedAtUtc;
+        }
+
+        public SaveCandidateKind Kind { get; }
+        public string Path { get; }
+        public SaveGameData Data { get; }
+        public DateTime SavedAtUtc { get; }
+    }
+
+    private int recoveryLoadedSlotIndex = -1;
+    private string recoveryLoadedSourcePath = string.Empty;
 
     // ==================================================
     // WORLD TRASH DEFAULTS
@@ -237,29 +303,155 @@ public sealed class SaveManager : MonoBehaviour
     // SAVE INFORMATION
     // ==================================================
 
-    public bool HasSave(int slotIndex)
+    public SaveSlotStatus GetSaveSlotStatus(
+        int slotIndex
+    )
     {
         if (!IsValidSlotIndex(slotIndex))
-            return false;
+        {
+            return new SaveSlotStatus(
+                SaveSlotState.Empty,
+                "Empty",
+                string.Empty
+            );
+        }
 
-        return File.Exists(
-            GetSaveFilePath(slotIndex)
+        bool anyCandidateFileExists = false;
+
+        List<SaveCandidate> validCandidates =
+            new List<SaveCandidate>();
+
+        TryAddValidCandidate(
+            validCandidates,
+            SaveCandidateKind.Main,
+            GetSaveFilePath(slotIndex),
+            slotIndex,
+            ref anyCandidateFileExists
         );
+
+        TryAddValidCandidate(
+            validCandidates,
+            SaveCandidateKind.Backup,
+            GetBackupSaveFilePath(slotIndex),
+            slotIndex,
+            ref anyCandidateFileExists
+        );
+
+        TryAddValidCandidate(
+            validCandidates,
+            SaveCandidateKind.Temporary,
+            GetTemporarySaveFilePath(slotIndex),
+            slotIndex,
+            ref anyCandidateFileExists
+        );
+
+        TryAddValidCandidate(
+            validCandidates,
+            SaveCandidateKind.WriteTemporary,
+            GetWriteTemporarySaveFilePath(slotIndex),
+            slotIndex,
+            ref anyCandidateFileExists
+        );
+
+        if (!anyCandidateFileExists)
+        {
+            return new SaveSlotStatus(
+                SaveSlotState.Empty,
+                "Empty",
+                string.Empty
+            );
+        }
+
+        if (validCandidates.Count == 0)
+        {
+            return new SaveSlotStatus(
+                SaveSlotState.Corrupted,
+                "Corrupted Save",
+                string.Empty
+            );
+        }
+
+        bool hasValidMainSave =
+            TryGetCandidate(
+                validCandidates,
+                SaveCandidateKind.Main,
+                out SaveCandidate mainCandidate
+            );
+
+        if (hasValidMainSave)
+        {
+            SaveCandidate selectedCandidate =
+                mainCandidate;
+
+            bool hasNewerRecoveryCandidate = false;
+
+            foreach (SaveCandidate candidate in validCandidates)
+            {
+                if (candidate.Kind == SaveCandidateKind.Main)
+                    continue;
+
+                if (candidate.SavedAtUtc <=
+                    mainCandidate.SavedAtUtc)
+                {
+                    continue;
+                }
+
+                if (!hasNewerRecoveryCandidate ||
+                    candidate.SavedAtUtc >
+                    selectedCandidate.SavedAtUtc)
+                {
+                    selectedCandidate = candidate;
+                    hasNewerRecoveryCandidate = true;
+                }
+            }
+
+            if (!hasNewerRecoveryCandidate)
+            {
+                return CreateStatus(
+                    SaveSlotState.Valid,
+                    mainCandidate,
+                    slotIndex
+                );
+            }
+
+            return CreateStatus(
+                SaveSlotState.Recoverable,
+                selectedCandidate,
+                slotIndex
+            );
+        }
+
+        SaveCandidate newestCandidate =
+            GetNewestCandidate(validCandidates);
+
+        return CreateStatus(
+            SaveSlotState.Recoverable,
+            newestCandidate,
+            slotIndex
+        );
+    }
+
+    public bool HasSave(int slotIndex)
+    {
+        return GetSaveSlotStatus(slotIndex).CanLoad;
+    }
+
+    public bool HasAnySaveFiles(int slotIndex)
+    {
+        return GetSaveSlotStatus(slotIndex).CanDelete;
     }
 
     public string GetSaveName(int slotIndex)
     {
-        SaveGameData saveData =
-            ReadSaveFile(slotIndex);
+        SaveSlotStatus status =
+            GetSaveSlotStatus(slotIndex);
 
-        if (saveData == null ||
-            string.IsNullOrWhiteSpace(
-                saveData.saveName))
-        {
+        if (status.State == SaveSlotState.Empty)
             return "Empty";
-        }
 
-        return saveData.saveName;
+        return string.IsNullOrWhiteSpace(status.DisplayName)
+            ? $"Save {slotIndex + 1}"
+            : status.DisplayName;
     }
 
     public SaveGameData GetSaveData(
@@ -282,12 +474,29 @@ public sealed class SaveManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return false;
 
-        if (HasSave(slotIndex) &&
+        SaveSlotStatus status =
+            GetSaveSlotStatus(slotIndex);
+
+        if ((status.State == SaveSlotState.Recoverable ||
+             status.State == SaveSlotState.Corrupted) &&
+            overwriteExisting)
+        {
+            Debug.LogError(
+                $"Speicherplatz {slotIndex + 1} wird nicht ueberschrieben, " +
+                "weil er Recovery- oder Corruption-Daten enthaelt. " +
+                "Loesche den Slot zuerst bewusst.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (status.CanDelete &&
             !overwriteExisting)
         {
             Debug.LogWarning(
                 $"Auf Speicherplatz {slotIndex + 1} " +
-                "existiert bereits ein Spielstand.",
+                "existiert bereits ein Spielstand oder eine Save-Datei.",
                 gameObject
             );
 
@@ -310,6 +519,7 @@ public sealed class SaveManager : MonoBehaviour
             return false;
 
         CurrentSave = newSave;
+        ClearRecoveryLoadAuthorization(slotIndex);
 
         return true;
     }
@@ -352,21 +562,15 @@ public sealed class SaveManager : MonoBehaviour
             return false;
         }
 
-        if (!HasSave(slotIndex))
+        if (!CanWriteExistingSaveSlot(
+                slotIndex,
+                out SaveSlotStatus status))
         {
-            Debug.LogError(
-                $"Character-Auswahl fuer Slot {slotIndex + 1} " +
-                "konnte nicht gespeichert werden, weil keine " +
-                "bestehende Save-Datei gefunden wurde. " +
-                "StartNewGame muss den Slot vorher erstellen.",
-                gameObject
-            );
-
             return false;
         }
 
         SaveGameData saveData =
-            ReadSaveFile(slotIndex);
+            ReadSaveFile(status, slotIndex, true);
 
         if (saveData == null)
         {
@@ -383,18 +587,6 @@ public sealed class SaveManager : MonoBehaviour
         EnsureSaveDataSectionsExist(
             saveData
         );
-
-        if (saveData.slotIndex != slotIndex)
-        {
-            Debug.LogError(
-                $"Character-Auswahl fuer Slot {slotIndex + 1} " +
-                "konnte nicht gespeichert werden, weil die " +
-                $"Save-Datei Slot {saveData.slotIndex} enthaelt.",
-                gameObject
-            );
-
-            return false;
-        }
 
         saveData.player.characterId =
             normalizedCharacterId;
@@ -470,20 +662,15 @@ public sealed class SaveManager : MonoBehaviour
             return false;
         }
 
-        if (!HasSave(slotIndex))
+        if (!CanWriteExistingSaveSlot(
+                slotIndex,
+                out SaveSlotStatus status))
         {
-            Debug.LogError(
-                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
-                "gespeichert werden, weil keine bestehende Save-Datei " +
-                "gefunden wurde. StartNewGame muss den Slot vorher erstellen.",
-                gameObject
-            );
-
             return false;
         }
 
         SaveGameData saveData =
-            ReadSaveFile(slotIndex);
+            ReadSaveFile(status, slotIndex, true);
 
         if (saveData == null)
         {
@@ -500,18 +687,6 @@ public sealed class SaveManager : MonoBehaviour
         EnsureSaveDataSectionsExist(
             saveData
         );
-
-        if (saveData.slotIndex != slotIndex)
-        {
-            Debug.LogError(
-                $"Appearance fuer Slot {slotIndex + 1} konnte nicht " +
-                "gespeichert werden, weil die Save-Datei Slot " +
-                $"{saveData.slotIndex} enthaelt.",
-                gameObject
-            );
-
-            return false;
-        }
 
         appearanceCopy.appearanceVersion =
             CharacterAppearanceData.CurrentVersion;
@@ -573,23 +748,73 @@ public sealed class SaveManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
         {
             Debug.LogWarning(
-                $"Ungültiger Speicherplatz: {slotIndex}",
+                $"Ungueltiger Speicherplatz: {slotIndex}",
                 gameObject
             );
 
             return false;
         }
 
-        SaveGameData saveData =
-            ReadSaveFile(slotIndex);
+        SaveSlotStatus status =
+            GetSaveSlotStatus(slotIndex);
 
-        if (saveData == null)
+        SaveGameData saveData;
+
+        if (status.State == SaveSlotState.Empty)
         {
             saveData =
                 SaveGameData.CreateNew(
                     slotIndex,
                     $"Save {slotIndex + 1}"
                 );
+        }
+        else if (status.State == SaveSlotState.Valid)
+        {
+            saveData =
+                ReadSaveFile(status, slotIndex, true);
+        }
+        else if (status.State == SaveSlotState.Recoverable)
+        {
+            if (!IsRecoverySaveAuthorized(
+                    slotIndex,
+                    status.SourcePath))
+            {
+                Debug.LogError(
+                    $"Speichern von Slot {slotIndex + 1} wurde blockiert, " +
+                    "weil der Slot Recovery-Daten enthaelt, aber in " +
+                    "dieser Session nicht bewusst daraus geladen wurde.",
+                    gameObject
+                );
+
+                return false;
+            }
+
+            saveData =
+                CurrentSave != null &&
+                CurrentSave.slotIndex == slotIndex
+                    ? CurrentSave
+                    : ReadSaveFile(status, slotIndex, true);
+        }
+        else
+        {
+            Debug.LogError(
+                $"Speichern von Slot {slotIndex + 1} wurde blockiert, " +
+                "weil der Slot beschaedigte Save-Dateien enthaelt.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (saveData == null)
+        {
+            Debug.LogError(
+                $"Speichern von Slot {slotIndex + 1} wurde abgebrochen, " +
+                "weil kein gueltiger Ausgangs-Save gelesen werden konnte.",
+                gameObject
+            );
+
+            return false;
         }
 
         EnsureSaveDataSectionsExist(
@@ -605,6 +830,13 @@ public sealed class SaveManager : MonoBehaviour
 
         saveData.UpdateLastSavedTime();
 
+        bool wasRecoveryRepair =
+            status.State == SaveSlotState.Recoverable &&
+            IsRecoverySaveAuthorized(
+                slotIndex,
+                status.SourcePath
+            );
+
         bool wasWritten =
             WriteSaveFile(
                 slotIndex,
@@ -615,6 +847,17 @@ public sealed class SaveManager : MonoBehaviour
             return false;
 
         CurrentSave = saveData;
+
+        if (wasRecoveryRepair)
+        {
+            ClearRecoveryLoadAuthorization(slotIndex);
+
+            Debug.Log(
+                $"Recovery-Save fuer Slot {slotIndex + 1} wurde " +
+                "erfolgreich als gueltiger Hauptsave gespeichert.",
+                gameObject
+            );
+        }
 
         GameSaved?.Invoke(slotIndex);
 
@@ -1024,8 +1267,24 @@ public sealed class SaveManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return false;
 
+        SaveSlotStatus status =
+            GetSaveSlotStatus(slotIndex);
+
+        if (!status.CanLoad)
+        {
+            Debug.LogError(
+                $"Spielstand {slotIndex + 1} konnte nicht geladen werden. " +
+                $"Status: {status.State}.\n" +
+                GetSaveCandidateFailureSummary(slotIndex),
+                gameObject
+            );
+
+            ClearRecoveryLoadAuthorization(slotIndex);
+            return false;
+        }
+
         SaveGameData saveData =
-            ReadSaveFile(slotIndex);
+            ReadSaveFile(status, slotIndex, true);
 
         if (saveData == null)
         {
@@ -1035,6 +1294,7 @@ public sealed class SaveManager : MonoBehaviour
                 gameObject
             );
 
+            ClearRecoveryLoadAuthorization(slotIndex);
             return false;
         }
 
@@ -1043,6 +1303,22 @@ public sealed class SaveManager : MonoBehaviour
         );
 
         CurrentSave = saveData;
+
+        if (status.State == SaveSlotState.Recoverable)
+        {
+            recoveryLoadedSlotIndex = slotIndex;
+            recoveryLoadedSourcePath = status.SourcePath;
+
+            Debug.Log(
+                $"Spielstand {slotIndex + 1} wurde aus einem " +
+                $"Recovery-Kandidaten geladen:\n{status.SourcePath}",
+                gameObject
+            );
+        }
+        else
+        {
+            ClearRecoveryLoadAuthorization(slotIndex);
+        }
 
         if (applyToCurrentScene)
         {
@@ -1598,19 +1874,27 @@ public sealed class SaveManager : MonoBehaviour
         string saveFilePath =
             GetSaveFilePath(slotIndex);
 
+        string backupFilePath =
+            GetBackupSaveFilePath(slotIndex);
+
         string temporaryFilePath =
             GetTemporarySaveFilePath(slotIndex);
 
+        string writeTemporaryFilePath =
+            GetWriteTemporarySaveFilePath(slotIndex);
+
         bool saveExisted =
-            File.Exists(saveFilePath);
+            File.Exists(saveFilePath) ||
+            File.Exists(backupFilePath) ||
+            File.Exists(temporaryFilePath) ||
+            File.Exists(writeTemporaryFilePath);
 
         try
         {
-            if (File.Exists(saveFilePath))
-                File.Delete(saveFilePath);
-
-            if (File.Exists(temporaryFilePath))
-                File.Delete(temporaryFilePath);
+            DeleteFileIfExists(saveFilePath);
+            DeleteFileIfExists(backupFilePath);
+            DeleteFileIfExists(temporaryFilePath);
+            DeleteFileIfExists(writeTemporaryFilePath);
         }
         catch (Exception exception)
         {
@@ -1629,6 +1913,8 @@ public sealed class SaveManager : MonoBehaviour
             CurrentSave = null;
         }
 
+        ClearRecoveryLoadAuthorization(slotIndex);
+
         SaveDeleted?.Invoke(slotIndex);
 
         return saveExisted;
@@ -1642,49 +1928,48 @@ public sealed class SaveManager : MonoBehaviour
         int slotIndex
     )
     {
-        if (!IsValidSlotIndex(slotIndex))
-            return null;
+        SaveSlotStatus status =
+            GetSaveSlotStatus(slotIndex);
 
-        string saveFilePath =
-            GetSaveFilePath(slotIndex);
+        return ReadSaveFile(
+            status,
+            slotIndex,
+            false
+        );
+    }
 
-        if (!File.Exists(saveFilePath))
-            return null;
-
-        try
+    private SaveGameData ReadSaveFile(
+        SaveSlotStatus status,
+        int slotIndex,
+        bool logFailure
+    )
+    {
+        if (!status.CanLoad ||
+            string.IsNullOrWhiteSpace(status.SourcePath))
         {
-            string json =
-                File.ReadAllText(
-                    saveFilePath
-                );
+            return null;
+        }
 
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
-            SaveGameData saveData =
-                JsonUtility.FromJson<SaveGameData>(
-                    json
-                );
-
-            if (saveData == null)
-                return null;
-
-            EnsureSaveDataSectionsExist(
-                saveData
-            );
-
+        if (TryReadAndValidateSaveCandidate(
+                status.SourcePath,
+                slotIndex,
+                out SaveGameData saveData,
+                out string failureReason))
+        {
             return saveData;
         }
-        catch (Exception exception)
+
+        if (logFailure)
         {
             Debug.LogError(
-                $"Spielstand {slotIndex + 1} konnte nicht gelesen werden.\n" +
-                exception,
+                $"Spielstand {slotIndex + 1} konnte nicht aus " +
+                $"'{status.SourcePath}' gelesen werden.\n" +
+                failureReason,
                 gameObject
             );
-
-            return null;
         }
+
+        return null;
     }
 
     // ==================================================
@@ -1707,15 +1992,32 @@ public sealed class SaveManager : MonoBehaviour
         string saveFilePath =
             GetSaveFilePath(slotIndex);
 
+        string backupFilePath =
+            GetBackupSaveFilePath(slotIndex);
+
         string temporaryFilePath =
             GetTemporarySaveFilePath(slotIndex);
 
-        bool temporaryFileValidated = false;
+        string writeTemporaryFilePath =
+            GetWriteTemporarySaveFilePath(slotIndex);
+
+        SaveSlotStatus existingStatus =
+            GetSaveSlotStatus(slotIndex);
+
+        bool writeTemporaryFileValidated = false;
 
         try
         {
-            if (File.Exists(temporaryFilePath))
-                File.Delete(temporaryFilePath);
+            if (!PreserveRecoveryCandidateBeforeWrite(
+                    slotIndex,
+                    existingStatus,
+                    backupFilePath))
+            {
+                return false;
+            }
+
+            if (File.Exists(writeTemporaryFilePath))
+                File.Delete(writeTemporaryFilePath);
 
             string json =
                 JsonUtility.ToJson(
@@ -1724,41 +2026,90 @@ public sealed class SaveManager : MonoBehaviour
                 );
 
             File.WriteAllText(
-                temporaryFilePath,
+                writeTemporaryFilePath,
                 json
             );
 
             if (!ValidateTemporarySaveFile(
                     slotIndex,
-                    temporaryFilePath))
+                    writeTemporaryFilePath))
             {
                 DeleteTemporarySaveFileBestEffort(
                     slotIndex,
-                    temporaryFilePath
+                    writeTemporaryFilePath
                 );
 
                 return false;
             }
 
-            temporaryFileValidated = true;
+            writeTemporaryFileValidated = true;
+
+            bool mainSaveIsValid =
+                TryReadAndValidateSaveCandidate(
+                    saveFilePath,
+                    slotIndex,
+                    out _,
+                    out _
+                );
 
             if (File.Exists(saveFilePath))
             {
-                File.Replace(
-                    temporaryFilePath,
-                    saveFilePath,
-                    null
-                );
+                if (mainSaveIsValid)
+                {
+                    DeleteBackupBeforeReplace(
+                        slotIndex,
+                        backupFilePath
+                    );
+
+                    File.Replace(
+                        writeTemporaryFilePath,
+                        saveFilePath,
+                        backupFilePath
+                    );
+                }
+                else
+                {
+                    File.Replace(
+                        writeTemporaryFilePath,
+                        saveFilePath,
+                        null
+                    );
+                }
             }
             else
             {
                 File.Move(
-                    temporaryFilePath,
+                    writeTemporaryFilePath,
                     saveFilePath
                 );
             }
 
-            if (File.Exists(temporaryFilePath))
+            if (!TryReadAndValidateSaveCandidate(
+                    saveFilePath,
+                    slotIndex,
+                    out _,
+                    out string finalValidationFailure))
+            {
+                Debug.LogError(
+                    $"Spielstand {slotIndex + 1} wurde geschrieben, " +
+                    "konnte danach aber nicht validiert werden.\n" +
+                    finalValidationFailure,
+                    gameObject
+                );
+
+                return false;
+            }
+
+            if (File.Exists(writeTemporaryFilePath))
+            {
+                DeleteTemporarySaveFileBestEffort(
+                    slotIndex,
+                    writeTemporaryFilePath
+                );
+            }
+
+            if (existingStatus.State == SaveSlotState.Recoverable &&
+                File.Exists(temporaryFilePath))
             {
                 DeleteTemporarySaveFileBestEffort(
                     slotIndex,
@@ -1773,16 +2124,16 @@ public sealed class SaveManager : MonoBehaviour
             Debug.LogError(
                 $"Spielstand {slotIndex + 1} konnte nicht sicher gespeichert werden.\n" +
                 $"Ziel: {saveFilePath}\n" +
-                $"Temporäre Datei: {temporaryFilePath}\n" +
+                $"Temporäre Datei: {writeTemporaryFilePath}\n" +
                 exception,
                 gameObject
             );
 
-            if (!temporaryFileValidated)
+            if (!writeTemporaryFileValidated)
             {
                 DeleteTemporarySaveFileBestEffort(
                     slotIndex,
-                    temporaryFilePath
+                    writeTemporaryFilePath
                 );
             }
 
@@ -1795,113 +2146,24 @@ public sealed class SaveManager : MonoBehaviour
         string temporaryFilePath
     )
     {
-        if (!File.Exists(temporaryFilePath))
+        if (TryReadAndValidateSaveCandidate(
+                temporaryFilePath,
+                expectedSlotIndex,
+                out _,
+                out string failureReason))
         {
-            Debug.LogError(
-                $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
-                $"wurde nicht erstellt.\n{temporaryFilePath}",
-                gameObject
-            );
-
-            return false;
-        }
-
-        FileInfo temporaryFileInfo =
-            new FileInfo(temporaryFilePath);
-
-        if (temporaryFileInfo.Length <= 0L)
-        {
-            Debug.LogError(
-                $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
-                $"ist leer.\n{temporaryFilePath}",
-                gameObject
-            );
-
-            return false;
-        }
-
-        try
-        {
-            string json =
-                File.ReadAllText(
-                    temporaryFilePath
-                );
-
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                Debug.LogError(
-                    $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
-                    $"enthält keinen gültigen JSON-Inhalt.\n{temporaryFilePath}",
-                    gameObject
-                );
-
-                return false;
-            }
-
-            SaveGameData temporarySaveData =
-                JsonUtility.FromJson<SaveGameData>(
-                    json
-                );
-
-            if (temporarySaveData == null)
-            {
-                Debug.LogError(
-                    $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
-                    $"konnte nicht als SaveGameData gelesen werden.\n" +
-                    temporaryFilePath,
-                    gameObject
-                );
-
-                return false;
-            }
-
-            if (temporarySaveData.player == null ||
-                temporarySaveData.sharedWorld == null ||
-                temporarySaveData.player.position == null ||
-                temporarySaveData.player.rotation == null ||
-                temporarySaveData.player.hotbarSlots == null ||
-                temporarySaveData.player.appearance == null ||
-                temporarySaveData.sharedWorld.facilities == null ||
-                temporarySaveData.sharedWorld.worldTrashObjects == null)
-            {
-                Debug.LogError(
-                    $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
-                    $"enthält nicht alle notwendigen Save-Bereiche.\n" +
-                    temporaryFilePath,
-                    gameObject
-                );
-
-                return false;
-            }
-
-            if (temporarySaveData.slotIndex !=
-                expectedSlotIndex)
-            {
-                Debug.LogError(
-                    $"Temporäre Save-Datei hat den falschen Slot. " +
-                    $"Erwartet: {expectedSlotIndex}, " +
-                    $"gefunden: {temporarySaveData.slotIndex}.\n" +
-                    temporaryFilePath,
-                    gameObject
-                );
-
-                return false;
-            }
-
             return true;
         }
-        catch (Exception exception)
-        {
-            Debug.LogError(
-                $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
-                $"konnte nicht validiert werden.\n" +
-                $"{temporaryFilePath}\n" +
-                exception,
-                gameObject
-            );
 
-            return false;
-        }
+        Debug.LogError(
+            $"Temporäre Save-Datei für Slot {expectedSlotIndex + 1} " +
+            "konnte nicht validiert werden.\n" +
+            $"{temporaryFilePath}\n" +
+            failureReason,
+            gameObject
+        );
+
+        return false;
     }
 
     private void DeleteTemporarySaveFileBestEffort(
@@ -1924,6 +2186,508 @@ public sealed class SaveManager : MonoBehaviour
                 gameObject
             );
         }
+    }
+
+    private bool TryReadAndValidateSaveCandidate(
+        string path,
+        int expectedSlotIndex,
+        out SaveGameData data,
+        out string failureReason
+    )
+    {
+        data = null;
+        failureReason = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            failureReason = "Dateipfad fehlt.";
+            return false;
+        }
+
+        if (!File.Exists(path))
+        {
+            failureReason = "Datei existiert nicht.";
+            return false;
+        }
+
+        try
+        {
+            FileInfo fileInfo =
+                new FileInfo(path);
+
+            if (fileInfo.Length <= 0L)
+            {
+                failureReason = "Datei ist leer.";
+                return false;
+            }
+
+            string json =
+                File.ReadAllText(path);
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                failureReason = "JSON-Inhalt ist leer.";
+                return false;
+            }
+
+            if (!ContainsJsonField(json, "saveVersion") ||
+                !ContainsJsonField(json, "slotIndex"))
+            {
+                failureReason =
+                    "Pflichtfelder saveVersion oder slotIndex fehlen.";
+                return false;
+            }
+
+            SaveGameData saveData =
+                JsonUtility.FromJson<SaveGameData>(
+                    json
+                );
+
+            if (saveData == null)
+            {
+                failureReason =
+                    "JSON konnte nicht als SaveGameData gelesen werden.";
+                return false;
+            }
+
+            if (saveData.saveVersion <= 0)
+            {
+                failureReason =
+                    $"Ungueltige Save-Version: {saveData.saveVersion}.";
+                return false;
+            }
+
+            if (saveData.saveVersion >
+                SaveGameData.CurrentSaveVersion)
+            {
+                failureReason =
+                    $"Save-Version {saveData.saveVersion} ist neuer " +
+                    $"als unterstuetzt ({SaveGameData.CurrentSaveVersion}).";
+                return false;
+            }
+
+            if (saveData.slotIndex != expectedSlotIndex)
+            {
+                failureReason =
+                    $"Slot-Mismatch. Erwartet: {expectedSlotIndex}, " +
+                    $"gefunden: {saveData.slotIndex}.";
+                return false;
+            }
+
+            EnsureSaveDataSectionsExist(saveData);
+
+            if (saveData.player == null ||
+                saveData.sharedWorld == null ||
+                saveData.player.position == null ||
+                saveData.player.rotation == null ||
+                saveData.player.hotbarSlots == null ||
+                saveData.player.appearance == null ||
+                saveData.sharedWorld.facilities == null ||
+                saveData.sharedWorld.worldTrashObjects == null)
+            {
+                failureReason =
+                    "Save enthaelt nicht alle notwendigen Bereiche.";
+                return false;
+            }
+
+            data = saveData;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            failureReason = exception.ToString();
+            return false;
+        }
+    }
+
+    private bool ContainsJsonField(
+        string json,
+        string fieldName
+    )
+    {
+        return json.IndexOf(
+            "\"" + fieldName + "\"",
+            StringComparison.Ordinal
+        ) >= 0;
+    }
+
+    private void TryAddValidCandidate(
+        List<SaveCandidate> validCandidates,
+        SaveCandidateKind kind,
+        string path,
+        int slotIndex,
+        ref bool anyCandidateFileExists
+    )
+    {
+        if (!File.Exists(path))
+            return;
+
+        anyCandidateFileExists = true;
+
+        if (!TryReadAndValidateSaveCandidate(
+                path,
+                slotIndex,
+                out SaveGameData saveData,
+                out _))
+        {
+            return;
+        }
+
+        validCandidates.Add(
+            new SaveCandidate(
+                kind,
+                path,
+                saveData,
+                GetSaveTimestampUtc(saveData, path)
+            )
+        );
+    }
+
+    private SaveSlotStatus CreateStatus(
+        SaveSlotState state,
+        SaveCandidate candidate,
+        int slotIndex
+    )
+    {
+        return new SaveSlotStatus(
+            state,
+            GetCandidateDisplayName(
+                candidate.Data,
+                slotIndex
+            ),
+            candidate.Path
+        );
+    }
+
+    private string GetCandidateDisplayName(
+        SaveGameData saveData,
+        int slotIndex
+    )
+    {
+        if (saveData != null &&
+            !string.IsNullOrWhiteSpace(saveData.saveName))
+        {
+            return saveData.saveName.Trim();
+        }
+
+        return $"Save {slotIndex + 1}";
+    }
+
+    private DateTime GetSaveTimestampUtc(
+        SaveGameData saveData,
+        string path
+    )
+    {
+        if (saveData != null &&
+            !string.IsNullOrWhiteSpace(saveData.lastSavedUtc) &&
+            DateTime.TryParse(
+                saveData.lastSavedUtc,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind,
+                out DateTime parsedTime))
+        {
+            return parsedTime.ToUniversalTime();
+        }
+
+        return File.GetLastWriteTimeUtc(path);
+    }
+
+    private bool TryGetCandidate(
+        List<SaveCandidate> candidates,
+        SaveCandidateKind kind,
+        out SaveCandidate candidate
+    )
+    {
+        foreach (SaveCandidate currentCandidate in candidates)
+        {
+            if (currentCandidate.Kind != kind)
+                continue;
+
+            candidate = currentCandidate;
+            return true;
+        }
+
+        candidate = default;
+        return false;
+    }
+
+    private SaveCandidate GetNewestCandidate(
+        List<SaveCandidate> candidates
+    )
+    {
+        SaveCandidate selectedCandidate =
+            candidates[0];
+
+        for (int i = 1;
+             i < candidates.Count;
+             i++)
+        {
+            if (candidates[i].SavedAtUtc >
+                selectedCandidate.SavedAtUtc)
+            {
+                selectedCandidate = candidates[i];
+            }
+        }
+
+        return selectedCandidate;
+    }
+
+    private string GetSaveCandidateFailureSummary(
+        int slotIndex
+    )
+    {
+        List<string> failureLines =
+            new List<string>();
+
+        AppendCandidateFailure(
+            failureLines,
+            "Main",
+            GetSaveFilePath(slotIndex),
+            slotIndex
+        );
+
+        AppendCandidateFailure(
+            failureLines,
+            "Backup",
+            GetBackupSaveFilePath(slotIndex),
+            slotIndex
+        );
+
+        AppendCandidateFailure(
+            failureLines,
+            "Temporary",
+            GetTemporarySaveFilePath(slotIndex),
+            slotIndex
+        );
+
+        AppendCandidateFailure(
+            failureLines,
+            "WriteTemporary",
+            GetWriteTemporarySaveFilePath(slotIndex),
+            slotIndex
+        );
+
+        return failureLines.Count == 0
+            ? "Keine Save-Kandidatendatei vorhanden."
+            : string.Join("\n", failureLines);
+    }
+
+    private void AppendCandidateFailure(
+        List<string> failureLines,
+        string label,
+        string path,
+        int slotIndex
+    )
+    {
+        if (!File.Exists(path))
+            return;
+
+        if (TryReadAndValidateSaveCandidate(
+                path,
+                slotIndex,
+                out _,
+                out string failureReason))
+        {
+            return;
+        }
+
+        failureLines.Add(
+            label + ": " + failureReason + " (" + path + ")"
+        );
+    }
+
+    private bool PreserveRecoveryCandidateBeforeWrite(
+        int slotIndex,
+        SaveSlotStatus existingStatus,
+        string backupFilePath
+    )
+    {
+        if (existingStatus.State != SaveSlotState.Recoverable)
+            return true;
+
+        if (string.IsNullOrWhiteSpace(existingStatus.SourcePath))
+            return true;
+
+        if (string.Equals(
+                existingStatus.SourcePath,
+                backupFilePath,
+                StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        if (!TryReadAndValidateSaveCandidate(
+                existingStatus.SourcePath,
+                slotIndex,
+                out _,
+                out string failureReason))
+        {
+            Debug.LogError(
+                $"Recovery-Kandidat fuer Slot {slotIndex + 1} " +
+                "konnte vor dem Speichern nicht als Backup erhalten werden.\n" +
+                failureReason,
+                gameObject
+            );
+
+            return false;
+        }
+
+        try
+        {
+            if (File.Exists(backupFilePath))
+                File.Delete(backupFilePath);
+
+            File.Copy(
+                existingStatus.SourcePath,
+                backupFilePath
+            );
+
+            if (!TryReadAndValidateSaveCandidate(
+                    backupFilePath,
+                    slotIndex,
+                    out _,
+                    out string backupFailureReason))
+            {
+                Debug.LogError(
+                    $"Backup fuer Slot {slotIndex + 1} wurde erstellt, " +
+                    "ist aber nicht gueltig.\n" +
+                    backupFailureReason,
+                    gameObject
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError(
+                $"Recovery-Kandidat fuer Slot {slotIndex + 1} " +
+                "konnte nicht als Backup erhalten werden.\n" +
+                exception,
+                gameObject
+            );
+
+            return false;
+        }
+    }
+
+    private void DeleteBackupBeforeReplace(
+        int slotIndex,
+        string backupFilePath
+    )
+    {
+        if (!File.Exists(backupFilePath))
+            return;
+
+        try
+        {
+            File.Delete(backupFilePath);
+        }
+        catch (Exception exception)
+        {
+            throw new IOException(
+                $"Backup-Datei fuer Slot {slotIndex + 1} " +
+                "konnte vor File.Replace nicht entfernt werden.",
+                exception
+            );
+        }
+    }
+
+    private void DeleteFileIfExists(
+        string path
+    )
+    {
+        if (File.Exists(path))
+            File.Delete(path);
+    }
+
+    private bool CanWriteExistingSaveSlot(
+        int slotIndex,
+        out SaveSlotStatus status
+    )
+    {
+        status =
+            GetSaveSlotStatus(slotIndex);
+
+        if (status.State == SaveSlotState.Empty)
+        {
+            Debug.LogError(
+                $"Slot {slotIndex + 1} kann nicht aktualisiert werden, " +
+                "weil keine bestehende Save-Datei vorhanden ist.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (status.State == SaveSlotState.Corrupted)
+        {
+            Debug.LogError(
+                $"Slot {slotIndex + 1} kann nicht aktualisiert werden, " +
+                "weil der Save beschaedigt ist.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        if (status.State == SaveSlotState.Recoverable &&
+            !IsRecoverySaveAuthorized(slotIndex, status.SourcePath))
+        {
+            Debug.LogError(
+                $"Slot {slotIndex + 1} kann nicht aktualisiert werden, " +
+                "weil zuerst bewusst aus dem Recovery-Kandidaten " +
+                "geladen werden muss.",
+                gameObject
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsRecoverySaveAuthorized(
+        int slotIndex,
+        string sourcePath
+    )
+    {
+        return recoveryLoadedSlotIndex == slotIndex &&
+               !string.IsNullOrWhiteSpace(recoveryLoadedSourcePath) &&
+               string.Equals(
+                   recoveryLoadedSourcePath,
+                   sourcePath,
+                   StringComparison.Ordinal
+               );
+    }
+
+    public void ClearRecoveryLoadAuthorizationIfSlotChanges(
+        int slotIndex
+    )
+    {
+        if (recoveryLoadedSlotIndex >= 0 &&
+            recoveryLoadedSlotIndex != slotIndex)
+        {
+            ClearRecoveryLoadAuthorization();
+        }
+    }
+
+    private void ClearRecoveryLoadAuthorization(
+        int slotIndex
+    )
+    {
+        if (recoveryLoadedSlotIndex != slotIndex)
+            return;
+
+        ClearRecoveryLoadAuthorization();
+    }
+
+    private void ClearRecoveryLoadAuthorization()
+    {
+        recoveryLoadedSlotIndex = -1;
+        recoveryLoadedSourcePath = string.Empty;
     }
 
     // ==================================================
@@ -2007,12 +2771,28 @@ public sealed class SaveManager : MonoBehaviour
         );
     }
 
+    private string GetBackupSaveFilePath(
+        int slotIndex
+    )
+    {
+        return GetSaveFilePath(slotIndex) +
+               ".bak";
+    }
+
     private string GetTemporarySaveFilePath(
         int slotIndex
     )
     {
         return GetSaveFilePath(slotIndex) +
                ".tmp";
+    }
+
+    private string GetWriteTemporarySaveFilePath(
+        int slotIndex
+    )
+    {
+        return GetSaveFilePath(slotIndex) +
+               ".write.tmp";
     }
 
     private bool IsValidSlotIndex(
