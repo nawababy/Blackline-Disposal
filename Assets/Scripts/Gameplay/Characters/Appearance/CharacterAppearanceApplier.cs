@@ -150,7 +150,7 @@ public sealed class CharacterAppearanceApplier : MonoBehaviour
             return false;
         }
 
-        database.ValidateDatabase(database);
+        database.EnsureValidated(database);
 
         CharacterAppearanceData resolvedAppearance = new CharacterAppearanceData();
         bool resolved = mode == ApplyMode.Runtime

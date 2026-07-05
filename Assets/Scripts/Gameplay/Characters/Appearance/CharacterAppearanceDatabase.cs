@@ -34,6 +34,10 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
 
     private static readonly List<AppearanceDefinition> EmptyDefinitions = new List<AppearanceDefinition>(0);
 
+    [NonSerialized] private bool validationCacheInitialized;
+    [NonSerialized] private bool validationCacheDirty = true;
+    [NonSerialized] private bool cachedValidationResult;
+
     [Serializable]
     public sealed class BodyTypeDefinition
     {
@@ -550,11 +554,39 @@ public sealed class CharacterAppearanceDatabase : ScriptableObject
         valid &= ValidateDefinitions(CharacterAppearanceCategory.Gloves, bodyTypeIds, definitionIds, bodySkinKeys, logContext);
         valid &= ValidateDefinitions(CharacterAppearanceCategory.FullBody, bodyTypeIds, definitionIds, bodySkinKeys, logContext);
         valid &= ValidateDefaults(logContext);
+
+        cachedValidationResult = valid;
+        validationCacheInitialized = true;
+        validationCacheDirty = false;
+
         return valid;
+    }
+
+    public bool EnsureValidated(UnityEngine.Object logContext = null)
+    {
+        if (validationCacheInitialized && !validationCacheDirty)
+        {
+            return cachedValidationResult;
+        }
+
+        return ValidateDatabase(logContext);
+    }
+
+    public void InvalidateValidationCache()
+    {
+        validationCacheInitialized = false;
+        validationCacheDirty = true;
+        cachedValidationResult = false;
+    }
+
+    private void OnEnable()
+    {
+        InvalidateValidationCache();
     }
 
     private void OnValidate()
     {
+        InvalidateValidationCache();
         ValidateDatabase(this);
     }
 
