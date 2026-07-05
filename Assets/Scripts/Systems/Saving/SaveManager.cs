@@ -1193,12 +1193,6 @@ public sealed class SaveManager : MonoBehaviour
             WorldTrashSaveObject worldTrash =
                 entry.Value;
 
-            /*
-             * Deaktivierte Müllobjekte gelten als entfernt.
-             */
-            if (!worldTrash.gameObject.activeInHierarchy)
-                continue;
-
             string worldObjectId =
                 entry.Key;
 
