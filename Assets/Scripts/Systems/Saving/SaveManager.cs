@@ -73,11 +73,44 @@ public sealed class SaveManager : MonoBehaviour
 
     public SaveGameData CurrentSave { get; private set; }
 
-    public string SaveDirectoryPath =>
-        Path.Combine(
-            Application.persistentDataPath,
-            saveFolderName
-        );
+#if UNITY_EDITOR
+    private static string saveDirectoryPathOverrideForTests =
+        string.Empty;
+
+    public static void SetSaveDirectoryPathOverrideForTests(
+        string path
+    )
+    {
+        saveDirectoryPathOverrideForTests =
+            string.IsNullOrWhiteSpace(path)
+                ? string.Empty
+                : path.Trim();
+    }
+
+    public static void ClearSaveDirectoryPathOverrideForTests()
+    {
+        saveDirectoryPathOverrideForTests = string.Empty;
+    }
+#endif
+
+    public string SaveDirectoryPath
+    {
+        get
+        {
+#if UNITY_EDITOR
+            if (!string.IsNullOrWhiteSpace(
+                    saveDirectoryPathOverrideForTests))
+            {
+                return saveDirectoryPathOverrideForTests;
+            }
+#endif
+
+            return Path.Combine(
+                Application.persistentDataPath,
+                saveFolderName
+            );
+        }
+    }
 
     private enum SaveCandidateKind
     {
