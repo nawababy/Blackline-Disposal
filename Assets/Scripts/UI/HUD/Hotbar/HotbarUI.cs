@@ -392,6 +392,9 @@ public sealed class HotbarUI : MonoBehaviour
         subscribedInventory.CashChanged +=
             UpdateCash;
 
+        subscribedInventory.CashGained +=
+            OnCashGained;
+
         subscribedInventory.SelectedSlotChanged +=
             UpdateSelectedSlot;
 
@@ -436,6 +439,9 @@ public sealed class HotbarUI : MonoBehaviour
         {
             subscribedInventory.CashChanged -=
                 UpdateCash;
+
+            subscribedInventory.CashGained -=
+                OnCashGained;
 
             subscribedInventory.SelectedSlotChanged -=
                 UpdateSelectedSlot;
@@ -628,33 +634,24 @@ public sealed class HotbarUI : MonoBehaviour
         int newAmount
     )
     {
-        /*
-         * Während des Speicherladens wird der neue Wert
-         * nur als Ausgangswert übernommen.
-         */
-        if (!allowMoneyGainPopups)
+        if (!cashInitialized ||
+            newAmount != lastCash)
         {
             lastCash = newAmount;
             cashInitialized = true;
-
-            SetCashText(newAmount);
-
-            return;
         }
-
-        if (cashInitialized)
-        {
-            int difference =
-                newAmount - lastCash;
-
-            if (difference > 0)
-                ShowCashGain(difference);
-        }
-
-        lastCash = newAmount;
-        cashInitialized = true;
 
         SetCashText(newAmount);
+    }
+
+    private void OnCashGained(
+        int amount
+    )
+    {
+        if (amount <= 0)
+            return;
+
+        ShowCashGain(amount);
     }
 
     private void UpdateBank(

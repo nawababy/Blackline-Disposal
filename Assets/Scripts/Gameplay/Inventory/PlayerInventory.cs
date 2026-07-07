@@ -88,6 +88,7 @@ public sealed class PlayerInventory : MonoBehaviour
     // ==================================================
 
     public event Action<int> CashChanged;
+    public event Action<int> CashGained;
     public event Action<int> SelectedSlotChanged;
 
     /*
@@ -503,11 +504,24 @@ public sealed class PlayerInventory : MonoBehaviour
         if (roundedAmount <= 0)
             return;
 
+        int previousCash =
+            currentCash;
+
         currentCash += roundedAmount;
+
+        int actualAddedAmount =
+            currentCash - previousCash;
 
         CashChanged?.Invoke(
             currentCash
         );
+
+        if (actualAddedAmount > 0)
+        {
+            CashGained?.Invoke(
+                actualAddedAmount
+            );
+        }
     }
 
     public bool TrySpendCash(
