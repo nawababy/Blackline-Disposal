@@ -154,6 +154,341 @@ public sealed class SaveManagerFileRegressionTests
         AssertAllGeneratedFilesStayInsideTestDirectory();
     }
 
+    [Test]
+    public void GetSaveSlotStatus_CorruptedMainOnly_ReturnsCorrupted()
+    {
+        WriteInvalidSaveCandidate(
+            GetMainSavePath(0)
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Corrupted)
+        );
+
+        Assert.That(status.CanLoad, Is.False);
+        Assert.That(status.CanDelete, Is.True);
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_ValidBackupWithoutMain_ReturnsRecoverable()
+    {
+        string mainSavePath =
+            CreateValidMainSave(0, "Backup Recovery Save");
+
+        string backupSavePath =
+            GetBackupSavePath(0);
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            backupSavePath
+        );
+
+        DeleteInsideTestDirectory(mainSavePath);
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Recoverable)
+        );
+
+        Assert.That(status.CanLoad, Is.True);
+        Assert.That(status.CanDelete, Is.True);
+        Assert.That(
+            NormalizeDirectoryPath(status.SourcePath),
+            Is.EqualTo(NormalizeDirectoryPath(backupSavePath))
+        );
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_ValidBackupWithCorruptedMain_ReturnsRecoverable()
+    {
+        string mainSavePath =
+            CreateValidMainSave(0, "Backup With Corrupted Main");
+
+        string backupSavePath =
+            GetBackupSavePath(0);
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            backupSavePath
+        );
+
+        WriteInvalidSaveCandidate(mainSavePath);
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Recoverable)
+        );
+
+        Assert.That(status.CanLoad, Is.True);
+        Assert.That(status.CanDelete, Is.True);
+        Assert.That(
+            NormalizeDirectoryPath(status.SourcePath),
+            Is.EqualTo(NormalizeDirectoryPath(backupSavePath))
+        );
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_ValidTemporaryWithoutMain_ReturnsRecoverable()
+    {
+        string mainSavePath =
+            CreateValidMainSave(0, "Temporary Recovery Save");
+
+        string temporarySavePath =
+            GetTemporarySavePath(0);
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            temporarySavePath
+        );
+
+        DeleteInsideTestDirectory(mainSavePath);
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Recoverable)
+        );
+
+        Assert.That(status.CanLoad, Is.True);
+        Assert.That(status.CanDelete, Is.True);
+        Assert.That(
+            NormalizeDirectoryPath(status.SourcePath),
+            Is.EqualTo(NormalizeDirectoryPath(temporarySavePath))
+        );
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_ValidWriteTemporaryWithoutMain_ReturnsRecoverable()
+    {
+        string mainSavePath =
+            CreateValidMainSave(0, "Write Temporary Recovery Save");
+
+        string writeTemporarySavePath =
+            GetWriteTemporarySavePath(0);
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            writeTemporarySavePath
+        );
+
+        DeleteInsideTestDirectory(mainSavePath);
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Recoverable)
+        );
+
+        Assert.That(status.CanLoad, Is.True);
+        Assert.That(status.CanDelete, Is.True);
+        Assert.That(
+            NormalizeDirectoryPath(status.SourcePath),
+            Is.EqualTo(NormalizeDirectoryPath(writeTemporarySavePath))
+        );
+    }
+
+    [Test]
+    public void DeleteSave_RemovesAllSlotCandidateFiles()
+    {
+        string mainSavePath =
+            CreateValidMainSave(0, "Delete Candidates Save");
+
+        string backupSavePath =
+            GetBackupSavePath(0);
+
+        string temporarySavePath =
+            GetTemporarySavePath(0);
+
+        string writeTemporarySavePath =
+            GetWriteTemporarySavePath(0);
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            backupSavePath
+        );
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            temporarySavePath
+        );
+
+        CopyInsideTestDirectory(
+            mainSavePath,
+            writeTemporarySavePath
+        );
+
+        Assert.That(File.Exists(mainSavePath), Is.True);
+        Assert.That(File.Exists(backupSavePath), Is.True);
+        Assert.That(File.Exists(temporarySavePath), Is.True);
+        Assert.That(File.Exists(writeTemporarySavePath), Is.True);
+
+        bool wasDeleted =
+            saveManager.DeleteSave(0);
+
+        Assert.That(wasDeleted, Is.True);
+        Assert.That(File.Exists(mainSavePath), Is.False);
+        Assert.That(File.Exists(backupSavePath), Is.False);
+        Assert.That(File.Exists(temporarySavePath), Is.False);
+        Assert.That(File.Exists(writeTemporarySavePath), Is.False);
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Empty)
+        );
+
+        Assert.That(status.CanLoad, Is.False);
+        Assert.That(status.CanDelete, Is.False);
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_AllCandidatesInvalid_ReturnsCorrupted()
+    {
+        WriteInvalidSaveCandidate(
+            GetMainSavePath(0)
+        );
+
+        WriteInvalidSaveCandidate(
+            GetBackupSavePath(0)
+        );
+
+        WriteInvalidSaveCandidate(
+            GetTemporarySavePath(0)
+        );
+
+        WriteInvalidSaveCandidate(
+            GetWriteTemporarySavePath(0)
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Corrupted)
+        );
+
+        Assert.That(
+            status.State,
+            Is.Not.EqualTo(SaveSlotState.Recoverable)
+        );
+
+        Assert.That(status.CanLoad, Is.False);
+        Assert.That(status.CanDelete, Is.True);
+    }
+
+    private string CreateValidMainSave(
+        int slotIndex,
+        string displayName
+    )
+    {
+        bool wasCreated =
+            saveManager.CreateNewSave(
+                slotIndex,
+                displayName,
+                false
+            );
+
+        Assert.That(wasCreated, Is.True);
+
+        string mainSavePath =
+            GetMainSavePath(slotIndex);
+
+        Assert.That(
+            File.Exists(mainSavePath),
+            Is.True
+        );
+
+        return mainSavePath;
+    }
+
+    private string GetMainSavePath(
+        int slotIndex
+    )
+    {
+        return Path.Combine(
+            testSaveDirectory,
+            "save_slot_" + slotIndex + ".json"
+        );
+    }
+
+    private string GetBackupSavePath(
+        int slotIndex
+    )
+    {
+        return GetMainSavePath(slotIndex) +
+               ".bak";
+    }
+
+    private string GetTemporarySavePath(
+        int slotIndex
+    )
+    {
+        return GetMainSavePath(slotIndex) +
+               ".tmp";
+    }
+
+    private string GetWriteTemporarySavePath(
+        int slotIndex
+    )
+    {
+        return GetMainSavePath(slotIndex) +
+               ".write.tmp";
+    }
+
+    private void CopyInsideTestDirectory(
+        string sourcePath,
+        string targetPath
+    )
+    {
+        AssertPathInsideTestDirectory(sourcePath);
+        AssertPathInsideTestDirectory(targetPath);
+
+        File.Copy(
+            sourcePath,
+            targetPath,
+            true
+        );
+    }
+
+    private void WriteInvalidSaveCandidate(
+        string path
+    )
+    {
+        AssertPathInsideTestDirectory(path);
+
+        File.WriteAllText(
+            path,
+            "{ \"saveVersion\": 4, \"slotIndex\": 0,"
+        );
+    }
+
+    private void DeleteInsideTestDirectory(
+        string path
+    )
+    {
+        AssertPathInsideTestDirectory(path);
+
+        if (File.Exists(path))
+            File.Delete(path);
+    }
+
     private void AssertAllGeneratedFilesStayInsideTestDirectory()
     {
         string normalizedTestDirectory =
@@ -176,6 +511,36 @@ public sealed class SaveManagerFileRegressionTests
                 "A generated save test file was outside the temporary test directory."
             );
         }
+    }
+
+    private void AssertPathInsideTestDirectory(
+        string path
+    )
+    {
+        Assert.That(
+            string.IsNullOrWhiteSpace(path),
+            Is.False,
+            "Path must not be empty."
+        );
+
+        string normalizedTestDirectory =
+            NormalizeDirectoryPath(testSaveDirectory);
+
+        string normalizedPath =
+            Path.GetFullPath(path);
+
+        string testDirectoryPrefix =
+            normalizedTestDirectory +
+            Path.DirectorySeparatorChar;
+
+        Assert.That(
+            normalizedPath.StartsWith(
+                testDirectoryPrefix,
+                StringComparison.OrdinalIgnoreCase
+            ),
+            Is.True,
+            "Path must stay inside the isolated SaveManager test directory."
+        );
     }
 
     private void DeleteTemporaryTestDirectory()
