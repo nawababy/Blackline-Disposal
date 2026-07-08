@@ -2,6 +2,30 @@ using UnityEngine;
 
 public sealed class CarryTrash : MonoBehaviour
 {
+    public readonly struct PickupTargetResult
+    {
+        public Trash Trash { get; }
+        public Rigidbody Rigidbody { get; }
+        public Collider Collider { get; }
+        public RaycastHit RaycastHit { get; }
+        public bool CanPickup { get; }
+
+        internal PickupTargetResult(
+            Trash trash,
+            Rigidbody rigidbody,
+            Collider collider,
+            RaycastHit raycastHit,
+            bool canPickup
+        )
+        {
+            Trash = trash;
+            Rigidbody = rigidbody;
+            Collider = collider;
+            RaycastHit = raycastHit;
+            CanPickup = canPickup;
+        }
+    }
+
     // ==================================================
     // PLAYER / INPUT
     // ==================================================
@@ -48,6 +72,9 @@ public sealed class CarryTrash : MonoBehaviour
     private Vector3 lastCarryPosition;
     private Vector3 calculatedVelocity;
 
+    private int pickupTargetCacheFrame = -1;
+    private PickupTargetResult cachedPickupTarget;
+
     // ==================================================
     // PUBLIC VALUES
     // ==================================================
@@ -74,10 +101,13 @@ public sealed class CarryTrash : MonoBehaviour
     {
         if (inputSettings != null)
             inputSettings.EnsureLoaded();
+
+        InvalidatePickupTargetCache();
     }
 
     private void OnDisable()
     {
+        InvalidatePickupTargetCache();
         /*
          * Falls das Script oder das Player-Objekt deaktiviert
          * wird, wird ein getragener Sack sauber freigegeben.
@@ -139,6 +169,7 @@ public sealed class CarryTrash : MonoBehaviour
     )
     {
         playerCamera = newPlayerCamera;
+        InvalidatePickupTargetCache();
     }
 
     public void SetInputSettings(
@@ -149,6 +180,8 @@ public sealed class CarryTrash : MonoBehaviour
 
         if (inputSettings != null)
             inputSettings.EnsureLoaded();
+
+        InvalidatePickupTargetCache();
     }
 
     // ==================================================
@@ -193,11 +226,64 @@ public sealed class CarryTrash : MonoBehaviour
 
     public bool TryPickup()
     {
-        if (!canCarry ||
-            isCarrying ||
-            playerCamera == null)
+        if (!TryGetCurrentPickupTarget(
+                out PickupTargetResult target))
         {
+            LogMissingTargetRigidbody(target);
             return false;
+        }
+
+        return PickupTarget(target);
+    }
+
+    public bool TryPickupTrash(Trash trash)
+    {
+        if (trash == null)
+            return false;
+
+        if (!TryGetCurrentPickupTarget(
+                out PickupTargetResult target))
+        {
+            if (target.Trash == trash)
+                LogMissingTargetRigidbody(target);
+
+            return false;
+        }
+
+        if (target.Trash != trash)
+            return false;
+
+        return PickupTarget(target);
+    }
+
+    public bool TryGetCurrentPickupTarget(
+        out PickupTargetResult result
+    )
+    {
+        if (pickupTargetCacheFrame !=
+            Time.frameCount)
+        {
+            cachedPickupTarget =
+                EvaluateCurrentPickupTarget();
+
+            pickupTargetCacheFrame =
+                Time.frameCount;
+        }
+
+        result = cachedPickupTarget;
+        return result.CanPickup;
+    }
+
+    private PickupTargetResult
+        EvaluateCurrentPickupTarget()
+    {
+        if (!isActiveAndEnabled ||
+            !canCarry ||
+            isCarrying ||
+            playerCamera == null ||
+            inputSettings == null)
+        {
+            return default;
         }
 
         bool hasHit =
@@ -211,49 +297,68 @@ public sealed class CarryTrash : MonoBehaviour
             );
 
         if (!hasHit)
-            return false;
+            return default;
 
         Trash trash =
             hit.collider.GetComponentInParent<Trash>();
 
         if (trash == null)
-            return false;
+        {
+            return new PickupTargetResult(
+                null,
+                null,
+                hit.collider,
+                hit,
+                false
+            );
+        }
 
-        return TryPickupTrash(trash);
+        Rigidbody trashRigidbody =
+            ResolveTrashRigidbody(trash);
+
+        return new PickupTargetResult(
+            trash,
+            trashRigidbody,
+            hit.collider,
+            hit,
+            trashRigidbody != null
+        );
     }
 
-    public bool TryPickupTrash(Trash trash)
+    private Rigidbody ResolveTrashRigidbody(
+        Trash trash
+    )
     {
-        if (!canCarry ||
-            isCarrying ||
-            trash == null ||
-            playerCamera == null)
-        {
-            return false;
-        }
+        if (trash == null)
+            return null;
 
         Rigidbody trashRigidbody =
             trash.GetComponent<Rigidbody>();
 
-        if (trashRigidbody == null)
-        {
-            trashRigidbody =
-                trash.GetComponentInChildren<Rigidbody>();
-        }
+        if (trashRigidbody != null)
+            return trashRigidbody;
 
-        if (trashRigidbody == null)
-        {
-            Debug.LogWarning(
-                $"Das Müllobjekt '{trash.name}' besitzt " +
-                "keinen Rigidbody.",
-                trash
-            );
+        return trash.GetComponentInChildren<Rigidbody>();
+    }
 
+    private bool PickupTarget(
+        PickupTargetResult target
+    )
+    {
+        if (!target.CanPickup ||
+            !isActiveAndEnabled ||
+            !canCarry ||
+            isCarrying ||
+            target.Trash == null ||
+            target.Rigidbody == null ||
+            playerCamera == null ||
+            inputSettings == null)
+        {
             return false;
         }
 
-        carriedTrash = trash;
-        carriedRigidbody = trashRigidbody;
+        carriedTrash = target.Trash;
+        carriedRigidbody = target.Rigidbody;
 
         carriedColliders =
             carriedTrash.GetComponentsInChildren<Collider>(
@@ -283,11 +388,28 @@ public sealed class CarryTrash : MonoBehaviour
         calculatedVelocity =
             Vector3.zero;
 
+        InvalidatePickupTargetCache();
         UpdateCarriedTrashPosition();
 
         return true;
     }
 
+    private void LogMissingTargetRigidbody(
+        PickupTargetResult target
+    )
+    {
+        if (target.Trash == null ||
+            target.Rigidbody != null)
+        {
+            return;
+        }
+
+        Debug.LogWarning(
+            $"Das Müllobjekt '{target.Trash.name}' besitzt " +
+            "keinen Rigidbody.",
+            target.Trash
+        );
+    }
     // ==================================================
     // CARRY MOVEMENT
     // ==================================================
@@ -433,6 +555,14 @@ public sealed class CarryTrash : MonoBehaviour
 
         calculatedVelocity =
             Vector3.zero;
+
+        InvalidatePickupTargetCache();
+    }
+
+    private void InvalidatePickupTargetCache()
+    {
+        pickupTargetCacheFrame = -1;
+        cachedPickupTarget = default;
     }
 
     // ==================================================
@@ -442,6 +572,7 @@ public sealed class CarryTrash : MonoBehaviour
     public void SetCarryEnabled(bool value)
     {
         canCarry = value;
+        InvalidatePickupTargetCache();
 
         /*
          * Beim Öffnen des Pause-Menüs wird der Sack wie
