@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdbac0d1db4aa0948b8bb6a2f2c07d94, type: 3}
+  m_Name: LowPolyMegapolisRoad01
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::RoadPainterProfile
+  profileId: low_poly_megapolis_road_01
+  displayName: LowPoly Megapolis Road 01
+  segmentParts:
+  - prefab: {fileID: 1809047982431576453, guid: e7916fe86221d5b418ae13ccfa546abd, type: 3}
+    localPositionOffset: {x: 0, y: 0, z: -1.501783}
+    localRotationOffset: {x: 0, y: 0, z: 0}
+  - prefab: {fileID: 1809047982431576453, guid: e7916fe86221d5b418ae13ccfa546abd, type: 3}
+    localPositionOffset: {x: 6.0008683, y: 0, z: 1.501783}
+    localRotationOffset: {x: 0, y: 180, z: 0}
+  segmentLength: 6.0008683
+  segmentSpacing: 0
+  roadWidth: 6.012084
+  forwardAxis: 0
+  yOffset: 0
+  maximumSlopeDegrees: 10
+  angleSnapDegrees: 15
+  gridSnapSize: 0
+  disableSecondaryLodColliders: 1

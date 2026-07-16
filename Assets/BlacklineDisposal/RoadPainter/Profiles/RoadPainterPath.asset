@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87e3fca01e5fee4f9bea777a689e8ad, type: 3}
+  m_Name: RoadPainterPath
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::RoadPainterPath
+  pathId: road_path_c712c052fc9f4b9182f448dfae3563ab
+  profile: {fileID: 11400000, guid: 590ff5573d2ae504299f78b7367b42cd, type: 2}
+  localControlPoints:
+  - {x: 450.1383, y: 0, z: 171.11172}
+  - {x: 451.37946, y: 0, z: 172.35287}
+  - {x: 452.70126, y: 0, z: 173.67468}
+  - {x: 454.01837, y: 0, z: 174.43512}
+  - {x: 455.151, y: 0, z: 175.56775}
+  - {x: 456.74014, y: 0, z: 177.15689}
+  - {x: 458.0761, y: 0, z: 178.49286}
+  - {x: 460.16904, y: 0, z: 180.58578}
+  - {x: 462.06125, y: 0, z: 181.0928}
+  - {x: 463.57553, y: 0, z: 181.49855}
+  - {x: 467.5707, y: 0, z: 181.49855}
+  - {x: 469.8718, y: 0, z: 180.88197}
+  - {x: 473.6829, y: 0, z: 184.69308}
+  - {x: 474.12424, y: 0, z: 186.34029}
+  - {x: 444.35083, y: 0, z: 156.56686}
+  - {x: 463.24796, y: 0, z: 167.47713}
+  - {x: 457.25262, y: 0, z: 161.4818}
+  - {x: 448.51807, y: 0, z: 161.4818}
+  - {x: 441.4653, y: 0, z: 163.37158}
+  - {x: 436.98758, y: 0, z: 165.95679}
+  - {x: 435.65802, y: 0, z: 168.25964}
+  - {x: 449.01492, y: 0, z: 175.97125}
+  - {x: 452.64316, y: 0, z: 175.97125}
+  roadRootGlobalObjectId: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-734179460-0
+  terrainGlobalObjectId: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-2108461012-0
+  generatedRootGlobalObjectId: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1412709374-0
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  useTerrainRaycast: 1
+  useFixedHeight: 0
+  fixedHeight: 0
