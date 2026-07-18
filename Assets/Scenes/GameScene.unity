@@ -571,7 +571,7 @@ MonoBehaviour:
   normalSize: {x: 64, y: 64}
   selectedSize: {x: 75, y: 75}
   inventory: {fileID: 426157140}
-  sharedBankAccount: {fileID: 514201156}
+  sharedBankAccount: {fileID: 0}
   cashTextTMP: {fileID: 1591899483}
   bankTextTMP: {fileID: 1727680798}
   cashGainTextTMP: {fileID: 1690276858}

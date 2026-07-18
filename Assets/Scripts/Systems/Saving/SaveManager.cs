@@ -184,8 +184,6 @@ public sealed class SaveManager : MonoBehaviour
 
         Instance = this;
 
-        DontDestroyOnLoad(gameObject);
-
         EnsureSaveDirectoryExists();
     }
 

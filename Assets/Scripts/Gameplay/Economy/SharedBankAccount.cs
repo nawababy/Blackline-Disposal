@@ -19,18 +19,6 @@ public sealed class SharedBankAccount : MonoBehaviour
     private int currentBalance;
 
     // ==================================================
-    // SETTINGS
-    // ==================================================
-
-    [Header("Persistence")]
-    [Tooltip(
-        "Aktivieren, wenn dieses Objekt beim Szenenwechsel " +
-        "bestehen bleiben soll."
-    )]
-    [SerializeField]
-    private bool persistBetweenScenes = true;
-
-    // ==================================================
     // PUBLIC VALUES
     // ==================================================
 
@@ -62,9 +50,6 @@ public sealed class SharedBankAccount : MonoBehaviour
 
         currentBalance =
             Mathf.Max(0, currentBalance);
-
-        if (persistBetweenScenes)
-            DontDestroyOnLoad(gameObject);
     }
 
     private void OnDestroy()

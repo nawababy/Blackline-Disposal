@@ -175,8 +175,6 @@ public sealed class SettingsManager : MonoBehaviour
 
         Instance = this;
 
-        DontDestroyOnLoad(gameObject);
-
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         startupQualityLevel =

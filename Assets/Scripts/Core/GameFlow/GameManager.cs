@@ -92,8 +92,6 @@ public sealed class GameManager : MonoBehaviour
 
         Instance = this;
 
-        DontDestroyOnLoad(gameObject);
-
         saveSlotCount =
             Mathf.Max(1, saveSlotCount);
 
