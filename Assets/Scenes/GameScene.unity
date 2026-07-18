@@ -62158,7 +62158,7 @@ MonoBehaviour:
   playerTransform: {fileID: 426157136}
   inputSettings: {fileID: 11400000, guid: dcdda59b561cf4e48bf44cfd70f320e6, type: 2}
   fallbackToggleKey: 27
-  stuckRespawnPoint: {fileID: 0}
+  stuckRespawnPoint: {fileID: 910770000201}
   fallbackStuckPosition: {x: 0, y: 1, z: 0}
   mainMenuSceneName: MainMenu
 --- !u!1 &1025093661
@@ -72938,7 +72938,39 @@ Transform:
   - {fileID: 410087041}
   - {fileID: 258417714}
   - {fileID: 2135198242}
+  - {fileID: 910770000201}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &910770000200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910770000201}
+  m_Layer: 0
+  m_Name: PlayerRespawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &910770000201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910770000200}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 387.70622, y: 22.59899, z: 539.97345}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1237787275}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1238139197
 GameObject:
@@ -113592,8 +113624,6 @@ GameObject:
   - component: {fileID: 1939721593}
   - component: {fileID: 1939721596}
   - component: {fileID: 1939721595}
-  - component: {fileID: 1939721597}
-  - component: {fileID: 1939721600}
   - component: {fileID: 1939721599}
   - component: {fileID: 1939721598}
   m_Layer: 0
@@ -113613,7 +113643,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.8, z: 0.5}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 426157136}
@@ -113713,18 +113743,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1939721597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1939721592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b140936859ef4c49bd7c7ffeae6406d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SuperBlur.SuperBlurFast
 --- !u!114 &1939721598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113802,18 +113820,6 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
---- !u!114 &1939721600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1939721592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea5fc59977a0bcc4182488d9f8708e50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::URPBlur
 --- !u!1001 &1943990238
 PrefabInstance:
   m_ObjectHideFlags: 0
