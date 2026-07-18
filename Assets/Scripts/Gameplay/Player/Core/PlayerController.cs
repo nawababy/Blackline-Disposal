@@ -10,12 +10,30 @@ public sealed class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private PlayerLook playerLook;
     [SerializeField] private PlayerInventory inventory;
+    [SerializeField] private Transform initialSpawnPoint;
 
     // ==================================================
     // PUBLIC ACCESS
     // ==================================================
 
     public PlayerInventory Inventory => inventory;
+
+    public bool TryGetInitialSpawnPose(
+        out Vector3 position,
+        out Quaternion rotation
+    )
+    {
+        if (initialSpawnPoint == null)
+        {
+            position = Vector3.zero;
+            rotation = Quaternion.identity;
+            return false;
+        }
+
+        position = initialSpawnPoint.position;
+        rotation = initialSpawnPoint.rotation;
+        return true;
+    }
 
     /*
      * Das Geld liegt nicht mehr zusätzlich im PlayerController.

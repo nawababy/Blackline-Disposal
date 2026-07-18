@@ -42,6 +42,8 @@ public readonly struct SaveSlotStatus
 [DisallowMultipleComponent]
 public sealed class SaveManager : MonoBehaviour
 {
+    private const float UninitializedPlayerPositionTolerance = 0.001f;
+
     // ==================================================
     // SINGLETON
     // ==================================================
@@ -1413,6 +1415,7 @@ public sealed class SaveManager : MonoBehaviour
 
         ApplyPlayerData(
             saveData,
+            playerController,
             inventory,
             playerTransform
         );
@@ -1436,6 +1439,7 @@ public sealed class SaveManager : MonoBehaviour
 
     private void ApplyPlayerData(
         SaveGameData saveData,
+        PlayerController playerController,
         PlayerInventory inventory,
         Transform playerTransform
     )
@@ -1463,21 +1467,52 @@ public sealed class SaveManager : MonoBehaviour
             );
         }
 
-        if (playerTransform != null)
-        {
-            ApplyPlayerTransform(
-                playerTransform,
-                saveData.player.position.ToVector3(),
-                saveData.player.rotation.ToVector3()
-            );
-        }
-        else
+        if (playerTransform == null)
         {
             Debug.LogWarning(
                 "Beim Laden wurde kein Player Transform gefunden.",
                 gameObject
             );
+
+            return;
         }
+
+        if (TryGetSavedPlayerPose(
+                saveData.player,
+                out Vector3 targetPosition,
+                out Quaternion targetRotation))
+        {
+            ApplyPlayerTransform(
+                playerTransform,
+                targetPosition,
+                targetRotation
+            );
+
+            return;
+        }
+
+        if (playerController != null &&
+            playerController.TryGetInitialSpawnPose(
+                out Vector3 initialPosition,
+                out Quaternion initialRotation) &&
+            IsFinite(initialPosition) &&
+            IsFinite(initialRotation))
+        {
+            ApplyPlayerTransform(
+                playerTransform,
+                initialPosition,
+                initialRotation
+            );
+
+            return;
+        }
+
+        Debug.LogWarning(
+            "Saved Player Transform is invalid or uninitialized, " +
+            "and PlayerController has no valid initial spawn pose. " +
+            "The current Scene position remains unchanged.",
+            gameObject
+        );
     }
 
     private void ApplyHotbarData(
@@ -1583,10 +1618,74 @@ public sealed class SaveManager : MonoBehaviour
         inventory.NotifyHotbarLoadCompleted();
     }
 
+    private bool TryGetSavedPlayerPose(
+        PlayerSaveData playerData,
+        out Vector3 position,
+        out Quaternion rotation
+    )
+    {
+        position = Vector3.zero;
+        rotation = Quaternion.identity;
+
+        if (playerData == null ||
+            playerData.position == null ||
+            playerData.rotation == null)
+        {
+            return false;
+        }
+
+        Vector3 savedPosition =
+            playerData.position.ToVector3();
+
+        Vector3 savedRotation =
+            playerData.rotation.ToVector3();
+
+        if (!IsFinite(savedPosition) ||
+            !IsFinite(savedRotation))
+        {
+            return false;
+        }
+
+        float toleranceSquared =
+            UninitializedPlayerPositionTolerance *
+            UninitializedPlayerPositionTolerance;
+
+        if (savedPosition.sqrMagnitude <=
+            toleranceSquared)
+        {
+            return false;
+        }
+
+        position = savedPosition;
+        rotation = Quaternion.Euler(savedRotation);
+        return true;
+    }
+
+    private static bool IsFinite(Vector3 value)
+    {
+        return IsFinite(value.x) &&
+               IsFinite(value.y) &&
+               IsFinite(value.z);
+    }
+
+    private static bool IsFinite(Quaternion value)
+    {
+        return IsFinite(value.x) &&
+               IsFinite(value.y) &&
+               IsFinite(value.z) &&
+               IsFinite(value.w);
+    }
+
+    private static bool IsFinite(float value)
+    {
+        return !float.IsNaN(value) &&
+               !float.IsInfinity(value);
+    }
+
     private void ApplyPlayerTransform(
         Transform playerTransform,
-        Vector3 savedPosition,
-        Vector3 savedRotation
+        Vector3 position,
+        Quaternion rotation
     )
     {
         if (playerTransform == null)
@@ -1603,8 +1702,8 @@ public sealed class SaveManager : MonoBehaviour
             characterController.enabled = false;
 
         playerTransform.SetPositionAndRotation(
-            savedPosition,
-            Quaternion.Euler(savedRotation)
+            position,
+            rotation
         );
 
         if (controllerWasEnabled)

@@ -25038,6 +25038,7 @@ MonoBehaviour:
   movement: {fileID: 426157134}
   playerLook: {fileID: 426157137}
   inventory: {fileID: 426157140}
+  initialSpawnPoint: {fileID: 910770000201}
 --- !u!114 &426157140
 MonoBehaviour:
   m_ObjectHideFlags: 0
