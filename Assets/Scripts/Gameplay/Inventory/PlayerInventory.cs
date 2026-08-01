@@ -141,6 +141,20 @@ public sealed class PlayerInventory : MonoBehaviour
             hotbarItems =
                 new HotbarItem[DefaultHotbarSize];
         }
+
+        for (int i = 0;
+             i < hotbarItems.Length;
+             i++)
+        {
+            HotbarItem item =
+                hotbarItems[i];
+
+            if (item != null &&
+                !item.IsValid)
+            {
+                hotbarItems[i] = null;
+            }
+        }
     }
 
     private void ClampSelectedSlot()
