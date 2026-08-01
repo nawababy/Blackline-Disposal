@@ -633,8 +633,8 @@ public sealed class SaveManagerFileRegressionTests
 
         LogAssert.Expect(
             LogType.Error,
-            "Legacy-Spielstand fuer Slot 1 konnte nicht migriert " +
-            "werden. Die GameScene wird nicht geladen."
+            "Legacy-Spielstand fuer Slot 1 kann nicht migriert " +
+            "werden, weil kein SaveManager verfuegbar ist."
         );
 
         object result =
