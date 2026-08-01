@@ -203,17 +203,36 @@ public sealed class GameManager : MonoBehaviour
         if (!IsValidSlotIndex(slotIndex))
             return;
 
-        if (SaveManager.Instance != null)
-        {
-            bool saveCreated =
-                SaveManager.Instance.CreateNewSave(
-                    slotIndex,
-                    $"Save {slotIndex + 1}",
-                    overwriteExisting: true
-                );
+        SaveManager saveManager =
+            SaveManager.Instance;
 
-            if (!saveCreated)
-                return;
+        if (saveManager == null)
+        {
+            Debug.LogError(
+                $"Neues Spiel fuer Slot {slotIndex + 1} kann nicht " +
+                "gestartet werden, weil kein SaveManager verfuegbar ist.",
+                gameObject
+            );
+
+            return;
+        }
+
+        bool saveCreated =
+            saveManager.CreateNewSave(
+                slotIndex,
+                $"Save {slotIndex + 1}",
+                overwriteExisting: true
+            );
+
+        if (!saveCreated)
+        {
+            Debug.LogError(
+                $"Neues Spiel fuer Slot {slotIndex + 1} wurde " +
+                "abgebrochen, weil der Save nicht erstellt werden konnte.",
+                gameObject
+            );
+
+            return;
         }
 
         SetCurrentSlot(slotIndex);
@@ -224,6 +243,17 @@ public sealed class GameManager : MonoBehaviour
     {
         if (!IsValidSlotIndex(slotIndex))
             return;
+
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogError(
+                $"Spielstand {slotIndex + 1} kann nicht fortgesetzt " +
+                "werden, weil kein SaveManager verfuegbar ist.",
+                gameObject
+            );
+
+            return;
+        }
 
         SaveSlotStatus jsonStatus =
             GetJsonSaveSlotStatus(slotIndex);
@@ -259,8 +289,10 @@ public sealed class GameManager : MonoBehaviour
          */
         if (HasLegacySave(slotIndex))
         {
+            if (!MigrateLegacySave(slotIndex))
+                return;
+
             SetCurrentSlot(slotIndex);
-            MigrateLegacySave(slotIndex);
             LoadGameScene();
             return;
         }
@@ -386,12 +418,24 @@ public sealed class GameManager : MonoBehaviour
             );
     }
 
-    private void MigrateLegacySave(
+    private bool MigrateLegacySave(
         int slotIndex
     )
     {
-        if (SaveManager.Instance == null)
-            return;
+        SaveManager saveManager =
+            SaveManager.Instance;
+
+        if (saveManager == null)
+        {
+            Debug.LogError(
+                $"Legacy-Spielstand fuer Slot {slotIndex + 1} kann " +
+                "nicht migriert werden, weil kein SaveManager " +
+                "verfuegbar ist.",
+                gameObject
+            );
+
+            return false;
+        }
 
         string legacySaveName =
             PlayerPrefs.GetString(
@@ -412,11 +456,24 @@ public sealed class GameManager : MonoBehaviour
                 $"Save {slotIndex + 1}";
         }
 
-        SaveManager.Instance.CreateNewSave(
-            slotIndex,
-            legacySaveName,
-            overwriteExisting: false
-        );
+        bool wasMigrated =
+            saveManager.CreateNewSave(
+                slotIndex,
+                legacySaveName,
+                overwriteExisting: false
+            );
+
+        if (!wasMigrated)
+        {
+            Debug.LogError(
+                $"Legacy-Spielstand fuer Slot {slotIndex + 1} " +
+                "konnte nicht migriert werden. Die GameScene wird " +
+                "nicht geladen.",
+                gameObject
+            );
+        }
+
+        return wasMigrated;
     }
 
     // ==================================================

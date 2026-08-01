@@ -1,21 +1,35 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 
 public sealed class SaveManagerFileRegressionTests
 {
     private const string TestRootFolderName = "BlacklineDisposalTests";
+    private const string CurrentSlotPreferenceKey = "CurrentSlot";
     private const string RealSaveDirectory =
         @"C:\Users\Pascal Dlutko\AppData\LocalLow\DefaultCompany\My project\Saves";
 
     private GameObject saveManagerGameObject;
+    private GameObject gameManagerGameObject;
     private SaveManager saveManager;
     private string testSaveDirectory;
+    private bool hadCurrentSlotPreference;
+    private int originalCurrentSlotPreference;
 
     [SetUp]
     public void SetUp()
     {
+        hadCurrentSlotPreference =
+            PlayerPrefs.HasKey(CurrentSlotPreferenceKey);
+
+        originalCurrentSlotPreference =
+            PlayerPrefs.GetInt(CurrentSlotPreferenceKey, -1);
+
         testSaveDirectory = Path.Combine(
             Path.GetTempPath(),
             TestRootFolderName,
@@ -48,6 +62,13 @@ public sealed class SaveManagerFileRegressionTests
     {
         try
         {
+            if (gameManagerGameObject != null)
+            {
+                UnityEngine.Object.DestroyImmediate(
+                    gameManagerGameObject
+                );
+            }
+
             if (saveManagerGameObject != null)
             {
                 UnityEngine.Object.DestroyImmediate(
@@ -57,10 +78,13 @@ public sealed class SaveManagerFileRegressionTests
         }
         finally
         {
+            gameManagerGameObject = null;
             saveManager = null;
             saveManagerGameObject = null;
 
             SaveManager.ClearSaveDirectoryPathOverrideForTests();
+
+            RestoreCurrentSlotPreference();
 
             DeleteTemporaryTestDirectory();
         }
@@ -391,6 +415,549 @@ public sealed class SaveManagerFileRegressionTests
 
         Assert.That(status.CanLoad, Is.False);
         Assert.That(status.CanDelete, Is.True);
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_CompleteVersion4Save_ReturnsValid()
+    {
+        WriteSaveDataCandidate(
+            GetMainSavePath(0),
+            SaveGameData.CreateNew(0, "Complete Version 4 Save")
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Valid)
+        );
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_HeaderOnlyVersion4Save_ReturnsCorrupted()
+    {
+        WriteJsonCandidate(
+            GetMainSavePath(0),
+            "{\"saveVersion\":4,\"slotIndex\":0}"
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Corrupted)
+        );
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_Version3WithoutVersion4Field_RemainsValid()
+    {
+        string version3Json =
+            CreateVersion4JsonWithOmittedField(
+                "sharedWorld.facilitiesSnapshotInitialized"
+            ).Replace(
+                "\"saveVersion\":4",
+                "\"saveVersion\":3"
+            );
+
+        WriteJsonCandidate(
+            GetMainSavePath(0),
+            version3Json
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Valid)
+        );
+    }
+
+    [TestCase("saveName")]
+    [TestCase("createdUtc")]
+    [TestCase("lastSavedUtc")]
+    [TestCase("player")]
+    [TestCase("sharedWorld")]
+    [TestCase("player.personalCash")]
+    [TestCase("player.position")]
+    [TestCase("player.position.x")]
+    [TestCase("player.position.y")]
+    [TestCase("player.position.z")]
+    [TestCase("player.rotation")]
+    [TestCase("player.rotation.x")]
+    [TestCase("player.rotation.y")]
+    [TestCase("player.rotation.z")]
+    [TestCase("player.selectedHotbarSlot")]
+    [TestCase("player.hotbarSlots")]
+    [TestCase("player.characterId")]
+    [TestCase("player.appearance")]
+    [TestCase("sharedWorld.sharedBankBalance")]
+    [TestCase("sharedWorld.worldTrashSnapshotInitialized")]
+    [TestCase("sharedWorld.worldTrashObjects")]
+    [TestCase("sharedWorld.facilitiesSnapshotInitialized")]
+    [TestCase("sharedWorld.facilities")]
+    public void GetSaveSlotStatus_Version4MissingRequiredField_ReturnsCorrupted(
+        string omittedField
+    )
+    {
+        WriteJsonCandidate(
+            GetMainSavePath(0),
+            CreateVersion4JsonWithOmittedField(omittedField)
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Corrupted),
+            omittedField
+        );
+    }
+
+    [TestCase(0)]
+    [TestCase(5)]
+    public void GetSaveSlotStatus_UnsupportedVersion_ReturnsCorrupted(
+        int saveVersion
+    )
+    {
+        SaveGameData saveData =
+            SaveGameData.CreateNew(0, "Invalid Version Save");
+
+        saveData.saveVersion = saveVersion;
+
+        WriteSaveDataCandidate(
+            GetMainSavePath(0),
+            saveData
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Corrupted)
+        );
+    }
+
+    [Test]
+    public void GetSaveSlotStatus_MismatchedSlotIndex_ReturnsCorrupted()
+    {
+        WriteSaveDataCandidate(
+            GetMainSavePath(0),
+            SaveGameData.CreateNew(1, "Wrong Slot Save")
+        );
+
+        SaveSlotStatus status =
+            saveManager.GetSaveSlotStatus(0);
+
+        Assert.That(
+            status.State,
+            Is.EqualTo(SaveSlotState.Corrupted)
+        );
+    }
+
+    [Test]
+    public void StartNewGame_MissingSaveManager_DoesNotContinueFlow()
+    {
+        DestroySaveManagerForTest();
+
+        GameManager gameManager =
+            CreateGameManagerForTest();
+
+        int initialSlot = gameManager.CurrentSlot;
+        int initialSceneHandle =
+            SceneManager.GetActiveScene().handle;
+
+        LogAssert.Expect(
+            LogType.Error,
+            "Neues Spiel fuer Slot 1 kann nicht gestartet werden, " +
+            "weil kein SaveManager verfuegbar ist."
+        );
+
+        gameManager.StartNewGame(0);
+
+        Assert.That(gameManager.CurrentSlot, Is.EqualTo(initialSlot));
+        Assert.That(
+            SceneManager.GetActiveScene().handle,
+            Is.EqualTo(initialSceneHandle)
+        );
+    }
+
+    [Test]
+    public void ContinueGame_MissingSaveManager_DoesNotContinueFlow()
+    {
+        DestroySaveManagerForTest();
+
+        GameManager gameManager =
+            CreateGameManagerForTest();
+
+        int initialSlot = gameManager.CurrentSlot;
+        int initialSceneHandle =
+            SceneManager.GetActiveScene().handle;
+
+        LogAssert.Expect(
+            LogType.Error,
+            "Spielstand 1 kann nicht fortgesetzt werden, " +
+            "weil kein SaveManager verfuegbar ist."
+        );
+
+        gameManager.ContinueGame(0);
+
+        Assert.That(gameManager.CurrentSlot, Is.EqualTo(initialSlot));
+        Assert.That(
+            SceneManager.GetActiveScene().handle,
+            Is.EqualTo(initialSceneHandle)
+        );
+    }
+
+    [Test]
+    public void MigrateLegacySave_CreateNewSaveFailure_ReturnsFalse()
+    {
+        CreateValidMainSave(0, "Existing Save");
+
+        GameManager gameManager =
+            CreateGameManagerForTest();
+
+        MethodInfo migrateLegacySave =
+            typeof(GameManager).GetMethod(
+                "MigrateLegacySave",
+                BindingFlags.Instance |
+                BindingFlags.NonPublic
+            );
+
+        Assert.That(migrateLegacySave, Is.Not.Null);
+
+        LogAssert.Expect(
+            LogType.Error,
+            "Legacy-Spielstand fuer Slot 1 konnte nicht migriert " +
+            "werden. Die GameScene wird nicht geladen."
+        );
+
+        object result =
+            migrateLegacySave.Invoke(
+                gameManager,
+                new object[] { 0 }
+            );
+
+        Assert.That(result, Is.EqualTo(false));
+    }
+
+    private static string CreateVersion4JsonWithOmittedField(
+        string omittedField
+    )
+    {
+        List<string> positionFields =
+            new List<string>();
+
+        AddJsonField(
+            positionFields,
+            "player.position.x",
+            "x",
+            "0",
+            omittedField
+        );
+
+        AddJsonField(
+            positionFields,
+            "player.position.y",
+            "y",
+            "0",
+            omittedField
+        );
+
+        AddJsonField(
+            positionFields,
+            "player.position.z",
+            "z",
+            "0",
+            omittedField
+        );
+
+        List<string> rotationFields =
+            new List<string>();
+
+        AddJsonField(
+            rotationFields,
+            "player.rotation.x",
+            "x",
+            "0",
+            omittedField
+        );
+
+        AddJsonField(
+            rotationFields,
+            "player.rotation.y",
+            "y",
+            "0",
+            omittedField
+        );
+
+        AddJsonField(
+            rotationFields,
+            "player.rotation.z",
+            "z",
+            "0",
+            omittedField
+        );
+
+        List<string> playerFields =
+            new List<string>();
+
+        AddJsonField(
+            playerFields,
+            "player.personalCash",
+            "personalCash",
+            "0",
+            omittedField
+        );
+
+        AddJsonField(
+            playerFields,
+            "player.position",
+            "position",
+            BuildJsonObject(positionFields),
+            omittedField
+        );
+
+        AddJsonField(
+            playerFields,
+            "player.rotation",
+            "rotation",
+            BuildJsonObject(rotationFields),
+            omittedField
+        );
+
+        AddJsonField(
+            playerFields,
+            "player.selectedHotbarSlot",
+            "selectedHotbarSlot",
+            "0",
+            omittedField
+        );
+
+        AddJsonField(
+            playerFields,
+            "player.hotbarSlots",
+            "hotbarSlots",
+            "[]",
+            omittedField
+        );
+
+        AddJsonField(
+            playerFields,
+            "player.characterId",
+            "characterId",
+            "\"\"",
+            omittedField
+        );
+
+        AddJsonField(
+            playerFields,
+            "player.appearance",
+            "appearance",
+            "{}",
+            omittedField
+        );
+
+        List<string> sharedWorldFields =
+            new List<string>();
+
+        AddJsonField(
+            sharedWorldFields,
+            "sharedWorld.sharedBankBalance",
+            "sharedBankBalance",
+            "500",
+            omittedField
+        );
+
+        AddJsonField(
+            sharedWorldFields,
+            "sharedWorld.worldTrashSnapshotInitialized",
+            "worldTrashSnapshotInitialized",
+            "false",
+            omittedField
+        );
+
+        AddJsonField(
+            sharedWorldFields,
+            "sharedWorld.worldTrashObjects",
+            "worldTrashObjects",
+            "[]",
+            omittedField
+        );
+
+        AddJsonField(
+            sharedWorldFields,
+            "sharedWorld.facilitiesSnapshotInitialized",
+            "facilitiesSnapshotInitialized",
+            "false",
+            omittedField
+        );
+
+        AddJsonField(
+            sharedWorldFields,
+            "sharedWorld.facilities",
+            "facilities",
+            "[]",
+            omittedField
+        );
+
+        List<string> rootFields =
+            new List<string>
+            {
+                "\"saveVersion\":4",
+                "\"slotIndex\":0"
+            };
+
+        AddJsonField(
+            rootFields,
+            "saveName",
+            "saveName",
+            "\"Required Field Save\"",
+            omittedField
+        );
+
+        AddJsonField(
+            rootFields,
+            "createdUtc",
+            "createdUtc",
+            "\"2026-08-01T00:00:00.0000000Z\"",
+            omittedField
+        );
+
+        AddJsonField(
+            rootFields,
+            "lastSavedUtc",
+            "lastSavedUtc",
+            "\"2026-08-01T00:00:00.0000000Z\"",
+            omittedField
+        );
+
+        AddJsonField(
+            rootFields,
+            "player",
+            "player",
+            BuildJsonObject(playerFields),
+            omittedField
+        );
+
+        AddJsonField(
+            rootFields,
+            "sharedWorld",
+            "sharedWorld",
+            BuildJsonObject(sharedWorldFields),
+            omittedField
+        );
+
+        return BuildJsonObject(rootFields);
+    }
+
+    private static void AddJsonField(
+        List<string> fields,
+        string fieldPath,
+        string fieldName,
+        string rawValue,
+        string omittedField
+    )
+    {
+        if (string.Equals(
+                fieldPath,
+                omittedField,
+                StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        fields.Add(
+            "\"" + fieldName + "\":" + rawValue
+        );
+    }
+
+    private static string BuildJsonObject(
+        List<string> fields
+    )
+    {
+        return "{" +
+               string.Join(",", fields) +
+               "}";
+    }
+
+    private void WriteSaveDataCandidate(
+        string path,
+        SaveGameData saveData
+    )
+    {
+        WriteJsonCandidate(
+            path,
+            JsonUtility.ToJson(saveData, true)
+        );
+    }
+
+    private void WriteJsonCandidate(
+        string path,
+        string json
+    )
+    {
+        AssertPathInsideTestDirectory(path);
+
+        File.WriteAllText(
+            path,
+            json
+        );
+    }
+
+    private void DestroySaveManagerForTest()
+    {
+        if (saveManagerGameObject != null)
+        {
+            UnityEngine.Object.DestroyImmediate(
+                saveManagerGameObject
+            );
+        }
+
+        saveManager = null;
+        saveManagerGameObject = null;
+
+        Assert.That(SaveManager.Instance, Is.Null);
+    }
+
+    private GameManager CreateGameManagerForTest()
+    {
+        Assert.That(
+            GameManager.Instance,
+            Is.Null,
+            "GameManager.Instance already exists before test setup."
+        );
+
+        gameManagerGameObject =
+            new GameObject(
+                "SaveManagerFileRegressionTests_GameManager"
+            );
+
+        return gameManagerGameObject.AddComponent<GameManager>();
+    }
+
+    private void RestoreCurrentSlotPreference()
+    {
+        if (hadCurrentSlotPreference)
+        {
+            PlayerPrefs.SetInt(
+                CurrentSlotPreferenceKey,
+                originalCurrentSlotPreference
+            );
+        }
+        else
+        {
+            PlayerPrefs.DeleteKey(
+                CurrentSlotPreferenceKey
+            );
+        }
+
+        PlayerPrefs.Save();
     }
 
     private string CreateValidMainSave(

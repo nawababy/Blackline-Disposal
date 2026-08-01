@@ -44,6 +44,44 @@ public sealed class SaveManager : MonoBehaviour
 {
     private const float UninitializedPlayerPositionTolerance = 0.001f;
 
+    private static readonly string[] RequiredCurrentSaveRootFields =
+    {
+        "saveVersion",
+        "slotIndex",
+        "saveName",
+        "createdUtc",
+        "lastSavedUtc",
+        "player",
+        "sharedWorld"
+    };
+
+    private static readonly string[] RequiredCurrentPlayerFields =
+    {
+        "personalCash",
+        "position",
+        "rotation",
+        "selectedHotbarSlot",
+        "hotbarSlots",
+        "characterId",
+        "appearance"
+    };
+
+    private static readonly string[] RequiredCurrentSharedWorldFields =
+    {
+        "sharedBankBalance",
+        "worldTrashSnapshotInitialized",
+        "worldTrashObjects",
+        "facilitiesSnapshotInitialized",
+        "facilities"
+    };
+
+    private static readonly string[] RequiredSerializableVector3Fields =
+    {
+        "x",
+        "y",
+        "z"
+    };
+
     // ==================================================
     // SINGLETON
     // ==================================================
@@ -2541,16 +2579,28 @@ public sealed class SaveManager : MonoBehaviour
                 return false;
             }
 
+            if (saveData.saveVersion ==
+                    SaveGameData.CurrentSaveVersion)
+            {
+                if (!TryValidateCurrentSaveJsonStructure(
+                        json,
+                        out failureReason))
+                {
+                    return false;
+                }
+
+                if (!HasRequiredSaveDataSections(saveData))
+                {
+                    failureReason =
+                        "Version-4-Save enthaelt null statt eines " +
+                        "notwendigen Datenbereichs.";
+                    return false;
+                }
+            }
+
             EnsureSaveDataSectionsExist(saveData);
 
-            if (saveData.player == null ||
-                saveData.sharedWorld == null ||
-                saveData.player.position == null ||
-                saveData.player.rotation == null ||
-                saveData.player.hotbarSlots == null ||
-                saveData.player.appearance == null ||
-                saveData.sharedWorld.facilities == null ||
-                saveData.sharedWorld.worldTrashObjects == null)
+            if (!HasRequiredSaveDataSections(saveData))
             {
                 failureReason =
                     "Save enthaelt nicht alle notwendigen Bereiche.";
@@ -2572,10 +2622,280 @@ public sealed class SaveManager : MonoBehaviour
         string fieldName
     )
     {
-        return json.IndexOf(
-            "\"" + fieldName + "\"",
-            StringComparison.Ordinal
-        ) >= 0;
+        return TryFindJsonFieldValueStart(
+            json,
+            fieldName,
+            out _
+        );
+    }
+
+    private bool TryValidateCurrentSaveJsonStructure(
+        string json,
+        out string failureReason
+    )
+    {
+        failureReason = string.Empty;
+
+        if (!TryRequireJsonFields(
+                json,
+                "Root",
+                RequiredCurrentSaveRootFields,
+                out failureReason))
+        {
+            return false;
+        }
+
+        if (!TryGetJsonObject(
+                json,
+                "player",
+                out string playerJson))
+        {
+            failureReason =
+                "Version-4-Save enthaelt kein gueltiges player-Objekt.";
+            return false;
+        }
+
+        if (!TryRequireJsonFields(
+                playerJson,
+                "player",
+                RequiredCurrentPlayerFields,
+                out failureReason))
+        {
+            return false;
+        }
+
+        if (!TryGetJsonObject(
+                playerJson,
+                "position",
+                out string positionJson) ||
+            !TryRequireJsonFields(
+                positionJson,
+                "player.position",
+                RequiredSerializableVector3Fields,
+                out failureReason))
+        {
+            if (string.IsNullOrEmpty(failureReason))
+            {
+                failureReason =
+                    "Version-4-Save enthaelt kein gueltiges " +
+                    "player.position-Objekt.";
+            }
+
+            return false;
+        }
+
+        if (!TryGetJsonObject(
+                playerJson,
+                "rotation",
+                out string rotationJson) ||
+            !TryRequireJsonFields(
+                rotationJson,
+                "player.rotation",
+                RequiredSerializableVector3Fields,
+                out failureReason))
+        {
+            if (string.IsNullOrEmpty(failureReason))
+            {
+                failureReason =
+                    "Version-4-Save enthaelt kein gueltiges " +
+                    "player.rotation-Objekt.";
+            }
+
+            return false;
+        }
+
+        if (!TryGetJsonObject(
+                json,
+                "sharedWorld",
+                out string sharedWorldJson))
+        {
+            failureReason =
+                "Version-4-Save enthaelt kein gueltiges " +
+                "sharedWorld-Objekt.";
+            return false;
+        }
+
+        return TryRequireJsonFields(
+            sharedWorldJson,
+            "sharedWorld",
+            RequiredCurrentSharedWorldFields,
+            out failureReason
+        );
+    }
+
+    private bool TryRequireJsonFields(
+        string json,
+        string sectionName,
+        string[] requiredFields,
+        out string failureReason
+    )
+    {
+        failureReason = string.Empty;
+        string missingFields = string.Empty;
+
+        for (int i = 0;
+             i < requiredFields.Length;
+             i++)
+        {
+            if (ContainsJsonField(
+                    json,
+                    requiredFields[i]))
+            {
+                continue;
+            }
+
+            if (missingFields.Length > 0)
+                missingFields += ", ";
+
+            missingFields += requiredFields[i];
+        }
+
+        if (missingFields.Length == 0)
+            return true;
+
+        failureReason =
+            $"Version-4-Save: Pflichtfelder fehlen in " +
+            $"{sectionName}: {missingFields}.";
+        return false;
+    }
+
+    private bool TryGetJsonObject(
+        string json,
+        string fieldName,
+        out string jsonObject
+    )
+    {
+        jsonObject = string.Empty;
+
+        if (!TryFindJsonFieldValueStart(
+                json,
+                fieldName,
+                out int objectStart) ||
+            objectStart >= json.Length ||
+            json[objectStart] != '{')
+        {
+            return false;
+        }
+
+        int objectDepth = 0;
+        bool isInsideString = false;
+        bool isEscaped = false;
+
+        for (int i = objectStart;
+             i < json.Length;
+             i++)
+        {
+            char currentCharacter = json[i];
+
+            if (isInsideString)
+            {
+                if (isEscaped)
+                {
+                    isEscaped = false;
+                    continue;
+                }
+
+                if (currentCharacter == '\\')
+                {
+                    isEscaped = true;
+                    continue;
+                }
+
+                if (currentCharacter == '"')
+                    isInsideString = false;
+
+                continue;
+            }
+
+            if (currentCharacter == '"')
+            {
+                isInsideString = true;
+                continue;
+            }
+
+            if (currentCharacter == '{')
+            {
+                objectDepth++;
+                continue;
+            }
+
+            if (currentCharacter != '}')
+                continue;
+
+            objectDepth--;
+
+            if (objectDepth != 0)
+                continue;
+
+            jsonObject = json.Substring(
+                objectStart,
+                i - objectStart + 1
+            );
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryFindJsonFieldValueStart(
+        string json,
+        string fieldName,
+        out int valueStart
+    )
+    {
+        valueStart = -1;
+
+        if (string.IsNullOrEmpty(json) ||
+            string.IsNullOrEmpty(fieldName))
+        {
+            return false;
+        }
+
+        string fieldToken =
+            "\"" + fieldName + "\"";
+
+        int searchStart = 0;
+
+        while (searchStart < json.Length)
+        {
+            int fieldIndex = json.IndexOf(
+                fieldToken,
+                searchStart,
+                StringComparison.Ordinal
+            );
+
+            if (fieldIndex < 0)
+                return false;
+
+            int separatorIndex =
+                fieldIndex + fieldToken.Length;
+
+            while (separatorIndex < json.Length &&
+                   char.IsWhiteSpace(json[separatorIndex]))
+            {
+                separatorIndex++;
+            }
+
+            if (separatorIndex < json.Length &&
+                json[separatorIndex] == ':')
+            {
+                valueStart = separatorIndex + 1;
+
+                while (valueStart < json.Length &&
+                       char.IsWhiteSpace(json[valueStart]))
+                {
+                    valueStart++;
+                }
+
+                return valueStart < json.Length;
+            }
+
+            searchStart =
+                fieldIndex + fieldToken.Length;
+        }
+
+        return false;
     }
 
     private void TryAddValidCandidate(
@@ -2960,6 +3280,21 @@ public sealed class SaveManager : MonoBehaviour
     // ==================================================
     // DATA VALIDATION
     // ==================================================
+
+    private bool HasRequiredSaveDataSections(
+        SaveGameData saveData
+    )
+    {
+        return saveData != null &&
+               saveData.player != null &&
+               saveData.sharedWorld != null &&
+               saveData.player.position != null &&
+               saveData.player.rotation != null &&
+               saveData.player.hotbarSlots != null &&
+               saveData.player.appearance != null &&
+               saveData.sharedWorld.facilities != null &&
+               saveData.sharedWorld.worldTrashObjects != null;
+    }
 
     private void EnsureSaveDataSectionsExist(
         SaveGameData saveData
